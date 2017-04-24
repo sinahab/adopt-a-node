@@ -29,3 +29,30 @@ sudo sed -i -e "s/PasswordAuthentication yes/PasswordAuthentication no/" /etc/ss
 sudo service ssh restart
 
 #-----------------------------------
+
+sudo apt-get install tmux
+tmux new -s bu
+sudo ./BU_auto_node.sh
+
+#---------------------------------
+
+# format the volume with ext4
+sudo mkfs.ext4 -F /dev/disk/by-id/scsi-0DO_Volume_volume-sfo2-01
+
+# create mount point under /mnt
+sudo mkdir -p /mnt/volume-sfo2-01
+
+# mount the volume
+sudo mount -o discard,defaults /dev/disk/by-id/scsi-0DO_Volume_volume-sfo2-01 /mnt/volume-sfo2-01;
+
+# change fstab so volume will be mounted after a reboot
+echo /dev/disk/by-id/scsi-0DO_Volume_volume-sfo2-01 /mnt/volume-sfo2-01 ext4 defaults,nofail,discard 0 0 | sudo tee -a /etc/fstab
+
+# TODO: don't know if this is secure, but needed to be able to write files / dirs.
+sudo chmod 747 /mnt/volume-sfo2-01/
+mkdir /mnt/volume-sfo2-01/.bitcoin
+
+#--------------------------------------
+
+# sudo su testme -c '/usr/local/bin/bitcoind -datadir=/home/testme/.bitcoin -daemon'
+sudo su testme -c '/usr/local/bin/bitcoind -datadir=/mnt/volume-sfo2-01/.bitcoin -conf=/mnt/volume-sfo2-01/.bitcoin/bitcoin.conf -daemon'
