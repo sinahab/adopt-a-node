@@ -31,7 +31,7 @@ BU_SUM64="864908c88d6b9d08c64e46b12acb5c1f8418b0737dfbeffdb8b1c03907892b02"
 BU_SUM32="bb5088b8dfb2be930534f1b174279299eec090542fa62fd04fe05eb9d43f14ba"
 BU_HOME="/home/$USR"
 
-SSH_KEY_PATH=/home/$USR/.ssh/id_rsa
+SSH_KEY_PATH=$BU_HOME/.ssh/id_rsa
 REMOTE_USR=auser
 REMOTE_HOST=trusted_host
 REMOTE_BLOCKCHAIN_PATH=path_to_the_blockchain
@@ -41,10 +41,10 @@ sync_chain() {
   echo "Start syncing the chain ..."
 
   sudo -u $USR bash <<-EOH
-  rsync --progress -a -e "ssh -i $SSH_KEY_PATH" $REMOTE_USR@$REMOTE_HOST:$REMOTE_BLOCKCHAIN_PATH/blocks /home/$USR/.bitcoin
-  rsync --progress -a -e "ssh -i $SSH_KEY_PATH" $REMOTE_USR@$REMOTE_HOST:$REMOTE_BLOCKCHAIN_PATH/chainstate /home/$USR/.bitcoin
+  rsync --progress -a -e "ssh -i $SSH_KEY_PATH" $REMOTE_USR@$REMOTE_HOST:$REMOTE_BLOCKCHAIN_PATH/blocks $BU_HOME/.bitcoin
+  rsync --progress -a -e "ssh -i $SSH_KEY_PATH" $REMOTE_USR@$REMOTE_HOST:$REMOTE_BLOCKCHAIN_PATH/chainstate $BU_HOME/.bitcoin
 EOH
-  chown $USR.$USR -R /home/$USR/.bitcoin
+  chown $USR.$USR -R $BU_HOME/.bitcoin
   echo "Synced!"
 }
 
@@ -156,7 +156,7 @@ create_swap () {
 cloning () {
   echo "Cloning Bitcoin BU ... "
   sudo -u $USR bash <<-EOH
-  cd /home/$USR
+  cd $BU_HOME
   mkdir -p ./src && cd ./src
   git clone $BU_REPO BU > /dev/null
   cd BU
@@ -168,12 +168,12 @@ EOH
 compiling () {
   echo -n "Compiling ... "
   sudo -u $USR bash <<-EOH
-  cd /home/$USR/src/BU
+  cd $BU_HOME/src/BU
   ./autogen.sh
   ./configure --without-gui --without-upnp --disable-tests --disable-wallet --disable-zmq
   make -j$(grep -c '^processor' /proc/cpuinfo)
 EOH
-  cd /home/$USR/src/BU
+  cd $BU_HOME/src/BU
   make install
   echo " done."
 }
