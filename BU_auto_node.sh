@@ -21,14 +21,14 @@
 set -eu
 
 #TODO read these pars from a conf file, ideally the JSON used in release signature.
-BU_BRANCH="1.0.1.3bu"
-BU_TAG="bu1.0.1.3"
+BU_BRANCH="v1.0.2.0"
+BU_TAG="v1.0.2.0"
 USR="testme"
 BU_REPO="https://github.com/BitcoinUnlimited/BitcoinUnlimited.git"
-BU_URL64="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.1.3-linux64.tar.gz"
-BU_URL32="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.1.3-linux32.tar.gz"
-BU_SUM64="864908c88d6b9d08c64e46b12acb5c1f8418b0737dfbeffdb8b1c03907892b02"
-BU_SUM32="bb5088b8dfb2be930534f1b174279299eec090542fa62fd04fe05eb9d43f14ba"
+BU_URL64="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.2.0-linux64.tar.gz"
+BU_URL32="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.2.0-linux32.tar.gz"
+BU_SUM64="3c6dcf8af26def3f204a38340b469448a8ec50de986e2d5934ab3d3eb22ef95f"
+BU_SUM32="2d1aca11f883b05430640f8a70589a9282ef254680f0e7115224b45b543b1096"
 BU_HOME="/home/$USR"
 
 SSH_KEY_PATH=$BU_HOME/.ssh/id_rsa
