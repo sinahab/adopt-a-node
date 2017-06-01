@@ -32,7 +32,6 @@ sudo service ssh restart
 
 sudo apt-get install tmux
 tmux new -s bu
-sudo ./BU_auto_node.sh
 
 #---------------------------------
 
@@ -51,6 +50,11 @@ echo /dev/disk/by-id/scsi-0DO_Volume_volume-sfo2-01 /mnt/volume-sfo2-01 ext4 def
 # TODO: don't know if this is secure, but needed to be able to write files / dirs.
 sudo chmod 747 /mnt/volume-sfo2-01/
 mkdir /mnt/volume-sfo2-01/.bitcoin
+
+#--------------------------------------
+
+# run in tmux
+sudo ./BU_auto_node.sh
 
 #--------------------------------------
 
