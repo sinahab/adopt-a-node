@@ -23,7 +23,7 @@ set -eu
 #TODO read these pars from a conf file, ideally the JSON used in release signature.
 BU_BRANCH="v1.0.2.0"
 BU_TAG="v1.0.2.0"
-USR="testme"
+USR="bu"
 BU_REPO="https://github.com/BitcoinUnlimited/BitcoinUnlimited.git"
 BU_URL64="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.2.0-linux64.tar.gz"
 BU_URL32="https://www.bitcoinunlimited.info/downloads/bitcoinUnlimited-1.0.2.0-linux32.tar.gz"
