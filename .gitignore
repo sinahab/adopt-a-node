@@ -1,3 +1,6 @@
 
 # aws keypair
 config/*.pem
+
+# config values
+config/config.py
