@@ -1,0 +1,8 @@
+name: adopt-a-node
+dependencies:
+- python
+- pip
+- flask
+- flask-security
+- flask-sqlalchemy
+- alembic
