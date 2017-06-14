@@ -4,9 +4,9 @@ from sqlalchemy import Column
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, BOOLEAN
 
-from adopt_a_node.db.models.base import Base
+from adopt_a_node.app import db
 
-class User(Base):
+class User(db.Model):
     __tablename__= 'users'
 
     id = Column(INTEGER, primary_key=True)

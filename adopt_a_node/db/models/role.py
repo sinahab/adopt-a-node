@@ -4,9 +4,9 @@ from sqlalchemy import Column
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, TEXT
 
-from adopt_a_node.db.models.base import Base
+from adopt_a_node.app import db
 
-class Role(Base):
+class Role(db.Model):
     __tablename__= 'roles'
 
     id = Column(INTEGER, primary_key=True)

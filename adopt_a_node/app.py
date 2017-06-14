@@ -1,8 +1,17 @@
 
 from flask import Flask, flash, redirect, render_template, request, session, abort
+
 import os
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['DEBUG'] = True
+app.config['SECRET_KEY'] = os.urandom(12)
+
+# TODO: import this from adopt_a_node.db.connection
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://dev:asdfasdf@localhost:5432/adoptanode_development'
+
+db = SQLAlchemy(app)
 
 @app.route('/')
 def home():
@@ -24,5 +33,4 @@ def do_admin_login():
     return home()
 
 if __name__ == "__main__":
-    app.secret_key = os.urandom(12)
-    app.run(debug=True ,host='0.0.0.0', port=3000)
+    app.run(host='0.0.0.0', port=3000)
