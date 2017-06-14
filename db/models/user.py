@@ -28,6 +28,7 @@ class User(db.Model, UserMixin):
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
 
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
+    nodes = db.relationship('Node', back_populates='user')
 
     def __repr__(self):
         return "Email(%r)" % (self.email)

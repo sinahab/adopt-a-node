@@ -8,7 +8,7 @@ from logging.config import fileConfig
 import sys
 import os
 sys.path.insert(0, os.getcwd())
-from adopt_a_node.db.connection import database_url
+from db.connection import database_url
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
