@@ -3,6 +3,6 @@ dependencies:
 - python
 - pip
 - flask
-- flask-security
-- flask-sqlalchemy
+- flask_security
+- flask_sqlalchemy
 - alembic
