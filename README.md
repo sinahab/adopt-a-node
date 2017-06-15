@@ -14,3 +14,8 @@ Activate the Conda environment:
 ```
     source activate adopt-a-node
 ```
+
+Install Stylus (the Javascript css preprocessor):
+```
+    npm install -g stylus
+```

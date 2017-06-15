@@ -4,3 +4,5 @@ config/*.pem
 
 # config values
 config/config.py
+
+.DS_Store

@@ -7,3 +7,4 @@ dependencies:
 - flask_sqlalchemy
 - alembic
 - bcrypt
+- flask_assets

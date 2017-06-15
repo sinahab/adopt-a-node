@@ -3,18 +3,25 @@
     <head>
         <title>Adopt-a-Node</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% assets "css" %}
+            <link rel="stylesheet" href="{{ ASSET_URL }}" />
+        {% endassets %}
     </head>
 
-    <body>
-        <div>
-            <a href='/'>ADOPT A NODE</a>
-            <a href='/sign_up'>Sign up</a>
-            <a href='/login'>Log in</a>
+    <body class='avenir'>
+        <div class='m0 p2 clearfix header'>
+            <a class='inline-block left px1' href='/'>ADOPT A NODE</a>
+
+            <a class='inline-block right px1' href='/login'>Log in</a>
+            <a class='inline-block right px1' href='/sign_up'>Sign up</a>
         </div>
 
-        {% block content %}{% endblock %}
+        <div class='m0 center body-container'>
+            {% block content %}{% endblock %}
+        </div>
 
-        <div>
+        <div class='m0 p2 footer'>
             FOOTER
         </div>
     </body>

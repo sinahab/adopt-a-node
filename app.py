@@ -2,6 +2,9 @@
 from flask import Flask, render_template
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
 
+from flask_assets import Environment
+from utils.assets import bundles
+
 import os
 
 from db.models.user import User
@@ -47,8 +50,11 @@ app.config['SECURITY_SEND_LOGIN_TEMPLATE'] = 'security/send_login.html'
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url()
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db.init_app(app)
+# assets
+assets = Environment(app)
+assets.register(bundles)
 
+db.init_app(app)
 # Setup Flask-Security
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
