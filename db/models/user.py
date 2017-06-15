@@ -7,6 +7,7 @@ from flask_security import UserMixin
 
 from db.connection import db
 from db.models.role import Role
+from db.models.node import Node
 from db.models.roles_users import roles_users
 
 class User(db.Model, UserMixin):

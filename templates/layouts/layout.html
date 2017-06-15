@@ -10,16 +10,26 @@
     </head>
 
     <body class='avenir'>
-        <div class='m0 p2 clearfix header'>
-            <a class='inline-block left px1' href='/'>ADOPT A NODE</a>
+        {% if current_user.is_authenticated %}
+            <div class='m0 p2 clearfix header'>
+                <a class='inline-block left px1' href='/'>ADOPT A NODE</a>
+                <a class='inline-block right px1' href='/logout'>Logout</a>
+                <a class='inline-block right px1' href='/adopt'>Adopt a Node</a>
+                <a class='inline-block right px1' href='/nodes'>My Nodes</a>
+            </div>
+        {% else %}
+            <div class='m0 p2 clearfix header'>
+                <a class='inline-block left px1' href='/'>ADOPT A NODE</a>
+                <a class='inline-block right px1' href='/login'>Log in</a>
+                <a class='inline-block right px1' href='/sign_up'>Sign up</a>
+            </div>
+        {% endif %}
 
-            <a class='inline-block right px1' href='/login'>Log in</a>
-            <a class='inline-block right px1' href='/sign_up'>Sign up</a>
-        </div>
 
         <div class='m0 center body-container'>
             {% block content %}{% endblock %}
         </div>
+
 
         <div class='m0 p2 footer'>
             FOOTER

@@ -13,11 +13,11 @@ from db.connection import db, database_url
 
 app = Flask(__name__)
 app.config['DEBUG'] = True
-app.config['SECRET_KEY'] = os.urandom(12)
+app.config['SECRET_KEY'] = 'asdf12345678'
 
 # flask_security configurations. Docs: https://pythonhosted.org/Flask-Security/configuration.html
 app.config['SECURITY_PASSWORD_HASH'] = 'bcrypt'
-app.config['SECURITY_PASSWORD_SALT'] = os.urandom(12)
+app.config['SECURITY_PASSWORD_SALT'] = 'asdf12345678'
 
 app.config['SECURITY_CONFIRMABLE'] = False
 app.config['SECURITY_REGISTERABLE'] = True

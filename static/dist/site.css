@@ -1307,7 +1307,7 @@ body {
   height: 100%;
 }
 .header {
-  background-color: #00a3ff;
+  background-color: #7d5da9;
   box-sizing: border-box;
   color: #fff;
   height: 60px;
@@ -1317,7 +1317,7 @@ body {
   height: calc(100% - 120px);
 }
 .footer {
-  background-color: #00a3ff;
+  background-color: #7d5da9;
   box-sizing: border-box;
   color: #fff;
   height: 60px;
