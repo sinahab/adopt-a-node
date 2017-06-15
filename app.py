@@ -28,7 +28,7 @@ app.config['SECURITY_SEND_REGISTER_EMAIL'] = False # TODO: enable this after ema
 app.config['SECURITY_URL_PREFIX'] = None
 app.config['SECURITY_LOGIN_URL'] = '/login'
 app.config['SECURITY_LOGOUT_URL'] = '/logout'
-app.config['SECURITY_REGISTER_URL'] = '/register'
+app.config['SECURITY_REGISTER_URL'] = '/sign_up'
 app.config['SECURITY_RESET_URL'] = '/reset'
 app.config['SECURITY_CHANGE_URL'] = '/change'
 app.config['SECURITY_CONFIRM_URL'] = '/confirm'
@@ -53,17 +53,26 @@ db.init_app(app)
 user_datastore = SQLAlchemyUserDatastore(db, User, Role)
 security = Security(app, user_datastore)
 
-# Create a user to test with
-# @app.before_first_request
-# def create_user():
-#     user_datastore.create_user(email='matt@nobien.net', password='password')
-#     db.session.commit()
 
 # Views
 @app.route('/')
+def landing():
+    return render_template('landing.html')
+
+@app.route('/adopt/')
 @login_required
-def home():
-    return render_template('index.html')
+def adopt():
+    return render_template('adopt.html')
+
+@app.route('/nodes/')
+@login_required
+def nodes():
+    return render_template('nodes.html')
+
+@app.route('/confirmation/')
+@login_required
+def confirmation():
+    return render_template('confirmation.html')
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=3000)
