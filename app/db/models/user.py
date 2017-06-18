@@ -5,10 +5,10 @@ from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, BOOLEAN
 from flask_security import UserMixin
 
-from db.connection import db
-from db.models.role import Role
-from db.models.node import Node
-from db.models.roles_users import roles_users
+from app.db.connection import db
+from app.db.models.role import Role
+from app.db.models.node import Node
+from app.db.models.roles_users import roles_users
 
 class User(db.Model, UserMixin):
     __tablename__= 'users'

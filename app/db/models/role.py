@@ -5,7 +5,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, TEXT
 from flask_security import RoleMixin
 
-from db.connection import db
+from app.db.connection import db
 
 class Role(db.Model, RoleMixin):
     __tablename__= 'roles'
