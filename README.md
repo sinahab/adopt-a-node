@@ -3,16 +3,18 @@
 
 ## Setup
 
-Create a Conda environment:
-
+Install virtualenv
 ```
-    conda create -n adopt-a-node
+pip install virtualenv   # or (conda install virtualenv) if using Anaconda Python
+pip install virtualenvwrapper
+export WORKON_HOME=~/Envs
+source /usr/local/bin/virtualenvwrapper.sh
 ```
 
-Activate the Conda environment:
-
+Create and activate the virtualenv
 ```
-    source activate adopt-a-node
+mkvirtualenv adopt-a-node
+workon adopt-a-node
 ```
 
 Install Stylus (the Javascript css preprocessor):
