@@ -1,8 +1,8 @@
 
 # aws keypair
-config/*.pem
+instance/*.pem
 
 # config values
-config/config.py
+instance/config.py
 
 .DS_Store
