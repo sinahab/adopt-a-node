@@ -1,7 +1,7 @@
 
-from flask import Flask, render_template
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
-from flask_security import Security, SQLAlchemyUserDatastore, login_required
+from flask_security import Security, SQLAlchemyUserDatastore
 from flask_assets import Environment
 from flask_migrate import Migrate
 
@@ -33,24 +33,11 @@ def create_app(config_name):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
-    # Views
-    @app.route('/')
-    def landing():
-        return render_template('landing.html')
+    # TODO: fill in the admin views.
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint, url_prefix='/admin')
 
-    @app.route('/adopt/')
-    @login_required
-    def adopt():
-        return render_template('adopt.html')
-
-    @app.route('/nodes/')
-    @login_required
-    def nodes():
-        return render_template('nodes.html')
-
-    @app.route('/confirmation/')
-    @login_required
-    def confirmation():
-        return render_template('confirmation.html')
+    from .user import user as user_blueprint
+    app.register_blueprint(user_blueprint)
 
     return app
