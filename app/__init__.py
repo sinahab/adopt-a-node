@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
 from flask_assets import Environment
+from flask_migrate import Migrate
 
 from .utils.assets import bundles
 
@@ -23,8 +24,10 @@ def create_app(config_name):
 
     db.init_app(app)
 
-    from .database.models.user import User
-    from .database.models.role import Role
+    migrate = Migrate(app, db)
+
+    from .models.user import User
+    from .models.role import Role
 
     # Setup Flask-Security
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
