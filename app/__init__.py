@@ -1,17 +1,16 @@
 
 from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore, login_required
-
 from flask_assets import Environment
+
 from .utils.assets import bundles
+
+from config import app_config
 
 import os
 
-from .db.models.user import User
-from .db.models.role import Role
-from .db.connection import db
-
-from config import app_config
+db = SQLAlchemy()
 
 def create_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
@@ -23,6 +22,9 @@ def create_app(config_name):
     assets.register(bundles)
 
     db.init_app(app)
+
+    from .database.models.user import User
+    from .database.models.role import Role
 
     # Setup Flask-Security
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)

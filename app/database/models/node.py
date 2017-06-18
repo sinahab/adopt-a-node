@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, BOOLEAN
 
-from app.db.connection import db
+from app import db
 
 class Node(db.Model):
     __tablename__= 'nodes'

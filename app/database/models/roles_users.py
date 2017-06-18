@@ -4,7 +4,7 @@ from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP
 
-from app.db.connection import db
+from app import db
 
 roles_users = db.Table('roles_users',
         Column('user_id', INTEGER, ForeignKey('users.id')),
