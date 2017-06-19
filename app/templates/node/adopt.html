@@ -1,0 +1,22 @@
+{% extends "layouts/layout.html" %}
+
+{% block title %}
+    Adopt a Node
+{% endblock %}
+
+{% block content %}
+
+    <h1>Adopt Node</h1>
+
+    <form method="POST" action="/nodes/">
+        {{ form.csrf_token }}
+        <div class='py1'> {{ form.bu_ad.label }} {{ form.bu_ad(size=20) }} </div>
+        <div class='py1'> {{ form.bu_eb.label }} {{ form.bu_eb(size=20) }} </div>
+        <div class='py1'> {{ form.name.label }} {{ form.name(size=20, placeholder='Mr. John Doe') }} </div>
+        <div class='py1'> {{ form.provider.label }} {{ form.provider }} </div>
+        <div class='py1'> {{ form.months.label }} {{ form.months(size=20) }} </div>
+        <input type="submit" value="Go">
+    </form>
+
+
+{% endblock %}

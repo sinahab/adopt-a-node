@@ -33,11 +33,10 @@ def create_app(config_name):
     user_datastore = SQLAlchemyUserDatastore(db, User, Role)
     security = Security(app, user_datastore)
 
-    # TODO: fill in the admin views.
-    from .admin import admin as admin_blueprint
-    app.register_blueprint(admin_blueprint, url_prefix='/admin')
+    from .home import home as home_blueprint
+    app.register_blueprint(home_blueprint)
 
-    from .user import user as user_blueprint
-    app.register_blueprint(user_blueprint)
+    from .node import node as node_blueprint
+    app.register_blueprint(node_blueprint)
 
     return app

@@ -24,7 +24,7 @@ pip freeze > requirements.txt
 
 Install Stylus (the Javascript css preprocessor):
 ```
-    npm install -g stylus
+npm install -g stylus
 ```
 
 ## To run app

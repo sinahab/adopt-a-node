@@ -12,14 +12,14 @@
     <body class='avenir'>
         {% if current_user.is_authenticated %}
             <div class='m0 p2 clearfix header'>
-                <a class='inline-block left px1' href="{{ url_for('user.landing') }}">ADOPT A NODE</a>
+                <a class='inline-block left px1' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
                 <a class='inline-block right px1' href='/logout'>Logout</a>
-                <a class='inline-block right px1' href="{{ url_for('user.adopt') }}">Adopt a Node</a>
-                <a class='inline-block right px1' href="{{ url_for('user.nodes') }}">My Nodes</a>
+                <a class='inline-block right px1' href="{{ url_for('node.new') }}">Adopt a Node</a>
+                <a class='inline-block right px1' href="{{ url_for('node.index') }}">My Nodes</a>
             </div>
         {% else %}
             <div class='m0 p2 clearfix header'>
-                <a class='inline-block left px1' href="{{ url_for('user.landing') }}">ADOPT A NODE</a>
+                <a class='inline-block left px1' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
                 <a class='inline-block right px1' href='/login'>Log in</a>
                 <a class='inline-block right px1' href='/sign_up'>Sign up</a>
             </div>

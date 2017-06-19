@@ -1,0 +1,48 @@
+{% extends "layouts/layout.html" %}
+{% block title %}My Nodes{% endblock %}
+{% block content %}
+    <h1>My Nodes</h1>
+
+    {% if nodes %}
+    <div class='center'>
+        <table class='pb4 inline-block'>
+            <thead>
+                <tr>
+                    <th class='px2'> Subversion </th>
+                    <th class='px2'> IP Address </th>
+                    <th class='px2'> Cloud Provider </th>
+                    <th class='px2'> Status </th>
+                    <th class='px2'> Launched At </th>
+                    <th class='px2'> Expires At </th>
+                    <th class='px2'> </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for node in nodes %}
+                <tr>
+                    <td class='px2'> {{ node.name }} </td>
+                    <td class='px2'> {{ node.ipv4_address }} </td>
+                    <td class='px2'> {{ node.provider }} </td>
+                    <td class='px2'> {{ node.status }} </td>
+                    <td class='px2'> {{ node.launched_at }} </td>
+                    <td class='px2'> {{ node.expires_at }} </td>
+                    <td class='px2'> <a href="{{ url_for('node.edit', id=node.id) }}">EDIT</a> </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+        <div>
+            No nodes have been added.
+        </div>
+    {% endif %}
+
+    <div>
+        Want to adopt a node?
+        <br />
+        <a href="{{ url_for('node.new') }}">Adopt</a>
+    </div>
+
+{% endblock %}
