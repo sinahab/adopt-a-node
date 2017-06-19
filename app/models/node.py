@@ -12,7 +12,7 @@ class Node(db.Model):
     id = Column(INTEGER, primary_key=True)
     user_id = Column(INTEGER, ForeignKey('users.id'))
     provider = Column(VARCHAR, nullable=False)
-    ipv4_address = Column(VARCHAR, nullable=False)
+    ipv4_address = Column(VARCHAR)
     bu_ad = Column(INTEGER, nullable=False, server_default='16')
     bu_eb = Column(INTEGER, nullable=False, server_default='12')
     name = Column(VARCHAR)
