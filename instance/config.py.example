@@ -1,0 +1,19 @@
+
+config = {
+    'development': {
+        'db': {
+            'username': 'dev',
+            'password': 'asdfasdf',
+            'host': 'localhost',
+            'port': '5432',
+            'database': 'adoptanode_development'
+        }
+    }
+}
+
+SECRET_KEY = 'asdf12345678'
+SQLALCHEMY_DATABASE_URI = 'postgresql://dev:asdfasdf@localhost:5432/adoptanode_development'
+FLASK_CONFIG = 'development'
+
+SECURITY_PASSWORD_HASH = 'bcrypt'
+SECURITY_PASSWORD_SALT = 'asdf12345678'

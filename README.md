@@ -33,6 +33,12 @@ export FLASK_APP=run.py
 flask run
 ```
 
+OR
+
+```
+gunicorn --bind 0.0.0.0:5000 wsgi:app
+```
+
 ## To run shell
 ```
 export FLASK_APP=run.py
