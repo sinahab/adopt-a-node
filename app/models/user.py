@@ -14,7 +14,7 @@ class User(db.Model, UserMixin):
     __tablename__= 'users'
 
     id = Column(INTEGER, primary_key=True)
-    email = Column(VARCHAR, nullable=False)
+    email = Column(VARCHAR, nullable=False, unique=True)
     password = Column(VARCHAR, nullable=False)
     active = Column(BOOLEAN)
 

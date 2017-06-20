@@ -45,6 +45,11 @@ export FLASK_APP=run.py
 flask shell
 ```
 
+## To run tests
+```
+python tests.py
+```
+
 ## Database migrations
 To create a migration:
 ```
