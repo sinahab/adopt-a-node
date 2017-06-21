@@ -25,11 +25,17 @@
             </div>
         {% endif %}
 
-
         <div class='m0 center body-container'>
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class='p1'>{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
             {% block content %}{% endblock %}
         </div>
-
 
         <div class='m0 p2 footer'>
             FOOTER
