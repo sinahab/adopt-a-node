@@ -46,7 +46,7 @@ class DigitalOceanNodeManager(NodeManager):
 
         return
 
-    def update_provider_attributes(self):
+    def get_provider_attributes(self):
         """
         Queries Digital Ocean and updates the node's data in the db accordingly
         """
