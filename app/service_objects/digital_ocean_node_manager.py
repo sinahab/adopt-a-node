@@ -70,6 +70,14 @@ class DigitalOceanNodeManager(NodeManager):
         snapshot = droplet.take_snapshot(snapshot_name, return_dict=True, power_off=False)
         return(snapshot)
 
+    def power_on(self):
+        """
+        Boots up the node
+        """
+        droplet = self.manager.get_droplet(self.node.provider_id)
+        droplet.power_on(return_dict=True)
+        return
+
     def get_latest_template_snapshot(self):
         """
         Gets the latest snapshot object from Digital Ocean

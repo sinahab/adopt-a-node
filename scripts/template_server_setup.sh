@@ -25,6 +25,15 @@ sudo sed -i -e "s/PermitRootLogin yes/PermitRootLogin no/" /etc/ssh/sshd_config
 sudo sed -i -e "s/PasswordAuthentication yes/PasswordAuthentication no/" /etc/ssh/sshd_config
 sudo service ssh restart
 
+#--------------------------------------
+
+# do not require sudo for poweroff, as this is required for automation in the app
+sudo visudo
+# then type in:
+bu ALL = NOPASSWD: /sbin/poweroff
+
+#--------------------------------------
+
 sudo apt-get install tmux
 tmux new -s bu
 

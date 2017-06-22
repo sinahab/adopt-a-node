@@ -1,7 +1,6 @@
 
-import paramiko
-
 from abc import ABC, abstractmethod
+from ..utils.ssh import ssh_scope
 
 class NodeManager(ABC):
     @abstractmethod
@@ -16,33 +15,40 @@ class NodeManager(ABC):
     def take_snapshot(self):
         pass
 
-    def poweroff(self):
+    @abstractmethod
+    def power_on(self):
+        pass
+
+    def power_off(self):
         """
         Powers off the node.
         """
-        self._execute_command_via_ssh('bitcoin-cli stop; sleep 20; sudo poweroff;')
+        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+            client.exec_command('sudo poweroff;')
         return
 
     def stop_bitcoind(self):
         """
         Stops bitcoind on the node.
         """
-        self._execute_command_via_ssh('bitcoin-cli stop')
+        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+            client.exec_command('bitcoin-cli stop')
         return
 
     def start_bitcoind(self):
         """
         Starts bitcoind on the node.
         """
-        # TODO: doesn't work. bu user needs password-less sudo privileges.
-        self._execute_command_via_ssh('bitcoind -daemon; exit')
+        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+            client.exec_command('bitcoind -daemon; exit')
         return
 
     def restart_bitcoind(self):
         """
         Restarts bitcoind on the node.
         """
-        self._execute_command_via_ssh('bitcoin-cli stop; sleep 20; bitcoind -daemon; exit')
+        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+            client.exec_command('bitcoin-cli stop; sleep 20; bitcoind -daemon; exit')
         return
 
     def update_bitcoin_conf(self):
@@ -50,40 +56,26 @@ class NodeManager(ABC):
         Updates .bitcoin/bitcoin.conf values to match the node record in the db.
         """
         # updating eb
-        eb = str(self.node.bu_eb * 1000000)
-        sed_params = "s/excessiveblocksize=[[:digit:]]*/excessiveblocksize={eb}/".format(eb=eb)
-        command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=sed_params)
-        self._execute_command_via_ssh(command)
+        eb = str(int(self.node.bu_eb * 1000000))
+        eb_sed_params = "s/excessiveblocksize.*/excessiveblocksize={eb}/".format(eb=eb)
+        eb_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=eb_sed_params)
 
         # updating ad
         ad = str(self.node.bu_ad)
-        sed_params = "s/excessiveacceptdepth=[[:digit:]]*/excessiveacceptdepth={ad}/".format(ad=ad)
-        command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=sed_params)
-        self._execute_command_via_ssh(command)
+        ad_sed_params = "s/excessiveacceptdepth.*/excessiveacceptdepth={ad}/".format(ad=ad)
+        ad_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=ad_sed_params)
 
         # updating net.subversionOverride
         eb = str(int(self.node.bu_eb))
         ad = str(self.node.bu_ad)
         name = self.node.name
         version = self.node.bu_version
-        sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version}(EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
-        command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=sed_params)
-        self._execute_command_via_ssh(command)
+        subversion_sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version}(EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
+        subversion_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=subversion_sed_params)
 
-        return
+        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+            client.exec_command(eb_command)
+            client.exec_command(ad_command)
+            client.exec_command(subversion_command)
 
-    def _execute_command_via_ssh(self, command):
-        """
-        Executes the provided shell command on the node via SSH.
-        """
-        client = paramiko.SSHClient()
-
-        client.load_system_host_keys()
-        client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-
-        client.connect(self.node.ipv4_address, username='bu')
-
-        stdin, stdout, stderr = client.exec_command(command)
-
-        client.close()
         return
