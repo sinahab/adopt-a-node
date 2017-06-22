@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, BOOLEAN
+from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, BOOLEAN
 from sqlalchemy.orm import validates
 
 from app import db
@@ -20,6 +20,11 @@ class Node(db.Model):
     bu_version = Column(VARCHAR)
     status = Column(VARCHAR, nullable=False, server_default='initializing')
     expiration_date = Column(TIMESTAMP(timezone=True))
+
+    provider_id = Column(INTEGER)
+    provider_status = Column(VARCHAR)
+    provider_data = Column(JSONB)
+    is_template_node = Column(BOOLEAN, server_default='False')
 
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
