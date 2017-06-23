@@ -48,8 +48,6 @@ def create():
             flash('You have successfully added a new node.')
 
         except Exception as e:
-            print("SINA")
-            print(e)
             flash(str(e))
 
         # redirect to nodes page

@@ -1,10 +1,11 @@
 
 from abc import ABC, abstractmethod
+from flask import current_app
 from ..utils.ssh import ssh_scope
 
 class NodeManager(ABC):
     @abstractmethod
-    def create_droplet_from_template(self):
+    def create_droplet_from_latest_snapshot(self):
         pass
 
     @abstractmethod
@@ -23,7 +24,7 @@ class NodeManager(ABC):
         """
         Powers off the node.
         """
-        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command('sudo poweroff;')
         return
 
@@ -31,7 +32,7 @@ class NodeManager(ABC):
         """
         Stops bitcoind on the node.
         """
-        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command('bitcoin-cli stop')
         return
 
@@ -39,7 +40,7 @@ class NodeManager(ABC):
         """
         Starts bitcoind on the node.
         """
-        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command('bitcoind -daemon; exit')
         return
 
@@ -47,7 +48,7 @@ class NodeManager(ABC):
         """
         Restarts bitcoind on the node.
         """
-        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command('bitcoin-cli stop; sleep 20; bitcoind -daemon; exit')
         return
 
@@ -73,7 +74,7 @@ class NodeManager(ABC):
         subversion_sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version}(EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
         subversion_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=subversion_sed_params)
 
-        with ssh_scope(self.node.ipv4_address, 'bu') as client:
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command(eb_command)
             client.exec_command(ad_command)
             client.exec_command(subversion_command)

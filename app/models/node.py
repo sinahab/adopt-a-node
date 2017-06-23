@@ -1,13 +1,14 @@
 
-
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, BOOLEAN
 from sqlalchemy.orm import validates
+from sqlalchemy import event
 
 from app import db
+from .state_mixin import StateMixin
 
-class Node(db.Model):
+class Node(db.Model, StateMixin):
     __tablename__= 'nodes'
 
     id = Column(INTEGER, primary_key=True)
@@ -18,18 +19,36 @@ class Node(db.Model):
     bu_eb = Column(INTEGER, nullable=False, server_default='12')
     name = Column(VARCHAR)
     bu_version = Column(VARCHAR)
-    status = Column(VARCHAR, nullable=False, server_default='initializing')
+    status = Column(VARCHAR, nullable=False, server_default='new')
     expiration_date = Column(TIMESTAMP(timezone=True))
-
     provider_id = Column(INTEGER)
     provider_status = Column(VARCHAR)
     provider_data = Column(JSONB)
     is_template_node = Column(BOOLEAN, server_default='False')
-
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
 
     user = db.relationship('User', back_populates='nodes')
+
+    # state machine
+    states = ['new', 'configured', 'provisioned', 'up']
+    transitions = [
+        { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node'},
+        { 'trigger': 'configure', 'source': 'provisioned', 'dest': 'configured', 'before': '_configure_node', 'after': 'start'},
+        { 'trigger': 'start', 'source': 'configured', 'dest': 'up', 'before': '_start_node'}
+    ]
+
+    def _provision_node(self):
+        DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
+        return
+
+    def _configure_node(self):
+        DigitalOceanNodeManager(self).update_bitcoin_conf()
+        return
+
+    def _start_node(self):
+        DigitalOceanNodeManager(self).restart_bitcoind()
+        return
 
     @validates('provider')
     def validate_email(self, key, provider):
@@ -38,3 +57,9 @@ class Node(db.Model):
 
     def __repr__(self):
         return "IPv4 Address(%r)" % (self.ipv4_address)
+
+# initialize node state machine
+event.listen(Node, 'init', Node.init_state_machine)
+event.listen(Node, 'load', Node.init_state_machine)
+
+from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager

@@ -3,10 +3,7 @@ import os
 import time
 import digitalocean
 
-# TODO: change this. import app directly, instead of creating it
-from app import create_app
-config_name = os.getenv('FLASK_CONFIG') or 'development'
-app = create_app(config_name)
+from flask import current_app
 
 from app import db
 from .node_manager import NodeManager
@@ -14,11 +11,11 @@ from app.models.node import Node
 
 class DigitalOceanNodeManager(NodeManager):
     def __init__(self, node):
-        self.manager = digitalocean.Manager(token=app.config['DIGITAL_OCEAN_ACCESS_TOKEN'])
+        self.manager = digitalocean.Manager(token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'])
         self.node = node
         return
 
-    def create_droplet_from_template(self):
+    def create_droplet_from_latest_snapshot(self):
         """
         Creates a new droplet from the latest template snapshot
         """
@@ -26,7 +23,7 @@ class DigitalOceanNodeManager(NodeManager):
 
         # create new droplet from image
         droplet = digitalocean.Droplet(
-            token=app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
+            token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
             name = str(self.node.id),
             region='sfo2',
             image=image.id,
@@ -42,7 +39,7 @@ class DigitalOceanNodeManager(NodeManager):
         # update node's values in the db
         self.node.provider_id = droplet.id
         db.session.commit()
-        self.update_provider_attributes()
+        self.get_provider_attributes()
 
         return
 
