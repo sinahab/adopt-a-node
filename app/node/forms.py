@@ -7,11 +7,11 @@ class NewNodeForm(FlaskForm):
     """
     Form for a user to adopt a new node
     """
-    bu_ad = IntegerField('Acceptance Depth', default=12, validators=[DataRequired()])
-    bu_eb = DecimalField('Excessive Blocksize', default=16.00, validators=[DataRequired()])
+    bu_ad = IntegerField('Acceptance Depth (AD)', default=12, validators=[DataRequired()])
+    bu_eb = DecimalField('Excessive Blocksize (EB)', default=16.00, validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
-    provider = SelectField('Provider', choices=[('aws', 'Amazon Web Services (AWS)'), ('digital_ocean', 'Digital Ocean')], validators=[DataRequired()])
-    months = IntegerField('Months', default=6, validators=[DataRequired()])
+    provider = SelectField('Cloud Provider', choices=[('aws', 'Amazon Web Services (AWS)'), ('digital_ocean', 'Digital Ocean')], validators=[DataRequired()])
+    months = IntegerField('How long do you want to support this node?', default=6, validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 class ExistingNodeForm(FlaskForm):

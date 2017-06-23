@@ -1,4 +1,4 @@
-{% extends "layouts/layout.html" %}
+{% extends "layouts/base_with_header.html" %}
 
 {% block title %}
     Adopt a Node
@@ -6,17 +6,58 @@
 
 {% block content %}
 
-    <h1>Adopt Node</h1>
+    <h1>Adopt a Node</h1>
 
-    <form method="POST" action="/nodes/">
+    <p>
+        Pick your parameters, pay with Bitcoin, and adopt a node:
+    </p>
+
+    <form method="POST" action="/nodes/" class='pb4'>
         {{ form.csrf_token }}
-        <div class='py1'> {{ form.bu_ad.label }} {{ form.bu_ad(size=20) }} </div>
-        <div class='py1'> {{ form.bu_eb.label }} {{ form.bu_eb(size=20) }} </div>
-        <div class='py1'> {{ form.name.label }} {{ form.name(size=20, placeholder='Mr. John Doe') }} </div>
-        <div class='py1'> {{ form.provider.label }} {{ form.provider }} </div>
-        <div class='py1'> {{ form.months.label }} {{ form.months(size=20) }} </div>
-        <input type="submit" value="Go">
+
+        <div class='py2'>
+            <div class='bold'>
+                {{ form.bu_eb.label }}
+            </div>
+            {{ form.bu_eb(size=20) }}
+            <div>EB is the maximum block size that a "relay node" will accept.</div>
+            <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
+        </div>
+
+        <div class='py2'>
+            <div class='bold'>
+                {{ form.bu_ad.label }}
+            </div>
+            {{ form.bu_ad(size=20) }}
+            <div>AD is the block count at which you will accept the longest chain as valid if it exceeds your EB.</div>
+            <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
+        </div>
+
+        <div class='py2'>
+            <div class='bold'>
+                {{ form.name.label }}
+                <div class='inline-block slate-gray'>(optional)</div>
+            </div>
+            {{ form.name(size=20, placeholder='e.g. John') }}
+            <div>This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network. You are free to leave it blank.</div>
+        </div>
+
+        <div class='py2'>
+            <div class='bold'>
+                {{ form.provider.label }}
+            </div>
+            {{ form.provider }}
+            <div>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</div>
+        </div>
+
+        <div class='py2'>
+            <div class='bold'>
+                {{ form.months.label }}
+            </div>
+            {{ form.months(size=20) }}
+            <div>This effects the price (which is dynamically updated to reflect the change).</div>
+        </div>
+
+        <input type="submit" class='button--secondary mt2 capitalize' value="Pay and Launch Node">
     </form>
-
-
 {% endblock %}

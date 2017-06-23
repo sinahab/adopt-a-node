@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{{ title }} | Adopt-a-Node</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        {% assets "css" %}
+            <link rel="stylesheet" href="{{ ASSET_URL }}" />
+        {% endassets %}
+    </head>
+
+    <body class='avenir'>
+
+        {% block content %}{% endblock %}
+
+        <div class='m0 p2 footer bg-off-black'>
+            <div class='inline-block left mx2 py2'>© MIT License. No Rights Reserved.</div>
+            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info' target='_blank'>Bitcoin Unlimited Website</a>
+            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info/about/contact' target='_blank'>Contact</a>
+        </div>
+    </body>
+</html>

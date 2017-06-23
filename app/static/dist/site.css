@@ -1307,19 +1307,67 @@ body {
   height: 100%;
 }
 .header {
-  background-color: #7d5da9;
   box-sizing: border-box;
   color: #fff;
-  height: 60px;
+  height: 82px;
+}
+.link--white {
+  text-decoration: none;
+  color: #fff;
+}
+.link--white:hover,
+.link--white:active,
+.link--white:focus {
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 1px;
 }
 .body-container {
   box-sizing: border-box;
-  height: calc(100% - 120px);
+  min-height: calc(100% - 2 * (82px));
 }
 .footer {
-  background-color: #7d5da9;
   box-sizing: border-box;
   color: #fff;
-  height: 60px;
+  height: 82px;
+}
+.bg-off-black {
+  background-color: #222;
+}
+.bg-porcelain {
+  background-color: #f7f8f9;
+}
+.slate-gray {
+  color: #6b7c93;
+}
+.button--primary {
+  background-color: #e67e22;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 3px;
+  border: none;
+  padding: 10px 20px;
+}
+.button--secondary {
+  background-color: #1e91d6;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 3px;
+  border: none;
+  padding: 10px 20px;
+}
+.capitalize {
+  text-transform: uppercase;
+}
+
+
+.landing-hero {
+  background-image: url("/static/img/hero.png");
+  background-size: cover;
+  height: 540px;
+  color: #fff;
+}
+.text-container {
+  max-width: 650px;
+  width: 80%;
 }
 

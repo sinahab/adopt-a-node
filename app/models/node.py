@@ -33,20 +33,37 @@ class Node(db.Model, StateMixin):
     # state machine
     states = ['new', 'configured', 'provisioned', 'up']
     transitions = [
-        { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node'},
+        { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node', 'after': '_schedule_configure'},
         { 'trigger': 'configure', 'source': 'provisioned', 'dest': 'configured', 'before': '_configure_node', 'after': 'start'},
         { 'trigger': 'start', 'source': 'configured', 'dest': 'up', 'before': '_start_node'}
     ]
 
     def _provision_node(self):
+        """
+        Provisions a server on the given cloud provider.
+        """
         DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
         return
 
+    def _schedule_configure(self):
+        """
+        Schedules the node for configuration.
+        This needs to happen after a delay, so that the server cloning from an existing snapshot is completed.
+        """
+        
+        pass
+
     def _configure_node(self):
+        """
+        Configures the bitcoind client to have the provided attributes (EB, AD, and subVersion).
+        """
         DigitalOceanNodeManager(self).update_bitcoin_conf()
         return
 
     def _start_node(self):
+        """
+        Starts the bitcoind client on the node.
+        """
         DigitalOceanNodeManager(self).restart_bitcoind()
         return
 

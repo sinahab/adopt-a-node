@@ -11,6 +11,7 @@ bundles = {
         'css/vendor/basscss.css',
         'css/vendor/_font-family.css',
         'css/main.styl',
+        'css/landing.styl',
         filters='stylus',
         output='dist/site.css')
 }

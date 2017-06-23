@@ -22,7 +22,7 @@ class Config(object):
     SECURITY_RESET_URL = '/reset'
     SECURITY_CHANGE_URL = '/change'
     SECURITY_CONFIRM_URL = '/confirm'
-    SECURITY_POST_LOGIN_VIEW = '/'
+    SECURITY_POST_LOGIN_VIEW = '/nodes'
     SECURITY_POST_LOGOUT_VIEW = '/'
     SECURITY_UNAUTHORIZED_VIEW = '/'
 

@@ -1,4 +1,4 @@
-{% extends "layouts/layout.html" %}
+{% extends "layouts/base_with_header.html" %}
 {% block title %}My Nodes{% endblock %}
 {% block content %}
     <h1>My Nodes</h1>
@@ -8,9 +8,11 @@
         <table class='pb4 inline-block'>
             <thead>
                 <tr>
-                    <th class='px2'> Subversion </th>
                     <th class='px2'> IP Address </th>
                     <th class='px2'> Cloud Provider </th>
+                    <th class='px2'> Name </th>
+                    <th class='px2'> EB </th>
+                    <th class='px2'> AD </th>
                     <th class='px2'> Status </th>
                     <th class='px2'> Launched At </th>
                     <th class='px2'> Expires At </th>
@@ -20,7 +22,6 @@
             <tbody>
                 {% for node in nodes %}
                 <tr>
-                    <td class='px2'> {{ node.name }} </td>
                     <td class='px2'>
                         <!-- TODO: only if node.status is up. otherwise, dont link. -->
                         <a href="{{ 'https://bitnodes.21.co/nodes/%s-8333/'%node.ipv4_address }}">
@@ -28,6 +29,9 @@
                         </a>
                     </td>
                     <td class='px2'> {{ node.provider }} </td>
+                    <td class='px2'> {{ node.name }} </td>
+                    <td class='px2'> {{ node.bu_eb }} </td>
+                    <td class='px2'> {{ node.bu_ad }} </td>
                     <td class='px2'> {{ node.status }} </td>
                     <td class='px2'> {{ node.launched_at }} </td>
                     <td class='px2'> {{ node.expires_at }} </td>
