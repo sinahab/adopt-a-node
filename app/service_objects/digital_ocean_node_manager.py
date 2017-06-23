@@ -85,7 +85,7 @@ class DigitalOceanNodeManager(NodeManager):
 
         snapshots = template_droplet.get_snapshots()
         # TODO: pick between snapshots: the latest created_at value
-        snapshot = snapshots[1]
+        snapshot = snapshots[0]
         image = self.manager.get_image(snapshot.id)
 
         return image

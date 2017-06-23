@@ -39,6 +39,16 @@ OR
 gunicorn --bind 0.0.0.0:5000 wsgi:app
 ```
 
+## To run Celery server
+```
+celery -A app.tasks worker --loglevel=info
+```
+
+To view scheduled tasks:
+```
+celery -A app.tasks inspect scheduled
+```
+
 ## To run shell
 ```
 export FLASK_APP=run.py

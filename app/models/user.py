@@ -7,7 +7,6 @@ from flask_security import UserMixin
 
 from app import db
 from .role import Role
-from .node import Node
 from .roles_users import roles_users
 
 class User(db.Model, UserMixin):
@@ -33,3 +32,5 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return "Email(%r)" % (self.email)
+
+from .node import Node

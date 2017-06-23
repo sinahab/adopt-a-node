@@ -5,6 +5,8 @@ from flask_security import Security, SQLAlchemyUserDatastore
 from flask_assets import Environment
 from flask_migrate import Migrate
 
+from celery import Celery
+
 from .utils.assets import bundles
 
 from config import app_config
@@ -14,17 +16,11 @@ import os
 db = SQLAlchemy()
 
 def create_app(config_name):
-    app = Flask(__name__, instance_relative_config=True)
-    app.config.from_object(app_config[config_name])
-    app.config.from_pyfile('config.py')
+    app = configure_app_with_db(config_name)
 
     # assets
     assets = Environment(app)
     assets.register(bundles)
-
-    db.init_app(app)
-
-    migrate = Migrate(app, db)
 
     from .models.user import User
     from .models.role import Role
@@ -40,3 +36,31 @@ def create_app(config_name):
     app.register_blueprint(node_blueprint)
 
     return app
+
+def configure_app_with_db(config_name):
+    app = Flask(__name__, instance_relative_config=True)
+    app.config.from_object(app_config[config_name])
+    app.config.from_pyfile('config.py')
+
+    db.init_app(app)
+
+    migrate = Migrate(app, db)
+
+    return app
+
+# inspired by https://github.com/thrisp/flask-celery-example/blob/master/app.py
+def create_celery(config_name):
+    app = configure_app_with_db(config_name)
+    celery = Celery('tasks', broker=app.config['CELERY_BROKER_URL'])
+    celery.conf.update(app.config)
+    TaskBase = celery.Task
+    class ContextTask(TaskBase):
+        abstract = True
+        def __call__(self, *args, **kwargs):
+            with app.app_context():
+                return TaskBase.__call__(self, *args, **kwargs)
+    celery.Task = ContextTask
+    return celery
+
+# TODO: make the config dynamic
+celery = create_celery('development')

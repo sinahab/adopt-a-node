@@ -33,7 +33,7 @@ class Node(db.Model, StateMixin):
     # state machine
     states = ['new', 'configured', 'provisioned', 'up']
     transitions = [
-        { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node', 'after': '_schedule_configure'},
+        { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node'},
         { 'trigger': 'configure', 'source': 'provisioned', 'dest': 'configured', 'before': '_configure_node', 'after': 'start'},
         { 'trigger': 'start', 'source': 'configured', 'dest': 'up', 'before': '_start_node'}
     ]
@@ -41,17 +41,12 @@ class Node(db.Model, StateMixin):
     def _provision_node(self):
         """
         Provisions a server on the given cloud provider.
+        Also, schedules the node for configuration.
+        This needs to happen after a delay, so that provisioning is already complete.
         """
         DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
+        configure_node.apply_async(args=(self.id,), countdown=2700)
         return
-
-    def _schedule_configure(self):
-        """
-        Schedules the node for configuration.
-        This needs to happen after a delay, so that the server cloning from an existing snapshot is completed.
-        """
-        
-        pass
 
     def _configure_node(self):
         """
@@ -80,3 +75,5 @@ event.listen(Node, 'init', Node.init_state_machine)
 event.listen(Node, 'load', Node.init_state_machine)
 
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
+from app.tasks import configure_node
+from .user import User

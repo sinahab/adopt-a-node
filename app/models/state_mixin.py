@@ -26,7 +26,9 @@ class StateMixin(object):
 
     @classmethod
     def init_state_machine(cls, obj, *args, **kwargs):
-        machine = Machine(model=obj, states=cls.states, transitions=cls.transitions, initial=obj.status,
+        initial = obj.status or 'new'
+
+        machine = Machine(model=obj, states=cls.states, transitions=cls.transitions, initial=initial,
                           after_state_change='after_state_change')
 
         # in case that we need to have machine obj in model obj
