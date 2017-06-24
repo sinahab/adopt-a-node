@@ -6,3 +6,5 @@ instance/*.pem
 instance/config.py
 
 .DS_Store
+
+__pycache__/
