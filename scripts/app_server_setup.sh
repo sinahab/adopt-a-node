@@ -35,6 +35,69 @@ sudo ufw status
 
 #-------------------------------------
 
+# install redis
+# inspired by: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04
+
+sudo apt-get update
+sudo apt-get install build-essential tcl
+cd /tmp
+curl -O http://download.redis.io/redis-stable.tar.gz
+tar xzvf redis-stable.tar.gz
+
+# install redis
+cd redis-stable
+make
+make test
+sudo make install
+
+# configure redis
+sudo mkdir /etc/redis
+sudo cp /tmp/redis-stable/redis.conf /etc/redis
+sudo vim /etc/redis/redis.conf
+# change 'supervised no' to 'supervised systemd'
+# change 'dir ./' to '/var/lib/redis'
+
+# create a Redis systemd unit file
+sudo vim /etc/systemd/system/redis.service
+#---- add the following ----
+[Unit]
+Description=Redis In-Memory Data Store
+After=network.target
+
+[Service]
+User=redis
+Group=redis
+ExecStart=/usr/local/bin/redis-server /etc/redis/redis.conf
+ExecStop=/usr/local/bin/redis-cli shutdown
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+#-------------------------
+
+# create the redis user, group, and directories
+sudo adduser --system --group --no-create-home redis
+sudo mkdir /var/lib/redis
+sudo chown redis:redis /var/lib/redis
+sudo chmod 770 /var/lib/redis
+
+# to start redis
+sudo systemctl start redis
+sudo systemctl status redis
+
+# test the redis connection
+redis-cli
+ping
+set test "It's working!"
+get test
+exit
+sudo systemctl restart redis
+
+# enable Redis to Start at Boot
+sudo systemctl enable redis
+
+#-------------------------------------
+
 # install tmux
 sudo apt-get install tmux
 tmux new -s bu

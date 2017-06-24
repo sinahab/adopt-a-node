@@ -31,7 +31,7 @@ class Node(db.Model, StateMixin):
     user = db.relationship('User', back_populates='nodes')
 
     # state machine
-    states = ['new', 'configured', 'provisioned', 'up']
+    states = ['new','provisioned', 'configured', 'up']
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision_node'},
         { 'trigger': 'configure', 'source': 'provisioned', 'dest': 'configured', 'before': '_configure_node', 'after': 'start'},
