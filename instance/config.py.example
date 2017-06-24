@@ -13,7 +13,17 @@ config = {
 
 SECRET_KEY = 'asdf12345678'
 SQLALCHEMY_DATABASE_URI = 'postgresql://dev:asdfasdf@localhost:5432/adoptanode_development'
-FLASK_CONFIG = 'development'
 
+# flask_security configurations. Docs: https://pythonhosted.org/Flask-Security/configuration.html
 SECURITY_PASSWORD_HASH = 'bcrypt'
 SECURITY_PASSWORD_SALT = 'asdf12345678'
+
+DIGITAL_OCEAN_ACCESS_TOKEN = 'token'
+
+OS_USER = 'bob'
+
+CELERY_BROKER_REDDIS_URL = 'url'
+
+CELERY_BROKER_URL = 'url'
+CELERY_RESULT_BACKEND = 'url'
+# CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}  # 1 hour.

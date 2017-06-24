@@ -123,8 +123,8 @@ sudo apt-get install python3-pip python3-dev nginx
 
 sudo pip3 install virtualenv
 sudo pip3 install virtualenvwrapper
-export WORKON_HOME=~/Envs
-source /usr/local/bin/virtualenvwrapper.sh
+echo 'export WORKON_HOME=~/Envs' >> ~/.bash_profile
+echo 'source /usr/local/bin/virtualenvwrapper.sh' >> ~/.bash_profile
 
 # don't create .pyc files
 echo 'export PYTHONDONTWRITEBYTECODE=1' >> ~/.bash_profile
