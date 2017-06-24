@@ -39,7 +39,7 @@ sudo ufw status
 # inspired by: https://www.digitalocean.com/community/tutorials/how-to-install-and-configure-redis-on-ubuntu-16-04
 
 sudo apt-get update
-sudo apt-get install build-essential tcl
+sudo apt-get install build-essential tcl libssl-dev libffi-dev python-dev
 cd /tmp
 curl -O http://download.redis.io/redis-stable.tar.gz
 tar xzvf redis-stable.tar.gz

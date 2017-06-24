@@ -41,7 +41,7 @@ gunicorn --bind 0.0.0.0:5000 wsgi:app
 
 ## To run Celery server
 ```
-celery -A app.tasks worker --loglevel=info
+celery -A app.tasks worker --loglevel=info &
 ```
 
 To view scheduled tasks:
@@ -69,4 +69,12 @@ flask db migrate -m create_users
 To run the migration:
 ```
 flask db upgrade
+```
+
+## To run production server
+```
+export FLASK_APP=run.py
+flask db upgrade
+celery -A app.tasks worker --loglevel=info &
+service adopt-a-node restart
 ```
