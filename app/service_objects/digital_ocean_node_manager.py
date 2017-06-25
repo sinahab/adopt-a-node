@@ -2,12 +2,11 @@
 import os
 import time
 import digitalocean
-
+from datetime import datetime
 from flask import current_app
 
 from app import db
 from .node_manager import NodeManager
-from app.models.node import Node
 
 class DigitalOceanNodeManager(NodeManager):
     def __init__(self, node):
@@ -19,14 +18,14 @@ class DigitalOceanNodeManager(NodeManager):
         """
         Creates a new droplet from the latest template snapshot
         """
-        image = self.get_latest_template_snapshot()
+        snapshot = self.get_latest_snapshot()
 
-        # create new droplet from image
+        # create new droplet from snapshot
         droplet = digitalocean.Droplet(
             token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
             name = str(self.node.id),
             region='sfo2',
-            image=image.id,
+            image=snapshot.id,
             size_slug='1gb',
             ssh_keys= [9581853],
             backups=False,
@@ -61,7 +60,6 @@ class DigitalOceanNodeManager(NodeManager):
         """
         Creates a snapshot from the given droplet.
         """
-        # TODO: this assumes that the server has already been turned off.
         droplet = self.manager.get_droplet(self.node.provider_id)
         snapshot_name = str(int(time.time()))  # use current utc epoch time as name of the snapshot
         snapshot = droplet.take_snapshot(snapshot_name, return_dict=True, power_off=False)
@@ -75,17 +73,10 @@ class DigitalOceanNodeManager(NodeManager):
         droplet.power_on(return_dict=True)
         return
 
-    def get_latest_template_snapshot(self):
+    def get_latest_snapshot(self):
         """
         Gets the latest snapshot object from Digital Ocean
         """
-        # find latest snapshot of the template node
-        template_node = Node.query.filter_by(provider='digital_ocean', is_template_node=True).first()
-        template_droplet = self.manager.get_droplet(template_node.provider_id)
-
-        snapshots = template_droplet.get_snapshots()
-        # TODO: pick between snapshots: the latest created_at value
-        snapshot = snapshots[0]
-        image = self.manager.get_image(snapshot.id)
-
-        return image
+        snapshots = self.manager.get_droplet_snapshots()
+        latest_snapshot = max(snapshots, key=lambda snapshot: datetime.strptime(snapshot.created_at, '%Y-%m-%dT%H:%M:%SZ'))
+        return(latest_snapshot)
