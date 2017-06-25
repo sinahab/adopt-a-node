@@ -119,10 +119,10 @@ ssh-add ~/.ssh/id_rsa
 #-------------------------------------
 
 # setting up the Python app server
-sudo apt-get install python3-pip python3-dev nginx
+sudo apt-get install python-pip python3-pip python3-dev nginx
 
 sudo pip3 install virtualenv
-sudo pip3 install virtualenvwrapper
+sudo pip install virtualenvwrapper
 echo 'export WORKON_HOME=~/Envs' >> ~/.bash_profile
 echo 'source /usr/local/bin/virtualenvwrapper.sh' >> ~/.bash_profile
 

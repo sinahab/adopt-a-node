@@ -26,4 +26,6 @@ CELERY_BROKER_REDDIS_URL = 'url'
 
 CELERY_BROKER_URL = 'url'
 CELERY_RESULT_BACKEND = 'url'
-# CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}  # 1 hour.
+
+SSH_PRIVATE_KEY_FILE = '/home/id_rsa'
+SSH_PRIVATE_KEY_PASSWORD = 'password'

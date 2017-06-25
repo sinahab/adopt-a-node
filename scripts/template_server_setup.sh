@@ -17,7 +17,11 @@ usermod -aG sudo $USR
 su - $USR
 mkdir ~/.ssh
 chmod 700 ~/.ssh  # set the permissions to only this user into it
-vim ~/.ssh/authorized_keys  #TODO: automate this: vim and paste in my public key.
+
+vim ~/.ssh/authorized_keys
+#TODO: automate this: vim and paste in my public key.
+#ALSO: paste in the public key of the app server.
+
 chmod 600 ~/.ssh/authorized_keys  # set the permissions so only this user is allowed to access it
 # check that you can ssh into server with $USR account
 
