@@ -1,4 +1,6 @@
 
+@import 'colors.styl'
+
 .form__flex-container
     display: flex
     flex-direction: row
@@ -44,3 +46,14 @@
 .button--submit
     width: 45%
     min-width: 300px
+
+.table__nodes
+    border-radius: 3px
+    border: solid 1px lighten($dark-gray, 70%)
+
+    thead
+        background-color: $porcelain
+        border: none
+
+    tr
+        height: 80px

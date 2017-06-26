@@ -1448,8 +1448,29 @@ a {
 .icon {
   height: 44px;
 }
+.button--secondary--small {
+  background-color: #1e91d6;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 3px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
 
 
+.bg-off-black {
+  background-color: #222;
+}
+.bg-porcelain {
+  background-color: #f7f8f9;
+}
+.slate-gray {
+  color: #6b7c93;
+}
+.dark-gray {
+  color: #4d4d4d;
+}
 .form__flex-container {
   display: flex;
   flex-direction: row;
@@ -1495,6 +1516,17 @@ a {
 .button--submit {
   width: 45%;
   min-width: 300px;
+}
+.table__nodes {
+  border-radius: 3px;
+  border: solid 1px #cacaca;
+}
+.table__nodes thead {
+  background-color: #f7f8f9;
+  border: none;
+}
+.table__nodes tr {
+  height: 80px;
 }
 
 
