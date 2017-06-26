@@ -1314,6 +1314,18 @@ code,
 }
 
 
+.bg-off-black {
+  background-color: #222;
+}
+.bg-porcelain {
+  background-color: #f7f8f9;
+}
+.slate-gray {
+  color: #6b7c93;
+}
+.dark-gray {
+  color: #4d4d4d;
+}
 .capitalize {
   text-transform: uppercase;
 }
@@ -1332,8 +1344,14 @@ code,
 .h3 {
   font-size: 18px;
 }
+.small {
+  font-size: 12px;
+}
 .lh-copy {
   line-height: 1.6;
+}
+.separator {
+  border-bottom: solid 1px #dbdbdb;
 }
 
 
@@ -1425,9 +1443,47 @@ a {
   border-radius: 3px;
   border: none;
   padding: 10px 20px;
+  cursor: pointer;
 }
 .icon {
   height: 44px;
+}
+
+
+.form__flex-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+}
+.form__flex-input {
+  flex-basis: 50%;
+}
+.form__flex-description {
+  flex-basis: 50%;
+}
+.form__input {
+  height: 40px;
+  width: 90%;
+  padding: 5px 10px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 3px;
+  background-color: #f4f6f7;
+}
+.form__input:active {
+  border: solid 2px #1e91d6;
+  box-shadow: none;
+  outline: none;
+}
+.form__input:focus {
+  border: solid 2px #1e91d6;
+  box-shadow: none;
+  outline: none;
+}
+.form__label {
+  width: 45%;
+  min-width: 200px;
 }
 
 

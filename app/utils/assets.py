@@ -14,6 +14,7 @@ bundles = {
         'css/utils.styl',
         'css/fonts.styl',
         'css/main.styl',
+        'css/node.styl',
         'css/landing.styl',
         filters='stylus',
         output='dist/site.css')

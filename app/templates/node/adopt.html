@@ -5,59 +5,78 @@
 {% endblock %}
 
 {% block content %}
+    <div class='py4 center'>
+        <div class='inline-block text-container'>
+            <p class='h2 slate-gray roboto'>Adopt a Node</p>
+            <p class='pt2 pb2'>Pick your parameters, pay with Bitcoin, and adopt a node:</p>
 
-    <h1>Adopt a Node</h1>
 
-    <p>
-        Pick your parameters, pay with Bitcoin, and adopt a node:
-    </p>
+            <form method="POST" action="/nodes/" class='pb4 left-align'>
+                {{ form.csrf_token }}
 
-    <form method="POST" action="/nodes/" class='pb4'>
-        {{ form.csrf_token }}
+                <div class='capitalize bold pt4 pb1'> {{ form.bu_eb.label }} </div>
+                <div class='form__flex-container'>
+                    <div class='form__flex-input'>
+                        {{ form.bu_eb(size=20, class_='form__input') }}
+                    </div>
+                    <div class='form__flex-description'>
+                        <p class='my0 pb1 lh-copy'>EB is the maximum block size, in MB, that a "relay node" will accept.</p>
+                        <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
+                    </div>
+                </div>
 
-        <div class='py2'>
-            <div class='bold'>
-                {{ form.bu_eb.label }}
-            </div>
-            {{ form.bu_eb(size=20) }}
-            <div>EB is the maximum block size that a "relay node" will accept.</div>
-            <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
+                <div class='capitalize bold pt4 pb1'> {{ form.bu_ad.label }} </div>
+                <div class='form__flex-container'>
+                    <div class='form__flex-input'>
+                        {{ form.bu_ad(size=20, class_='form__input') }}
+                    </div>
+                    <div class='form__flex-description'>
+                        <p class='my0 pb1 lh-copy'>AD is the block count at which you will accept the longest chain as valid if it exceeds your EB.</p>
+                        <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
+                    </div>
+                </div>
+
+                <div class='capitalize bold pt4 pb1'>
+                    {{ form.name.label }} <div class='inline-block regular small slate-gray'>(optional)</div>
+                </div>
+                <div class='form__flex-container'>
+                    <div class='form__flex-input'>
+                        {{ form.name(size=20, class_='form__input', placeholder='e.g. John') }}
+                    </div>
+                    <div class='form__flex-description'>
+                        <p class='mt0 lh-copy'>This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network. You are free to leave it blank.</p>
+                    </div>
+                </div>
+
+                <div class='capitalize bold pt4 pb1'> {{ form.provider.label }} </div>
+                <div class='form__flex-container'>
+                    <div class='form__flex-input'>
+                        {{ form.provider(class_='form__input') }}
+                    </div>
+                    <div class='form__flex-description'>
+                        <p class='mt0 lh-copy'>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</p>
+                    </div>
+                </div>
+
+                <div class='capitalize bold pt4 pb1 form__label'> {{ form.months.label }} </div>
+                <div class='form__flex-container'>
+                    <div class='form__flex-input'>
+                        {{ form.months(size=20, class_='form__input') }}
+                    </div>
+                    <div class='form__flex-description'>
+                        <p class='mt0 lh-copy'>This effects the price (which is dynamically updated to reflect the change).</p>
+                    </div>
+                </div>
+
+                <div class='pt4 separator'></div>
+
+                <div class='capitalize h2 bold pt4 pb1'> Total Cost </div>
+                <div class='capitalize pb2'>$54.05 (0.02243 BTC)</div>
+                <input type="submit" class='button--secondary mt2 capitalize' value="Pay and Launch Node">
+                <p class='py2 lh-copy'>Note: this is a non-profit initiative and the cost is calculated to purely pay for a server at the chosen given cloud provider for the chosen number of months.</div>
+            </form>
+
+
         </div>
-
-        <div class='py2'>
-            <div class='bold'>
-                {{ form.bu_ad.label }}
-            </div>
-            {{ form.bu_ad(size=20) }}
-            <div>AD is the block count at which you will accept the longest chain as valid if it exceeds your EB.</div>
-            <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
-        </div>
-
-        <div class='py2'>
-            <div class='bold'>
-                {{ form.name.label }}
-                <div class='inline-block slate-gray'>(optional)</div>
-            </div>
-            {{ form.name(size=20, placeholder='e.g. John') }}
-            <div>This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network. You are free to leave it blank.</div>
-        </div>
-
-        <div class='py2'>
-            <div class='bold'>
-                {{ form.provider.label }}
-            </div>
-            {{ form.provider }}
-            <div>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</div>
-        </div>
-
-        <div class='py2'>
-            <div class='bold'>
-                {{ form.months.label }}
-            </div>
-            {{ form.months(size=20) }}
-            <div>This effects the price (which is dynamically updated to reflect the change).</div>
-        </div>
-
-        <input type="submit" class='button--secondary mt2 capitalize' value="Pay and Launch Node">
-    </form>
+    </div>
 {% endblock %}
