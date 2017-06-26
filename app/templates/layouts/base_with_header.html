@@ -1,46 +1,33 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>{{ title }} | Adopt-a-Node</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        {% assets "css" %}
-            <link rel="stylesheet" href="{{ ASSET_URL }}" />
-        {% endassets %}
-    </head>
-
-    <body class='avenir'>
-        {% if current_user.is_authenticated %}
-            <div class='m0 p2 clearfix header bg-off-black'>
-                <a class='inline-block link--white left mx2 py2' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
-                <a class='inline-block link--white right mx2 py2' href='/logout'>Logout</a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
-            </div>
-        {% else %}
-            <div class='m0 p2 clearfix header bg-off-black'>
-                <a class='inline-block link--white left mx2 py2' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
-                <a class='inline-block link--white right mx2 py2' href='/login'>Log in</a>
-                <a class='inline-block link--white right mx2 py2' href='/sign_up'>Sign up</a>
-            </div>
-        {% endif %}
-
-        <div class='m0 center body-container'>
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class='p1'>{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
-            {% block content %}{% endblock %}
+{% extends "layouts/base.html" %}
+{% block body %}
+    {% if current_user.is_authenticated %}
+        <div class='m0 p2 clearfix header bg-off-black'>
+            <a class='inline-block capitalize header__logo left mx2' href="{{ url_for('home.landing') }}">
+                {% include "icons/adoptanode_logo.svg" %}
+            </a>
+            <a class='inline-block link--white right mx2 py2' href='/logout'>Logout</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
         </div>
-
-        <div class='m0 p2 footer bg-off-black'>
-            <div class='inline-block left mx2 py2'>© MIT License. No Rights Reserved.</div>
-            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info' target='_blank'>Bitcoin Unlimited Website</a>
-            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info/about/contact' target='_blank'>Contact</a>
+    {% else %}
+        <div class='m0 p2 clearfix capitalize header bg-off-black'>
+            <a class='inline-block header__logo left mx2' href="{{ url_for('home.landing') }}">
+                {% include "icons/adoptanode_logo.svg" %}
+            </a>
+            <a class='inline-block link--white right mx2 py2' href='/login'>Log in</a>
+            <a class='inline-block link--white right mx2 py2' href='/sign_up'>Sign up</a>
         </div>
-    </body>
-</html>
+    {% endif %}
+
+    <div class='m0 center body-container'>
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class='p1'>{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </div>
+{% endblock %}

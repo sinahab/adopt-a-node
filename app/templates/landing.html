@@ -1,76 +1,83 @@
-{% extends "layouts/base_without_header.html" %}
-{% block content %}
+{% extends "layouts/base.html" %}
+{% block body %}
 
     <div class='landing-hero'>
         {% if current_user.is_authenticated %}
-            <div class='m0 p2 clearfix header'>
-                <a class='inline-block link--white left mx2 py2' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
+            <div class='m0 p2 mb3 capitalize clearfix header'>
+                <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
+                    {% include "icons/adoptanode_logo.svg" %}
+                </a>
                 <a class='inline-block link--white right mx2 py2' href='/logout'>Logout</a>
                 <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
                 <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
             </div>
         {% else %}
-            <div class='m0 p2 clearfix header'>
-                <a class='inline-block link--white left mx2 py2' href="{{ url_for('home.landing') }}">ADOPT A NODE</a>
+            <div class='m0 p2 mb3 capitalize clearfix header'>
+                <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
+                    {% include "icons/adoptanode_logo.svg" %}
+                </a>
                 <a class='inline-block link--white right mx2 py2' href='/login'>Log in</a>
                 <a class='inline-block link--white right mx2 py2' href='/sign_up'>Sign up</a>
             </div>
         {% endif %}
 
+
         <div class='m0 center py4'>
-            <h2 class='py2'>Signal Your Support for Larger Blocks</h1>
-            <p class='mb4 py2'>
-                Adopt a Bitcoin Unlimited Full Node with the Click of a Button
-            </p>
-            <a class='capitalize button--primary' href="{{ url_for('node.new') }}">
-                Adopt a node
-            </a>
+            <p class='h1 p1 pt2'>Signal Your Support for Larger Blocks</h1>
+            <p class='mb4 p1 pb3 roboto'>Adopt a Bitcoin Unlimited Full Node with the Click of a Button</p>
+            <a class='button--primary' href="{{ url_for('node.new') }}">Adopt a node</a>
         </div>
     </div>
 
     <div class='landing-what py4 center'>
         <div class='inline-block text-container'>
-            <h2>What is Adopt-a-Node?</h2>
-            <p>
-                Adopt-a-Node is an initiative by Bitcoin Unlimited to strengthen the Bitcoin network.
-            </p>
-            <p>
-                 It allows users to launch their own Bitcoin Unlimited full node via this website.
-            </p>
-            <p>
-                Technical and non-technical individuals can make their voices heard, and contribute to the evolution of Bitcoin through a bottom-up, free-market-based approach.
-            </p>
+            <p class='h2 slate-gray roboto'>What is Adopt-a-Node?</p>
+            <div class='left-align lh-copy py2'>
+                <p class='pb2'>
+                    Adopt-a-Node is an initiative by Bitcoin Unlimited to strengthen the Bitcoin network.
+                </p>
+                <p class='pb2'>
+                     It allows users to launch their own Bitcoin Unlimited full node via this website.
+                </p>
+                <p class='pb2'>
+                    Technical and non-technical individuals can make their voices heard, and contribute to the evolution of Bitcoin through a bottom-up, free-market-based approach.
+                </p>
+            </div>
         </div>
     </div>
 
     <div class='landing-why py4 center bg-porcelain'>
-        <div class='inline-block text-container'>
+        <div class='inline-block py1 text-container--large'>
 
-            <h2>Why adopt a node?</h2>
-            <p>
-                Bitcoin is only as strong as it’s full-node network.
-            </p>
-            <div class='py2'>
-                <div class='inline-block'>
-                    Make your voice heard
+            <p class='h2 slate-gray roboto'>Why adopt a node?</p>
+            <p class='pt2 pb2'>Bitcoin is only as strong as it’s full-node network.</p>
+
+            <div class='lh-copy left-align why__flex-container py3'>
+                <div class='why__flex-title why-title__flex-container'>
+                    <div class='why-title__flex-logo'><img class='icon' src='static/img/loudspeaker.png'/></div>
+                    <div class='why-title__flex-title h3 capitalize'>Make your voice heard</div>
                 </div>
-                <div class='inline-block'>
+                <div class='why__flex-body'>
                     Decide on your node’s block size limit, launch, and signal to miners that you are ready for bigger blocks today.
                 </div>
             </div>
-            <div class='py2'>
-                <div class='inline-block'>
-                    Strengthen the Bitcoin network
+
+            <div class='lh-copy left-align why__flex-container py3'>
+                <div class='why__flex-title why-title__flex-container'>
+                    <div class='why-title__flex-logo'><img class='icon' src='static/img/network.png' /></div>
+                    <div class='why-title__flex-title h3 capitalize'>Strengthen the Bitcoin network</div>
                 </div>
-                <div class='inline-block'>
+                <div class='why__flex-body'>
                     A network with multiple full node implementations is more robust and less centralized. By adopting a BU node, you are moving the network in this direction.
                 </div>
             </div>
-            <div class='py2'>
-                <div class='inline-block'>
-                    Help enforce the rules of Bitcoin
+
+            <div class='lh-copy left-align why__flex-container py3'>
+                <div class='why__flex-title why-title__flex-container'>
+                    <div class='why-title__flex-logo'><img class='icon' src='static/img/rules.png' /></div>
+                    <div class='why-title__flex-title h3 capitalize'>Help enforce the rules of Bitcoin</div>
                 </div>
-                <div class='inline-block'>
+                <div class='why__flex-body'>
                     Full nodes reject transactions and blocks that don’t follow Bitcoin’s consensus rules. Your node will help in this capacity.
                 </div>
             </div>
@@ -80,49 +87,77 @@
 
     <div class='landing-how py4 center'>
         <div class='inline-block text-container'>
-            <h2>How to adopt a node?</h2>
-            <p>
-                The Adopt-a-Node project makes it easy to launch a Bitcoin Unlimited full-node.
-            </p>
-            <div class='py2'>
-                <div>Pick your parameters</div>
-                <div>
-                    Configure your node by choosing an
-                    <a href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Excessive Blocksize (EB)</a> and
-                    <a href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Acceptance Depth (AD)</a>.
+
+            <p class='h2 slate-gray roboto'>How to adopt a node?</p>
+            <p class='pt2 pb2'>The Adopt-a-Node project makes it easy to launch a Bitcoin Unlimited full-node.</p>
+
+            <div class='pt2 pb2 left-align how__flex-container'>
+                <div class='how__flex-icon'>
+                    <img class='icon' src='static/img/pick.png'/>
+                </div>
+                <div class='how__flex-body'>
+                    <p class='h3 capitalize'>Pick your parameters</p>
+                    <p class='lh-copy'>
+                        Configure your node by choosing an
+                        <a href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Excessive Blocksize (EB)</a> and
+                        <a href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Acceptance Depth (AD)</a>.
+                    </p>
                 </div>
             </div>
-            <div class='py2'>
-                <div>Name your node</div>
-                <div>
-                    This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network.
+
+            <div class='pt2 pb2 left-align how__flex-container'>
+                <div class='how__flex-icon'>
+                    <img class='icon' src='static/img/node.png'/>
+                </div>
+                <div class='how__flex-body'>
+                    <p class='h3 capitalize'>Name your node</p>
+                    <p class='lh-copy'>
+                        This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network.
+                    </p>
                 </div>
             </div>
-            <div class='py2'>
-                <div>Select a Cloud Hosting Provider</div>
-                <div>
-                    Pick how long you want to adopt the node and which cloud provider you want to use for hosting it (AWS and Digital Ocean are currently supported).
+
+            <div class='pt2 pb2 left-align how__flex-container'>
+                <div class='how__flex-icon'>
+                    <img class='icon' src='static/img/cloud.png'/>
+                </div>
+                <div class='how__flex-body'>
+                    <p class='h3 capitalize'>Select a Cloud Hosting Provider</p>
+                    <p class='lh-copy'>
+                        Pick how long you want to adopt the node and which cloud provider you want to use for hosting it (AWS and Digital Ocean are currently supported).
+                    </p>
                 </div>
             </div>
-            <div class='py2'>
-                <div>Pay with Bitcoin, and Launch!</div>
-                <div>
-                    Launch your node in the wild. You will receive its IP address, and can check in on it on the site and elsewhere.
+
+            <div class='pt2 pb2 left-align how__flex-container'>
+                <div class='how__flex-icon'>
+                    <img class='icon' src='static/img/rocket.png'/>
+                </div>
+                <div class='how__flex-body'>
+                    <p class='h3 capitalize'>Pay with Bitcoin, and Launch!</p>
+                    <p class='lh-copy'>
+                        Launch your node in the wild. You will receive its IP address, and can check in on it on the site and elsewhere.
+                    </p>
                 </div>
             </div>
+
         </div>
     </div>
 
-    <div class='landing-who py4 center bg-porcelain'>
-        <div class='inline-block text-container pb2'>
-            <h2>Who is behind Adopt-a-Node?</h2>
-            <div>The Bitcoin Unlimited organization mandates are:</div>
-            <ol>
-                <li>To foster competing implementations of the Bitcoin protocol in order to provide more choice to node operators and to add robustness to the network.</li>
-                <li>To support the continued growth and adoption of Bitcoin as a peer-to-peer electronic cash system as described in Satoshi Nakamoto's white paper.</li>
-            </ol>
-            <div class='pb1'>We believe in the long-term scalability of the Bitcoin network.</div>
-            <div class='pb4'>We hope you will join us in moving towards this goal by adopting a node.</div>
+    <div class='landing-who py4 center bg-porcelain bg-porcelain'>
+        <div class='inline-block text-container pb3'>
+            <p class='h2 slate-gray roboto'>Who is behind Adopt-a-Node?</p>
+            <div class='left-align lh-copy pt2 pb4'>
+                <p>
+                    The <a href='https://www.bitcoinunlimited.info/' target='_blank'>Bitcoin Unlimited organization</a> mandates are:
+                </p>
+                <ol class='py2'>
+                    <li class='pb2'>To foster competing implementations of the Bitcoin protocol in order to provide more choice to node operators and to add robustness to the network.</li>
+                    <li>To support the continued growth and adoption of Bitcoin as a peer-to-peer electronic cash system as described in Satoshi Nakamoto's white paper.</li>
+                </ol>
+                <p>We believe in the long-term scalability of the Bitcoin network.</p>
+                <p>We hope you will join us in moving towards this goal by adopting a node.</p>
+            </div>
 
             <a class='px3 py2 capitalize button--primary' href="{{ url_for('node.new') }}">
                 Adopt a node
