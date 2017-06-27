@@ -13,6 +13,7 @@ bundles = {
         'css/colors.styl',
         'css/utils.styl',
         'css/fonts.styl',
+        'css/forms.styl',
         'css/main.styl',
         'css/node.styl',
         'css/landing.styl',

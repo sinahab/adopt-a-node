@@ -1,16 +1,15 @@
 {% macro render_field_with_errors(field) %}
-  <p>
-    {{ field.label }} {{ field(**kwargs)|safe }}
-    {% if field.errors %}
-      <ul>
-      {% for error in field.errors %}
-        <li>{{ error }}</li>
-      {% endfor %}
-      </ul>
-    {% endif %}
-  </p>
+    <div class='pb3'>
+        <div class='capitalize bold pb1'> {{ field.label }} </div>
+        <div> {{ field(class='form__input width-100', **kwargs)|safe }} </div>
+        {% if field.errors %}
+            {% for error in field.errors %}
+                <p class='punch'>{{ error }}</p>
+            {% endfor %}
+        {% endif %}
+    </div>
 {% endmacro %}
 
 {% macro render_field(field) %}
-  <p>{{ field(**kwargs)|safe }}</p>
+  <p>{{ field(class='form__input', **kwargs)|safe }}</p>
 {% endmacro %}

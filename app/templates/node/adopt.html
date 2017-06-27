@@ -11,13 +11,13 @@
             <p class='pt2 pb2'>Pick your parameters, pay with Bitcoin, and adopt a node:</p>
 
 
-            <form method="POST" action="/nodes/" class='pb4 left-align'>
+            <form method="POST" action="/nodes/" class='pb1 left-align'>
                 {{ form.csrf_token }}
 
                 <div class='capitalize bold pt4 pb1'> {{ form.bu_eb.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.bu_eb(size=20, class_='form__input') }}
+                        {{ form.bu_eb(size=20, class_='form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='my0 pb1 lh-copy'>EB is the maximum block size, in MB, that a "relay node" will accept.</p>
@@ -28,7 +28,7 @@
                 <div class='capitalize bold pt4 pb1'> {{ form.bu_ad.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.bu_ad(size=20, class_='form__input') }}
+                        {{ form.bu_ad(size=20, class_='form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='my0 pb1 lh-copy'>AD is the block count at which you will accept the longest chain as valid if it exceeds your EB.</p>
@@ -41,7 +41,7 @@
                 </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.name(size=20, class_='form__input', placeholder='e.g. John') }}
+                        {{ form.name(size=20, class_='form__input width-90', placeholder='e.g. John') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='mt0 lh-copy'>This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network. You are free to leave it blank.</p>
@@ -51,7 +51,7 @@
                 <div class='capitalize bold pt4 pb1'> {{ form.provider.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.provider(class_='form__input') }}
+                        {{ form.provider(class_='form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='mt0 lh-copy'>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</p>
@@ -61,7 +61,7 @@
                 <div class='capitalize bold pt4 pb1 form__label'> {{ form.months.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.months(size=20, class_='form__input') }}
+                        {{ form.months(size=20, class_='form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='mt0 lh-copy'>This effects the price (which is dynamically updated to reflect the change).</p>
@@ -72,7 +72,7 @@
 
                 <div class='capitalize h2 bold pt4 pb1'> Total Cost </div>
                 <div class='capitalize pb2'>$54.05 (0.02243 BTC)</div>
-                <input type="submit" class='button--secondary button--submit mt2 capitalize' value="Pay and Launch Node">
+                <input type="submit" class='button--secondary width-45 mt2 capitalize' value="Pay and Launch Node">
                 <p class='py2 lh-copy'>Note: this is a non-profit initiative and the cost is calculated to purely pay for a server at the chosen given cloud provider for the chosen number of months.</div>
             </form>
 
