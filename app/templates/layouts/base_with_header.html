@@ -5,7 +5,7 @@
             <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
                 {% include "icons/adoptanode_logo.svg" %}
             </a>
-            <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.logout') }}">Logout</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.logout') }}">Sign out</a>
             <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
             <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
         </div>
@@ -19,7 +19,7 @@
         </div>
     {% endif %}
 
-    <div class='m0 center body-container'>
+    <div class='m0 center body-container pt4'>
         {% include "layouts/_messages.html" %}
         {% block content %}{% endblock %}
     </div>
