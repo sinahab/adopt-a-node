@@ -71,6 +71,31 @@ To run the migration:
 flask db upgrade
 ```
 
+## Assets
+This app uses flask-assets to manage assets.
+
+To see available commands:
+```
+flask assets
+```
+
+To build assets:
+```
+flask assets build
+```
+
+To clean assets:
+```
+flask assets clean
+```
+
+When done iterating on UI, clean assets, and build them once:
+```
+flask assets clean
+flask assets build
+```
+
+
 ## To run production server
 ```
 export FLASK_APP=run.py

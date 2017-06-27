@@ -1329,6 +1329,9 @@ code,
 .dark-gray {
   color: #4d4d4d;
 }
+.punch {
+  color: #dd3539;
+}
 .capitalize {
   text-transform: uppercase;
 }
@@ -1537,6 +1540,9 @@ a {
 }
 .dark-gray {
   color: #4d4d4d;
+}
+.punch {
+  color: #dd3539;
 }
 .table__nodes {
   border-radius: 3px;
