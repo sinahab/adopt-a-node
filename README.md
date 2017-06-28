@@ -95,6 +95,22 @@ flask assets clean
 flask assets build
 ```
 
+## Bitcoin payments
+The [Ruby docs](https://github.com/bitpay/ruby-client/blob/master/GUIDE.md#bitpay-authentication) are the best I've seen on how to set up authentication for the Bitpay API. In a Python REPL, do the following:
+```
+from bitpay.client import Client
+client = Client()
+pairing_code = client.create_token('merchant')
+# 1. Paste this pairing_code into the Merchant UI to activate it and get a key.
+# 2. Save client.pem into instance/bitpay-key.pem
+# 3. Save client.token into the BITPAY_TOKEN config variable in instance/config.py
+```
+
+If you would like to set up a Testnet API connection, modify the line where Client is initialize to the following:
+```
+client = Client(api_uri="https://test.bitpay.com")
+```
+And use the test.bitpay.com Merchant UI.
 
 ## To run production server
 ```

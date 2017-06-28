@@ -36,6 +36,8 @@ class Config(object):
 
     SECURITY_MSG_LOGIN = ('Please sign in first.', 'info')
 
+    BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
+
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
@@ -45,12 +47,21 @@ class DevelopmentConfig(Config):
 
     SQLALCHEMY_ECHO = True
 
+    APP_BASE_URI = 'http://localhost:5000'
+
+    # separate public uri for development, since needs to use ngrok or something like that.
+    APP_BASE_PUBLIC_URI = 'http://2d26955b.ngrok.io'
+
 class ProductionConfig(Config):
     """
     Production configurations
     """
 
     DEBUG = False
+
+    # TODO: update this when site is launched.
+    APP_BASE_URI = 'http://165.227.15.19'
+    APP_BASE_PUBLIC_URI = APP_BASE_URI
 
 class TestingConfig(Config):
     """
