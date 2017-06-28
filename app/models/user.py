@@ -29,6 +29,7 @@ class User(db.Model, UserMixin):
 
     roles = db.relationship('Role', secondary=roles_users, backref=db.backref('users', lazy='dynamic'))
     nodes = db.relationship('Node', back_populates='user')
+    invoices = db.relationship('Invoice', back_populates='user')
 
     def __repr__(self):
         return "Email(%r)" % (self.email)

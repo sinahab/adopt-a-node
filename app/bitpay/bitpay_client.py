@@ -23,6 +23,7 @@ class BitpayClient():
             'itemDesc': 'Adopt-a-Node',
             'redirectURL': "{base_uri}/confirmation".format(base_uri=current_app.config['APP_BASE_URI']),
             'notificationURL': "{base_public_uri}/bitpay".format(base_public_uri=current_app.config['APP_BASE_PUBLIC_URI']),
+            'orderId': '1',
             'posData': '1',
             'transactionSpeed': 'high',
             'extendedNotifications': True,
