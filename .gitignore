@@ -1,9 +1,6 @@
 
-# aws keypair
-instance/*.pem
-
-# config values
-instance/config.py
+# instance specific config
+instance/
 
 .DS_Store
 
