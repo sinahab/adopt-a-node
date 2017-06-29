@@ -5,6 +5,8 @@ from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, B
 from sqlalchemy.orm import validates
 from sqlalchemy import event
 
+from datetime import datetime
+
 from app import db
 from .state_mixin import StateMixin
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
@@ -21,7 +23,8 @@ class Node(db.Model, StateMixin):
     name = Column(VARCHAR)
     bu_version = Column(VARCHAR)
     status = Column(VARCHAR, nullable=False, server_default='new')
-    expiration_date = Column(TIMESTAMP(timezone=True))
+    launched_at = Column(TIMESTAMP(timezone=True))
+    months_adopted = Column(INTEGER)
     provider_id = Column(INTEGER)
     provider_status = Column(VARCHAR)
     provider_data = Column(JSONB)
@@ -64,8 +67,17 @@ class Node(db.Model, StateMixin):
         Also, schedules the node for configuration.
         This needs to happen after a delay, so that provisioning is already complete.
         """
-        DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
-        configure_node.apply_async(args=(self.id,), countdown=2700)
+        try:
+            DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
+
+            self.launched_at = datetime.utcnow()
+            db.session.add(self)
+            db.session.commit()
+
+            configure_node.apply_async(args=(self.id,), countdown=2700)
+        except Exception as e:
+            print(e)
+
         return
 
     def _configure(self):
