@@ -125,3 +125,4 @@ event.listen(Node, 'load', Node.init_state_machine)
 
 from app.tasks import configure_node
 from .user import User
+from .invoice import Invoice

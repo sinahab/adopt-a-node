@@ -2,47 +2,48 @@
 {% block title %}My Nodes{% endblock %}
 {% block content %}
     <div class='pt1 pb3 center'>
-        <p class='h2 pb3 slate-gray roboto'>My Nodes</p>
+        <p class='h2 pb2 slate-gray roboto'>My Nodes</p>
 
         {% if nodes %}
-        <table class='inline-block table__nodes'>
-            <thead>
-                <tr>
-                    <th class='p1 px3'> IP Address </th>
-                    <th class='p1 px3'> Cloud Provider </th>
-                    <th class='p1 px3'> Status </th>
-                    <th class='p1 px3'> Launched At </th>
-                    <th class='p1 px3'> Expires At </th>
-                    <th class='p1 px3'> </th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for node in nodes %}
-                <tr>
-                    <td class='p1 px3'>
-                        <!-- TODO: only if node.status is up. otherwise, dont link. -->
-                        <a href="{{ 'https://bitnodes.21.co/nodes/%s-8333/'%node.ipv4_address }}">
-                            {{ node.ipv4_address }}
-                        </a>
-                    </td>
-                    <td class='p1 px3'> {{ node.provider }} </td>
-                    <td class='p1 px3'> {{ node.status }} </td>
-                    <td class='p1 px3'> {{ node.launched_at }} </td>
-                    <td class='p1 px3'> {{ node.expires_at }} </td>
-                    <td class='p1 px3 capitalize'>
-                        <a href="{{ url_for('node.edit', id=node.id) }}" class='button--secondary--small small p1'>view / edit</a>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
+            <div class='p2'>
+                <table class='inline-block table__nodes'>
+                    <thead>
+                        <tr>
+                            <th class='p1 px3'> IP Address </th>
+                            <th class='p1 px3'> Cloud Provider </th>
+                            <th class='p1 px3'> Status </th>
+                            <th class='p1 px3'> Launched At </th>
+                            <th class='p1 px3'> Expires At </th>
+                            <th class='p1 px3'> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for node in nodes %}
+                        <tr>
+                            <td class='p1 px3'>
+                                <!-- TODO: only if node.status is up. otherwise, dont link. -->
+                                <a href="{{ 'https://bitnodes.21.co/nodes/%s-8333/'%node.ipv4_address }}">
+                                    {{ node.ipv4_address }}
+                                </a>
+                            </td>
+                            <td class='p1 px3'> {{ node.provider }} </td>
+                            <td class='p1 px3'> {{ node.status }} </td>
+                            <td class='p1 px3'> {{ node.launched_at }} </td>
+                            <td class='p1 px3'> {{ node.expires_at }} </td>
+                            <td class='p1 px3 capitalize'>
+                                <a href="{{ url_for('node.edit', id=node.id) }}" class='button--secondary--small small p1'>view / edit</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
-            <p class='pb2'>No nodes have been added.</p>
+            <p class='py2'>You haven't adopted any nodes yet.</p>
         {% endif %}
 
         <br /><br />
-        <p class='pt4 pb3'>Want to adopt a node?</p>
+        <p class='pt1 pb3'>Want to adopt a node?</p>
         <a class='button--secondary' href="{{ url_for('node.new') }}">Adopt a node</a>
 
     </div>

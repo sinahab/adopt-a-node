@@ -7,6 +7,7 @@ from sqlalchemy import event
 from app import db
 from app.bitpay.utils import create_order_id
 from .state_mixin import StateMixin
+from app.bitpay.bitpay_client import BitpayClient
 
 class Invoice(db.Model, StateMixin):
     __tablename__= 'invoices'
@@ -19,7 +20,7 @@ class Invoice(db.Model, StateMixin):
     currency = Column(VARCHAR, nullable=False, server_default='USD')
     status = Column(VARCHAR, nullable=False, server_default='new')
     bitpay_invoice_created_at = Column(TIMESTAMP(timezone=True))
-    bitpay_id = Column(INTEGER)
+    bitpay_id = Column(VARCHAR)
     bitpay_data = Column(JSONB)
     created_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
@@ -28,12 +29,28 @@ class Invoice(db.Model, StateMixin):
     node = db.relationship('Node', back_populates='invoices')
 
     # state machine
-    states = ['new', 'paid', 'confirmed', 'complete']
-    transitions = [
-        { 'trigger': 'pay', 'source': 'new', 'dest': 'paid' },
-        { 'trigger': 'confirm', 'source': 'paid', 'dest': 'confirmed' },
-        { 'trigger': 'complete', 'source': 'confirmed', 'dest': 'complete' }
+    # Refer to Bitpay's invoice states here: https://bitpay.com/docs/invoice-states
+    states = [
+        'new',  # a new Invoice record created in the DB.
+        'generated', # the invoice record has been created on Bitpay.
+        'paid', # the User has paid for the invoice
+        'confirmed',  # the payment has been confirmed due to our requirements ('slow' means after 6 blocks)
+        'complete',  # the payment is complete (i.e. after 6 blocks)
+        'expired',  # payment was not received within a 15 minute window, and the invoice expired.
+        'invalid'  # invoice was paid, but payment was not confirmed within 1 hour after receipt. Need to contact Bitpay to resolve these, in case they go through later.
     ]
+    transitions = [
+        { 'trigger': 'generate', 'source': 'new', 'dest': 'generated', 'before': '_generate_on_bitpay' },
+        { 'trigger': 'pay', 'source': 'generated', 'dest': 'paid' },
+        { 'trigger': 'confirm', 'source': 'paid', 'dest': 'confirmed' },
+        { 'trigger': 'complete', 'source': ['paid', 'confirmed'], 'dest': 'complete' },
+        { 'trigger': 'expire', 'source': 'generated', 'dest': 'expired' },
+        { 'trigger': 'invalidate', 'source': 'paid', 'dest': 'invalid' }
+    ]
+
+    def _generate_on_bitpay(self):
+        BitpayClient().create_invoice_on_bitpay(self)
+        return
 
     def __repr__(self):
         return "Bitpay invoice (%r)" % (self.bitpay_id)

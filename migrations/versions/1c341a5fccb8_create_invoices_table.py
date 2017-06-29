@@ -30,7 +30,7 @@ def upgrade():
         Column('status', VARCHAR, nullable=False, server_default='new'),
 
         Column('bitpay_invoice_created_at', TIMESTAMP(timezone=True)),
-        Column('bitpay_id', INTEGER),
+        Column('bitpay_id', VARCHAR),
         Column('bitpay_data', JSONB),
 
         Column('created_at', TIMESTAMP(timezone=True), nullable=False, server_default=func.now()),

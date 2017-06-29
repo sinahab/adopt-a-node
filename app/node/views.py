@@ -4,8 +4,10 @@ from flask_security import current_user, login_required
 
 from . import node
 from .forms import NewNodeForm, ExistingNodeForm
-from .. import db
-from ..models.node import Node
+from app import db
+from app.models.node import Node
+from app.models.invoice import Invoice
+from app.bitpay.bitpay_client import BitpayClient
 
 @node.route('/nodes/', methods=['GET'])
 @login_required
@@ -35,20 +37,39 @@ def create():
     form = NewNodeForm()
 
     if form.validate_on_submit():
-        node = Node(
-            user=current_user,
-            provider=form.provider.data,
-            name=form.name.data
-        )
 
         try:
-            # add node to the database
+            # step 1: create a new Node record in the DB.
+            # TODO: calculate expiration_date
+            node = Node(
+                user=current_user,
+                provider=form.provider.data,
+                name=form.name.data,
+                bu_ad=form.bu_ad.data,
+                bu_eb=form.bu_eb.data
+            )
+
+            # step 2: create a new Invoice record in the DB.
+            # TODO: calculate price based on time & cloud provider
+            invoice = Invoice(
+                user=current_user,
+                node=node,
+                price=4.00,
+                currency='USD'
+            )
+
             db.session.add(node)
+            db.session.add(invoice)
             db.session.commit()
-            flash('You have successfully added a new node.')
+
+            # step 3: create bitpay invoice & associate w Invoice record in DB.
+            invoice.generate()
+
+            # redirect user to bitpay url
+            return redirect(invoice.bitpay_data['url'])
 
         except Exception as e:
-            flash(str(e))
+            return redirect(url_for('node.new'))
 
         # redirect to nodes page
         return redirect(url_for('node.index'))
