@@ -5,9 +5,8 @@ from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, F
 from sqlalchemy import event
 
 from app import db
-from app.bitpay.utils import create_order_id
+from app.utils.invoice import create_order_id
 from .state_mixin import StateMixin
-from app.bitpay.bitpay_client import BitpayClient
 
 class Invoice(db.Model, StateMixin):
     __tablename__= 'invoices'
@@ -40,15 +39,30 @@ class Invoice(db.Model, StateMixin):
         'invalid'  # invoice was paid, but payment was not confirmed within 1 hour after receipt. Need to contact Bitpay to resolve these, in case they go through later.
     ]
     transitions = [
-        { 'trigger': 'generate', 'source': 'new', 'dest': 'generated', 'before': '_generate_on_bitpay' },
-        { 'trigger': 'pay', 'source': 'generated', 'dest': 'paid' },
-        { 'trigger': 'confirm', 'source': 'paid', 'dest': 'confirmed' },
-        { 'trigger': 'complete', 'source': ['paid', 'confirmed'], 'dest': 'complete' },
-        { 'trigger': 'expire', 'source': 'generated', 'dest': 'expired' },
-        { 'trigger': 'invalidate', 'source': 'paid', 'dest': 'invalid' }
+        { 'trigger': 'generate', 'source': ['new'], 'dest': 'generated', 'before': '_generate_on_bitpay' },
+        { 'trigger': 'pay', 'source': ['generated'], 'dest': 'paid' },
+        { 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed' },
+        { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete' },
+        { 'trigger': 'expire', 'source': ['generated'], 'dest': 'expired' },
+        { 'trigger': 'invalidate', 'source': ['paid'], 'dest': 'invalid' }
     ]
 
+    def possible_transitions_to(self, dest):
+        """
+        Returns all possible transitions between the current state as source and the provided dest  destination states
+        """
+        possible_transitions = list(
+            filter(
+                lambda transition: (self.status in transition['source']) and (dest == transition['dest']),
+                self.__class__.transitions
+            )
+        )
+        return(possible_transitions)
+
     def _generate_on_bitpay(self):
+        """
+        Generates an invoice on Bitpay
+        """
         BitpayClient().create_invoice_on_bitpay(self)
         return
 
@@ -58,3 +72,5 @@ class Invoice(db.Model, StateMixin):
 # initialize Invoice state machine
 event.listen(Invoice, 'init', Invoice.init_state_machine)
 event.listen(Invoice, 'load', Invoice.init_state_machine)
+
+from app.service_objects.bitpay_client import BitpayClient

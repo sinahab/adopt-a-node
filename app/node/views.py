@@ -7,7 +7,7 @@ from .forms import NewNodeForm, ExistingNodeForm
 from app import db
 from app.models.node import Node
 from app.models.invoice import Invoice
-from app.bitpay.bitpay_client import BitpayClient
+from app.service_objects.bitpay_client import BitpayClient
 
 @node.route('/nodes/', methods=['GET'])
 @login_required

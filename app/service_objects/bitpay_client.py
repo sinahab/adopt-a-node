@@ -34,11 +34,35 @@ class BitpayClient():
         }
 
         bitpay_invoice = self.client.create_invoice(params)
+        self._update_invoice_bitpay_params(invoice, bitpay_invoice)
+        return(invoice)
 
-        invoice.bitpay_invoice_created_at = datetime.utcfromtimestamp(bitpay_invoice['invoiceTime']/1000)
-        invoice.bitpay_id = bitpay_invoice['id']
-        del bitpay_invoice['token']
-        invoice.bitpay_data = bitpay_invoice
+    def fetch_invoice(self, invoice):
+        """
+        Sync's up an invoice with Bitpay, trigger's any possible transitions, and updates the Invoice record.
+        """
+        fetched_invoice = self.client.get_invoice(invoice.bitpay_id)
+
+        if (invoice.status != fetched_invoice['status']):
+            possible_transitions = invoice.possible_transitions_to(fetched_invoice['status'])
+
+            if (len(possible_transitions) > 0):
+                trigger = possible_transitions[0]['trigger']
+                method_to_call = getattr(invoice, trigger)
+                method_to_call()
+
+        self._update_invoice_bitpay_params(invoice, fetched_invoice)
+
+        return(invoice)
+
+    def _update_invoice_bitpay_params(self, invoice, bitpay_params):
+        """
+        Updates an Invoice db record with data returned by Bitpay
+        """
+        invoice.bitpay_invoice_created_at = datetime.utcfromtimestamp(bitpay_params['invoiceTime']/1000)
+        invoice.bitpay_id = bitpay_params['id']
+        del bitpay_params['token']
+        invoice.bitpay_data = bitpay_params
 
         try:
             db.session.add(invoice)
