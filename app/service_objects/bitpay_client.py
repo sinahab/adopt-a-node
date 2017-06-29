@@ -59,6 +59,10 @@ class BitpayClient():
         """
         Updates an Invoice db record with data returned by Bitpay
         """
+        # check that the bitpay_params are indeed mapped to our invoice record.
+        if (int(bitpay_params['posData']) != invoice.id):
+            return
+
         invoice.bitpay_invoice_created_at = datetime.utcfromtimestamp(bitpay_params['invoiceTime']/1000)
         invoice.bitpay_id = bitpay_params['id']
         del bitpay_params['token']

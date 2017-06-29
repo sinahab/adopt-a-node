@@ -42,7 +42,7 @@ class Invoice(db.Model, StateMixin):
         { 'trigger': 'generate', 'source': ['new'], 'dest': 'generated', 'before': '_generate_on_bitpay' },
         { 'trigger': 'pay', 'source': ['generated'], 'dest': 'paid' },
         { 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed' },
-        { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete' },
+        { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete', 'before': '_provision_node' },
         { 'trigger': 'expire', 'source': ['generated'], 'dest': 'expired' },
         { 'trigger': 'invalidate', 'source': ['paid'], 'dest': 'invalid' }
     ]
@@ -58,6 +58,12 @@ class Invoice(db.Model, StateMixin):
             )
         )
         return(possible_transitions)
+
+    def _provision_node(self):
+        """
+        Provisions the node paid for by the invoice.
+        """
+        self.node.provision()
 
     def _generate_on_bitpay(self):
         """
