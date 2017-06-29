@@ -87,6 +87,9 @@ def edit(id):
 @node.route('/nodes/<int:id>', methods=['POST'])
 @login_required
 def update(id):
+    """
+    Update an existing node.
+    """
     node = Node.query.get_or_404(id)
     form = ExistingNodeForm(obj=node)
 

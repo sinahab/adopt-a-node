@@ -1,16 +1,4 @@
 
-config = {
-    'development': {
-        'db': {
-            'username': 'dev',
-            'password': 'asdfasdf',
-            'host': 'localhost',
-            'port': '5432',
-            'database': 'adoptanode_development'
-        }
-    }
-}
-
 SECRET_KEY = 'asdf12345678'
 SQLALCHEMY_DATABASE_URI = 'postgresql://dev:asdfasdf@localhost:5432/adoptanode_development'
 
@@ -29,3 +17,5 @@ CELERY_RESULT_BACKEND = 'url'
 
 SSH_PRIVATE_KEY_FILE = '/home/id_rsa'
 SSH_PRIVATE_KEY_PASSWORD = 'password'
+
+BITPAY_TOKEN = {'merchant': 'hi'}

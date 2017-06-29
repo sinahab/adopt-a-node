@@ -6,18 +6,30 @@ from ..utils.ssh import ssh_scope
 class NodeManager(ABC):
     @abstractmethod
     def create_droplet_from_latest_snapshot(self):
+        """
+        Clones a new server from the latest template snapshot
+        """
         pass
 
     @abstractmethod
     def get_provider_attributes(self):
+        """
+        Queries the provider and updates the node's data in the db accordingly
+        """
         pass
 
     @abstractmethod
     def take_snapshot(self):
+        """
+        Creates a snapshot from the given server.
+        """
         pass
 
     @abstractmethod
     def power_on(self):
+        """
+        Boots up the node
+        """
         pass
 
     def power_off(self):

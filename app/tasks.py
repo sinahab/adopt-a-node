@@ -5,6 +5,11 @@ from app.utils.ssh import ssh_scope
 
 @celery.task(name="tasks.add")
 def configure_node(node_id):
+    """
+    Checks to see whether the node has been successfully provisioned.
+    If yes: it configures the node.
+    If not: it schedules another check in in 45 minutes.
+    """
     node = Node.query.get(node_id)
 
     # TODO: the if statement should check that the node has been successfully provisioned
