@@ -17,6 +17,12 @@
                 {{ register_user_form.submit(class='button--secondary width-100')|safe }}
             </form>
 
+            <p class='pb3'>
+                Already have an account yet?
+                <a class='bold' href="{{ url_for('security.login') }}">Sign in</a>.
+            </p>
+
+
         </div>
     </div>
 
