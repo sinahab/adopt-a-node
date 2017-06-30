@@ -2,24 +2,7 @@
 {% block body %}
 
     <div class='landing-hero'>
-        {% if current_user.is_authenticated %}
-            <div class='m0 p2 mb3 capitalize clearfix header'>
-                <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
-                    {% include "icons/adoptanode_logo.svg" %}
-                </a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.logout') }}">Sign out</a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
-            </div>
-        {% else %}
-            <div class='m0 p2 mb3 capitalize clearfix header'>
-                <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
-                    {% include "icons/adoptanode_logo.svg" %}
-                </a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.login') }}">Sign in</a>
-                <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.register') }}">Sign up</a>
-            </div>
-        {% endif %}
+        {% include "layouts/_header.html" %}
 
         <div class='m0 center py4'>
             <p class='h1 p1 pt2'>Signal Your Support for Larger Blocks</h1>

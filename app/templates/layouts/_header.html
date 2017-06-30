@@ -1,0 +1,42 @@
+<div class='m0 p2 capitalize clearfix header'>
+    <a class='inline-block header__logo left mx2 py2' href="{{ url_for('home.landing') }}">
+        {% include "icons/adoptanode_logo.svg" %}
+    </a>
+
+    {% if current_user.is_authenticated %}
+        <div class='header--web'>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.logout') }}">Sign out</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
+        </div>
+
+        <div class='header--mobile'>
+            <button type="button" class="right mx2 drawer-toggle drawer-hamburger">
+                <span class="drawer-hamburger-icon"></span>
+            </button>
+            <nav class="drawer-nav bg-off-black center py2" role="navigation">
+                <div class='px1 py3'><a class='link--white' href="{{ url_for('node.index') }}">My Nodes</a>
+                <div class='px1 py3'><a class='link--white' href="{{ url_for('node.new') }}">Adopt a Node</a>
+                <div class='px1 py3'><a class='link--white' href="{{ url_for('security.logout') }}">Sign out</a>
+            </nav>
+        </div>
+
+    {% else %}
+
+        <div class='header--web'>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.login') }}">Sign in</a>
+            <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.register') }}">Sign up</a>
+        </div>
+
+        <div class='header--mobile'>
+            <button type="button" class="right mx2 drawer-toggle drawer-hamburger">
+                <span class="drawer-hamburger-icon"></span>
+            </button>
+            <nav class="drawer-nav bg-off-black center py2" role="navigation">
+                <div class='p2 pt3'><a class='link--white' href="{{ url_for('security.register') }}">Sign up</a></div>
+                <div class='p2'><a class='link--white' href="{{ url_for('security.login') }}">Sign in</a></div>
+            </nav>
+        </div>
+
+    {% endif %}
+</div>
