@@ -1898,6 +1898,7 @@ code,
 }
 .drawer-hamburger {
   padding-top: 28px;
+  position: absolute;
 }
 .drawer-hamburger-icon {
   background-color: #fff;
