@@ -34,11 +34,6 @@ a
     box-sizing: border-box
     min-height: calc(100% - (2 * 82px))
 
-.footer
-    box-sizing: border-box
-    color: white
-    height: 82px
-
 .button--primary
     background-color: #e67e22
     text-decoration: none
@@ -69,3 +64,31 @@ a
     border: none
     padding: 10px 15px
     cursor: pointer
+
+.footer
+    box-sizing: border-box
+    color: white
+    min-height: 82px
+    margin: 0
+    padding: 10px
+    clear: both
+    background-color: $off-black
+
+.footer__item
+    display: inline-block
+    padding: 20px
+
+@media (max-width: 640px)
+    .footer
+        clear: none
+        text-align: center
+
+    .footer__item
+        display: block
+        padding: 20px
+
+    .right
+        float: none
+
+    .left
+        float: none

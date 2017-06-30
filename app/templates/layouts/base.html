@@ -15,10 +15,14 @@
     <body class='open-sans dark-gray drawer drawer--right'>
         {% block body %}{% endblock %}
 
-        <div class='m0 p2 footer bg-off-black'>
-            <div class='inline-block left mx2 py2'>© MIT License. No Rights Reserved.</div>
-            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info' target='_blank'>Bitcoin Unlimited Website</a>
-            <a class='inline-block link--white right mx2 py2' href='https://www.bitcoinunlimited.info/about/contact' target='_blank'>Contact</a>
+        <div class='footer'>
+            <div class='footer__item right'>
+                <a class='link--white' href='https://www.bitcoinunlimited.info/about/contact' target='_blank'>Contact</a>
+            </div>
+            <div class='footer__item right'>
+                <a class='link--white' href='https://www.bitcoinunlimited.info' target='_blank'>Bitcoin Unlimited Website</a>
+            </div>
+            <div class='footer__item left'>© MIT License. No Rights Reserved.</div>
         </div>
     </body>
 </html>
