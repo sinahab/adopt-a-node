@@ -5,45 +5,59 @@
     height: 620px
     color: white
 
-.why__flex-container
+.why__container
     display: flex
     flex-direction: row
     justify-content: space-between
 
-.why__flex-title
+.why__title
     flex-basis: 35%
 
-.why__flex-body
+.why__body
     flex-basis: 60%
 
-.why-title__flex-container
+.why-title__container
     display: flex
     flex-direction: row
     justify-content: space-around
     align-items: center
 
-.why-title__flex-logo
+.why-title__logo
     flex-basis: 20%
+    margin-right: 5%
 
-.why-title__flex-title
+.why-title__title
     flex-basis: 75%
 
 
-.how__flex-container
+.how__container
     display: flex
     flex-direction: row
     justify-content: center
     align-items: center
 
-.how__flex-icon
+.how__icon
     flex-basis: 10%
     margin: 5%
 
-.how__flex-body
+.how__body
     flex-basis: 60%
 
 
-@media (max-width: 800px)
-    // TODO: fix these. 
-    .why__flex-container, .how__flex-container
+@media (max-width: 640px)
+    .why__container, .how__container
         display: block
+        text-align: center
+
+        .lh-copy
+            text-align: left
+
+    .why__title
+        display: block
+        padding-bottom: 14px
+
+    .why__body
+        text-align: left
+
+    .why-title__logo
+        padding-bottom: 5px
