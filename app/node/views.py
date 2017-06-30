@@ -1,5 +1,5 @@
 
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template, url_for, abort
 from flask_security import current_user, login_required
 
 from . import node
@@ -92,6 +92,10 @@ def edit(id):
     View or edit an existing node
     """
     node = Node.query.get_or_404(id)
+
+    if node.user != current_user:
+        return redirect(url_for('node.index'))
+
     form = ExistingNodeForm(obj=node)
     return render_template('node/edit.html', form=form, node=node, title="Node")
 
@@ -102,6 +106,10 @@ def update(id):
     Update an existing node.
     """
     node = Node.query.get_or_404(id)
+
+    if node.user != current_user:
+        return redirect(url_for('node.index'))
+
     form = ExistingNodeForm(obj=node)
 
     if form.validate_on_submit():
