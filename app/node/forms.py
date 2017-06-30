@@ -10,7 +10,7 @@ class NewNodeForm(FlaskForm):
     bu_ad = IntegerField('Acceptance Depth (AD)', default=12, validators=[DataRequired()])
     bu_eb = DecimalField('Excessive Blocksize (EB)', default=16.00, validators=[DataRequired()])
     name = StringField('Name', validators=[DataRequired()])
-    provider = SelectField('Cloud Provider', choices=[('aws', 'Amazon Web Services (AWS)'), ('digital_ocean', 'Digital Ocean')], validators=[DataRequired()])
+    provider = SelectField('Cloud Provider', choices=[('digital_ocean', 'Digital Ocean'), ('aws', 'Amazon Web Services (AWS)')], validators=[DataRequired()])
     months = IntegerField('How long do you want to support this node (in months)?', default=6, validators=[DataRequired()])
     submit = SubmitField('Submit')
 

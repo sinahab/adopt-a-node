@@ -1,10 +1,10 @@
 from flask_assets import Bundle
 
 bundles = {
-    # 'home_js': Bundle(
-    #     'js/lib/jquery-1.10.2.js',
-    #     'js/home.js',
-    #     output='gen/home.js'),
+    'js': Bundle(
+        'js/vendor/jquery-3.2.1.min.js',
+        'js/adopt.js',
+        output='dist/main.js'),
 
     'css': Bundle(
         'css/vendor/normalize.css',

@@ -1,6 +1,8 @@
 
 from app.models.node import CLOUD_PROVIDERS
 
+# NOTE: keep sync'd with prices on the js front-end @ app/static/js/adopt.js
+# (which give user real-time price estimate).
 PROVIDERS = {
     'digital_ocean': { 'price_per_month': 10.00, 'currency': 'USD' },
     'aws': {}

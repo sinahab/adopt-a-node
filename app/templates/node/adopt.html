@@ -51,7 +51,7 @@
                 <div class='capitalize bold pt4 pb1'> {{ form.provider.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.provider(class_='form__input width-90') }}
+                        {{ form.provider(class_='js-provider form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='mt0 lh-copy'>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</p>
@@ -61,7 +61,7 @@
                 <div class='capitalize bold pt4 pb1 form__label'> {{ form.months.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
-                        {{ form.months(size=20, class_='form__input width-90') }}
+                        {{ form.months(size=20, class_='js-months form__input width-90') }}
                     </div>
                     <div class='form__flex-description'>
                         <p class='mt0 lh-copy'>This effects the price (which is dynamically updated to reflect the change).</p>
@@ -70,8 +70,11 @@
 
                 <div class='pt4 separator'></div>
 
-                <div class='capitalize h2 bold pt4 pb1'> Total Cost </div>
-                <div class='capitalize pb2'>$54.05 (0.02243 BTC)</div>
+                <div class='h2 pt4 pb2'>
+                    <div class='inline-block capitalize bold pr1'> Total Cost: </div>
+                    <div class='inline-block js-price'>$60.00</div>
+                </div>
+
                 <input type="submit" class='button--secondary width-45 mt2 capitalize' value="Pay and Launch Node">
                 <p class='py2 lh-copy'>Note: this is a non-profit initiative and the cost is calculated to purely pay for a server at the chosen given cloud provider for the chosen number of months.</div>
             </form>
