@@ -1887,6 +1887,14 @@ code,
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.header__button {
+  text-decoration: none;
+  color: #fff;
+  border-radius: 3px;
+  border: 2px solid #fff;
+  padding: 10px 24px;
+  cursor: pointer;
+}
 .header__icon {
   height: 34px;
 }
