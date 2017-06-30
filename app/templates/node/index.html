@@ -6,36 +6,43 @@
 
         {% include "layouts/_messages.html" %}
 
-        {% if nodes %}
+        {% if serialized_nodes %}
             <div class='p2'>
                 <table class='inline-block table__nodes'>
                     <thead>
                         <tr>
-                            <th class='p1 px3'> IP Address </th>
-                            <th class='p1 px3'> Cloud Provider </th>
-                            <th class='p1 px3'> Status </th>
+                            <th class='p1 px3'> Node </th>
+                            <th class='p1 px3'> Name </th>
+                            <th class='p1 px3'> EB </th>
+                            <th class='p1 px3'> AD </th>
                             <th class='p1 px3'> Launched At </th>
                             <th class='p1 px3'> Expires At </th>
                             <th class='p1 px3'> </th>
                         </tr>
                     </thead>
                     <tbody>
-                        {% for node in nodes %}
-                        <tr>
-                            <td class='p1 px3'>
-                                <!-- TODO: only if node.status is up. otherwise, dont link. -->
-                                <a href="{{ 'https://bitnodes.21.co/nodes/%s-8333/'%node.ipv4_address }}">
-                                    {{ node.ipv4_address }}
-                                </a>
-                            </td>
-                            <td class='p1 px3'> {{ node.provider }} </td>
-                            <td class='p1 px3'> {{ node.status }} </td>
-                            <td class='p1 px3'> {{ node.launched_at }} </td>
-                            <td class='p1 px3'> {{ node.months_adopted }} </td>
-                            <td class='p1 px3 capitalize'>
-                                <a href="{{ url_for('node.edit', id=node.id) }}" class='button--secondary--small small p1'>view / edit</a>
-                            </td>
-                        </tr>
+                        {% for node in serialized_nodes %}
+                            <tr>
+                                <td class='p1 px3'>
+                                    {% if node.info()['link'] %}
+                                        <a href="{{ node.info['link'] }}" target='_blank'>
+                                            {{ node.info()['message'] }}
+                                        </a>
+                                    {% else %}
+                                        {{ node.info()['message'] }}
+                                    {% endif %}
+                                </td>
+                                <td class='p1 px3'> {{ node.name() }} </td>
+                                <td class='p1 px3'> {{ node.eb() }} </td>
+                                <td class='p1 px3'> {{ node.ad() }} </td>
+                                <td class='p1 px3'> {{ node.launched_at() }} </td>
+                                <td class='p1 px3'> {{ node.expires_at() }} </td>
+                                <td class='p1 px3 capitalize'>
+                                    {% if node.should_show_details_button() %}
+                                        <a href="{{ url_for('node.edit', id=node.node_id()) }}" class='button--secondary--small small p1'>view / edit</a>
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                     </tbody>
                 </table>

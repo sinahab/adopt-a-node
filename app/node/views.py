@@ -9,6 +9,7 @@ from app.models.node import Node
 from app.models.invoice import Invoice
 from app.service_objects.bitpay_client import BitpayClient
 from app.utils.invoice import calculate_price
+from app.serializers.node_serializer import NodeSerializer
 
 @node.route('/nodes/', methods=['GET'])
 @login_required
@@ -16,9 +17,15 @@ def index():
     """
     List the user's nodes
     """
-    nodes = current_user.nodes
+    current_user_nodes = current_user.nodes
 
-    return render_template('node/index.html', nodes=nodes, title="My Nodes")
+    if current_user_nodes:
+        serialized_nodes = list(map(lambda node: NodeSerializer(node), current_user_nodes))
+        serialized_nodes_to_show = list(filter(lambda node: node.should_show(), serialized_nodes))
+        return render_template('node/index.html', serialized_nodes=serialized_nodes_to_show, title="My Nodes")
+
+    else:
+        return render_template('node/index.html', serialized_nodes=[], title="My Nodes")
 
 @node.route('/adopt/', methods=['GET'])
 @login_required

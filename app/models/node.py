@@ -35,7 +35,7 @@ class Node(db.Model, StateMixin):
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
 
     user = db.relationship('User', back_populates='nodes')
-    invoices = db.relationship('Invoice', back_populates='node')
+    invoice = db.relationship('Invoice', uselist=False, back_populates='node')
 
     # state machine
     states = [

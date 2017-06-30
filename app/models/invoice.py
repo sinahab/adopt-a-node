@@ -1,4 +1,6 @@
 
+from datetime import datetime, timezone
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, FLOAT
@@ -25,7 +27,7 @@ class Invoice(db.Model, StateMixin):
     updated_at = Column(TIMESTAMP(timezone=True), nullable=False, server_default=func.now(), onupdate=func.now())
 
     user = db.relationship('User', back_populates='invoices')
-    node = db.relationship('Node', back_populates='invoices')
+    node = db.relationship('Node', back_populates='invoice')
 
     # state machine
     # Refer to Bitpay's invoice states here: https://bitpay.com/docs/invoice-states
@@ -47,18 +49,6 @@ class Invoice(db.Model, StateMixin):
         { 'trigger': 'invalidate', 'source': ['paid'], 'dest': 'invalid' }
     ]
 
-    def possible_transitions_to(self, dest):
-        """
-        Returns all possible transitions between the current state as source and the provided dest  destination states
-        """
-        possible_transitions = list(
-            filter(
-                lambda transition: (self.status in transition['source']) and (dest == transition['dest']),
-                self.__class__.transitions
-            )
-        )
-        return(possible_transitions)
-
     def _provision_node(self):
         """
         Provisions the node paid for by the invoice.
@@ -71,6 +61,25 @@ class Invoice(db.Model, StateMixin):
         """
         BitpayClient().create_invoice_on_bitpay(self)
         return
+
+    def possible_transitions_to(self, dest):
+        """
+        Returns all possible transitions between the current state as source and the provided dest  destination states
+        """
+        possible_transitions = list(
+            filter(
+                lambda transition: (self.status in transition['source']) and (dest == transition['dest']),
+                self.__class__.transitions
+            )
+        )
+        return(possible_transitions)
+
+    def generated_minutes_ago(self):
+        """
+        Returns an number specifying how many minutes ago the invoice was generated on Bitpay.
+        """
+        diff = datetime.now(timezone.utc) - self.bitpay_invoice_created_at
+        return(diff.seconds / 60)
 
     def __repr__(self):
         return "Bitpay invoice (%r)" % (self.bitpay_id)
