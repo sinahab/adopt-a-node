@@ -6,8 +6,8 @@
     <div class='pt1 pb4 center'>
         <div class='inline-block text-container--small'>
 
-            <p class='h2 pb3 slate-gray roboto'>Sign up</p>
-            <form action="{{ url_for_security('register') }}" method="POST" name="register_user_form" class='left-align pb3'>
+            <p class='h2 pb2 slate-gray roboto'>Sign up</p>
+            <form action="{{ url_for_security('register') }}" method="POST" name="register_user_form" class='left-align pt1 pb3'>
                 {{ register_user_form.hidden_tag() }}
                 {{ render_field_with_errors(register_user_form.email) }}
                 {{ render_field_with_errors(register_user_form.password) }}

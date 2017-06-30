@@ -72,8 +72,11 @@ def create():
         except Exception as e:
             return redirect(url_for('node.new'))
 
-        # redirect to nodes page
-        return redirect(url_for('node.index'))
+    else:
+        for field, errors in form.errors.items():
+            flash(errors[0])
+
+        return redirect(url_for('node.new'))
 
 @node.route('/nodes/<int:id>', methods=['GET'])
 @login_required
@@ -96,10 +99,22 @@ def update(id):
 
     if form.validate_on_submit():
         node.name = form.name.data
+        node.bu_eb = form.bu_eb.data
+        node.bu_ad = form.bu_ad.data
 
-        db.session.add(node)
-        db.session.commit()
-        flash('You have successfully edited the node.')
+        try:
+            db.session.add(node)
+            db.session.commit()
+            flash('You have successfully edited the node.')
 
-        # redirect to the node page
+        except Exception as e:
+            print(e)
+
+        # redirect to the nodes page
         return redirect(url_for('node.index'))
+
+    else:
+        for field, errors in form.errors.items():
+            flash(errors[0])
+
+        return redirect(url_for('node.edit', id=node.id))

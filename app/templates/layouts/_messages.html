@@ -1,9 +1,7 @@
 {% with messages = get_flashed_messages() %}
     {% if messages %}
-        <div class='pt1'>
-            {% for message in messages %}
-                <p class='pt1'>{{ message }}</p>
-            {% endfor %}
-        </div>
+        {% for message in messages %}
+            <p class='pb1 punch'>{{ message }}</p>
+        {% endfor %}
     {% endif %}
 {% endwith %}

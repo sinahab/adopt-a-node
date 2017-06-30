@@ -7,12 +7,14 @@
 {% block content %}
     <div class='pt1 pb4 center'>
         <div class='inline-block text-container'>
-            <p class='h2 slate-gray roboto'>Edit Your Node</p>
+            <p class='h2 pb2 slate-gray roboto'>Edit Your Node</p>
 
-            <form method="POST" action="{{ url_for('node.update', id=node.id)}}" class='pb3 left-align'>
+            {% include "layouts/_messages.html" %}
+
+            <form method="POST" action="{{ url_for('node.update', id=node.id)}}" class='pt1 pb3 left-align'>
                 {{ form.csrf_token }}
 
-                <div class='capitalize bold pt4 pb1'> {{ form.bu_eb.label }} </div>
+                <div class='capitalize bold pt2 pb1'> {{ form.bu_eb.label }} </div>
                 <div class='form__flex-container'>
                     <div class='form__flex-input'>
                         {{ form.bu_eb(size=20, class_='form__input width-90') }}
@@ -42,7 +44,7 @@
                         {{ form.name(size=20, class_='form__input width-90', placeholder='e.g. John') }}
                     </div>
                     <div class='form__flex-description'>
-                        <p class='mt0 lh-copy'>This name will be appended to your node’s user agent string. It will be visible on the Bitcoin network. You are free to leave it blank.</p>
+                        <p class='mt0 lh-copy'>This name will be appended to your node’s user agent string, and will be visible on the Bitcoin network. Please only use alphanumeric characters, and keep to less than 12 in length.</p>
                     </div>
                 </div>
 

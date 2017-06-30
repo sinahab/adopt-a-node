@@ -4,6 +4,8 @@
     <div class='pt1 pb3 center'>
         <p class='h2 pb2 slate-gray roboto'>My Nodes</p>
 
+        {% include "layouts/_messages.html" %}
+
         {% if nodes %}
             <div class='p2'>
                 <table class='inline-block table__nodes'>
@@ -43,8 +45,11 @@
         {% endif %}
 
         <br /><br />
-        <p class='pt1 pb3'>Want to adopt a node?</p>
-        <a class='button--secondary' href="{{ url_for('node.new') }}">Adopt a node</a>
+        <div class='pb4'>
+            <p class='pt1 pb3'>Want to adopt a node?</p>
+            <a class='button--secondary' href="{{ url_for('node.new') }}">Adopt a node</a>
+        </div>
+
 
     </div>
 {% endblock %}
