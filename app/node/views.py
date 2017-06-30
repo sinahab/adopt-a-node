@@ -8,6 +8,7 @@ from app import db
 from app.models.node import Node
 from app.models.invoice import Invoice
 from app.service_objects.bitpay_client import BitpayClient
+from app.utils.invoice import calculate_price
 
 @node.route('/nodes/', methods=['GET'])
 @login_required
@@ -39,33 +40,33 @@ def create():
     if form.validate_on_submit():
 
         try:
-            # step 1: create a new Node record in the DB.
-            # TODO: calculate expiration_date
+            # step 1: create a new Node record.
             node = Node(
                 user=current_user,
                 provider=form.provider.data,
                 name=form.name.data,
                 bu_ad=form.bu_ad.data,
-                bu_eb=form.bu_eb.data
+                bu_eb=form.bu_eb.data,
+                months_adopted=form.months.data
             )
 
-            # step 2: create a new Invoice record in the DB.
-            # TODO: calculate price based on time & cloud provider
+            # step 2: create a new Invoice record.
             invoice = Invoice(
                 user=current_user,
                 node=node,
-                price=4.00,
+                price=calculate_price(node.provider, node.months_adopted),
                 currency='USD'
             )
 
+            # step 3: save new Node and Invoice records to the DB.
             db.session.add(node)
             db.session.add(invoice)
             db.session.commit()
 
-            # step 3: create bitpay invoice & associate w Invoice record in DB.
+            # step 4: create bitpay invoice & associate w Invoice record in DB.
             invoice.generate()
 
-            # redirect user to bitpay url
+            # step 5: redirect user to bitpay url
             return redirect(invoice.bitpay_data['url'])
 
         except Exception as e:

@@ -11,6 +11,8 @@ from app import db
 from .state_mixin import StateMixin
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
 
+CLOUD_PROVIDERS = ('aws', 'digital_ocean')
+
 class Node(db.Model, StateMixin):
     __tablename__= 'nodes'
 
@@ -125,7 +127,7 @@ class Node(db.Model, StateMixin):
 
     @validates('provider')
     def validate_email(self, key, provider):
-        assert provider in ('aws', 'digital_ocean')
+        assert provider in CLOUD_PROVIDERS
         return provider
 
     def __repr__(self):
