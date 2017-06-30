@@ -17,22 +17,22 @@
                 {{ form.csrf_token }}
 
                 <div class='capitalize bold pt2 pb1'> {{ form.bu_eb.label }} </div>
-                <div class='form__flex-container'>
-                    <div class='form__flex-input'>
+                <div class='form__container'>
+                    <div class='form__input-container'>
                         {{ form.bu_eb(size=20, class_='form__input width-90') }}
                     </div>
-                    <div class='form__flex-description'>
+                    <div class='form__description'>
                         <p class='my0 pb1 lh-copy'>EB is the maximum block size, in MB, that a "relay node" will accept.</p>
                         <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
                     </div>
                 </div>
 
                 <div class='capitalize bold pt4 pb1'> {{ form.bu_ad.label }} </div>
-                <div class='form__flex-container'>
-                    <div class='form__flex-input'>
+                <div class='form__container'>
+                    <div class='form__input-container'>
                         {{ form.bu_ad(size=20, class_='form__input width-90') }}
                     </div>
-                    <div class='form__flex-description'>
+                    <div class='form__description'>
                         <p class='my0 pb1 lh-copy'>AD is the block count at which you will accept the longest chain as valid if it exceeds your EB.</p>
                         <a class='block' href='https://www.bitcoinunlimited.info/faq/what-is-bu' target='_blank'>Learn more.</a>
                     </div>
@@ -41,31 +41,31 @@
                 <div class='capitalize bold pt4 pb1'>
                     {{ form.name.label }} <div class='inline-block regular small slate-gray'>(optional)</div>
                 </div>
-                <div class='form__flex-container'>
-                    <div class='form__flex-input'>
+                <div class='form__container'>
+                    <div class='form__input-container'>
                         {{ form.name(size=20, class_='form__input width-90', placeholder='e.g. John') }}
                     </div>
-                    <div class='form__flex-description'>
+                    <div class='form__description'>
                         <p class='mt0 lh-copy'>This name will be appended to your node’s user agent string, and will be visible on the Bitcoin network. Please only use alphanumeric characters, and keep to less than 12 in length.</p>
                     </div>
                 </div>
 
                 <div class='capitalize bold pt4 pb1'> {{ form.provider.label }} </div>
-                <div class='form__flex-container'>
-                    <div class='form__flex-input'>
+                <div class='form__container'>
+                    <div class='form__input-container'>
                         {{ form.provider(class_='js-provider form__input width-90') }}
                     </div>
-                    <div class='form__flex-description'>
+                    <div class='form__description'>
                         <p class='mt0 lh-copy'>Pick the cloud provider where you would like to host the node. This effects the price (which is dynamically updated to reflect the change).</p>
                     </div>
                 </div>
 
                 <div class='capitalize bold pt4 pb1 form__label'> {{ form.months.label }} </div>
-                <div class='form__flex-container'>
-                    <div class='form__flex-input'>
+                <div class='form__container'>
+                    <div class='form__input-container'>
                         {{ form.months(size=20, class_='js-months form__input width-90') }}
                     </div>
-                    <div class='form__flex-description'>
+                    <div class='form__description'>
                         <p class='mt0 lh-copy'>This effects the price (which is dynamically updated to reflect the change).</p>
                     </div>
                 </div>

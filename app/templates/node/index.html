@@ -7,7 +7,7 @@
         {% include "layouts/_messages.html" %}
 
         {% if serialized_nodes %}
-            <div class='p2'>
+            <div class='p2 overflow-x--auto'>
                 <table class='inline-block table__nodes'>
                     <thead>
                         <tr>
@@ -37,9 +37,9 @@
                                 <td class='p1 px3'> {{ node.ad() }} </td>
                                 <td class='p1 px3'> {{ node.launched_at() }} </td>
                                 <td class='p1 px3'> {{ node.expires_at() }} </td>
-                                <td class='p1 px3 capitalize'>
+                                <td class='p1 px3 capitalize table__button-container'>
                                     {% if node.should_show_details_button() %}
-                                        <a href="{{ url_for('node.edit', id=node.node_id()) }}" class='button--secondary--small small p1'>view / edit</a>
+                                        <a href="{{ url_for('node.edit', id=node.node_id()) }}" class='table__button small p1'>view / edit</a>
                                     {% endif %}
                                 </td>
                             </tr>

@@ -1,14 +1,14 @@
 
-.form__flex-container
+.form__container
     display: flex
     flex-direction: row
     justify-content: center
     align-items: flex-start
 
-.form__flex-input
+.form__input-container
     flex-basis: 50%
 
-.form__flex-description
+.form__description
     flex-basis: 50%
 
 .form__input
@@ -39,3 +39,10 @@
 .form__label
     width: 45%
     min-width: 200px
+
+@media (max-width: 640px)
+    .form__container
+        display: block
+
+    .form__input-container
+        padding-bottom: 10px

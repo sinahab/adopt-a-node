@@ -1800,6 +1800,9 @@ code,
 .width-100 {
   width: 100%;
 }
+.overflow-x--auto {
+  overflow-x: auto;
+}
 
 
 @font-face {
@@ -1824,16 +1827,16 @@ code,
 }
 
 
-.form__flex-container {
+.form__container {
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: flex-start;
 }
-.form__flex-input {
+.form__input-container {
   flex-basis: 50%;
 }
-.form__flex-description {
+.form__description {
   flex-basis: 50%;
 }
 .form__input {
@@ -1864,6 +1867,14 @@ code,
 .form__label {
   width: 45%;
   min-width: 200px;
+}
+@media (max-width: 640px) {
+  .form__container {
+    display: block;
+  }
+  .form__input-container {
+    padding-bottom: 10px;
+  }
 }
 
 
@@ -1980,15 +1991,6 @@ a {
 .icon {
   height: 44px;
 }
-.button--secondary--small {
-  background-color: #1e91d6;
-  text-decoration: none;
-  color: #fff;
-  border-radius: 3px;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-}
 .footer {
   box-sizing: border-box;
   color: #fff;
@@ -2048,6 +2050,18 @@ a {
 }
 .table__nodes tr {
   height: 80px;
+}
+.table__button {
+  background-color: #1e91d6;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 3px;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+}
+.table__button-container {
+  min-width: 100px;
 }
 
 
