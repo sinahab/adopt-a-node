@@ -8,12 +8,12 @@ class Config(object):
 
     SECURITY_CONFIRMABLE = False
     SECURITY_REGISTERABLE = True
-    SECURITY_RECOVERABLE = False # TODO: needs email setup
+    SECURITY_RECOVERABLE = False # Needs email setup
     SECURITY_TRACKABLE = True
     SECURITY_PASSWORDLESS = False
-    SECURITY_CHANGEABLE = False # TODO: enable this in the future, to allow changing of passwords.
+    SECURITY_CHANGEABLE = False # Enable this in the future, to allow changing of passwords.
 
-    SECURITY_SEND_REGISTER_EMAIL = False # TODO: enable this after email setup is done.
+    SECURITY_SEND_REGISTER_EMAIL = False # Needs email setup.
 
     SECURITY_URL_PREFIX = None
     SECURITY_LOGIN_URL = '/sign_in'
