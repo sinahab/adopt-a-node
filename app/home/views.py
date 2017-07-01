@@ -8,7 +8,7 @@ def landing():
     """
     The landing page.
     """
-    return render_template('landing.html', title="Welcome")
+    return render_template('landing.html', title="BU")
 
 @home.route('/confirmation/')
 @login_required

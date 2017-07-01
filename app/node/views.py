@@ -34,7 +34,7 @@ def new():
     Adopt a node: select parameters for a new node
     """
     form = NewNodeForm()
-    return render_template('node/adopt.html', form=form, title="Adopt a Node")
+    return render_template('node/adopt.html', form=form, title="Adopt")
 
 @node.route('/nodes/', methods=['POST'])
 @login_required
