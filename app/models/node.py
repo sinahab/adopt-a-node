@@ -27,7 +27,7 @@ class Node(db.Model, StateMixin):
     status = Column(VARCHAR, nullable=False, server_default='new')
     launched_at = Column(TIMESTAMP(timezone=True))
     months_adopted = Column(INTEGER)
-    provider_id = Column(INTEGER)
+    provider_id = Column(VARCHAR)
     provider_status = Column(VARCHAR)
     provider_data = Column(JSONB)
     is_template_node = Column(BOOLEAN, server_default='False')
