@@ -51,9 +51,8 @@ flask db upgrade
 
 # make sure correct production secrets exist in instance/config.py
 
-ps aux | grep celery # and kill existing celery workers
-celery -A app.tasks worker --loglevel=info &
-service adopt-a-node restart
+service adopt-celery restart
+service adopt-web restart
 ```
 
 ## In development

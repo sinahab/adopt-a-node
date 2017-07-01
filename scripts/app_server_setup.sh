@@ -163,8 +163,8 @@ createdb adoptanode_production # create the database
 export FLASK_APP=run.py
 flask db upgrade
 
-# create a systemd unit file
-sudo vim /etc/systemd/system/adopt-a-node.service
+# create a systemd unit file for gunicorn
+sudo vim /etc/systemd/system/adopt-web.service
 # with the following contents:
 # ----
 [Unit]
@@ -176,6 +176,7 @@ User=bu
 Group=www-data
 WorkingDirectory=/home/bu/adopt-a-node
 Environment="PATH=/home/bu/Envs/adopt-a-node/bin"
+Environment="FLASK_CONFIG=production"
 ExecStart=/home/bu/Envs/adopt-a-node/bin/gunicorn --workers 3 --bind unix:adopt-a-node.sock -m 007 wsgi:app
 
 [Install]
@@ -183,8 +184,36 @@ WantedBy=multi-user.target
 # ----
 
 # start the gunicorn service
-sudo systemctl start adopt-a-node
-sudo systemctl enable adopt-a-node
+sudo systemctl start adopt-web
+sudo systemctl enable adopt-web
+service adopt-web start
+#--------------------------------------
+
+# create a systemd unit file for celery (our task queue)
+sudo vim /etc/systemd/system/adopt-celery.service
+# with the following contents:
+# ----
+[Unit]
+Description=Celery instance to serve adopt-a-node
+After=network.target
+
+[Service]
+User=bu
+Group=www-data
+WorkingDirectory=/home/bu/adopt-a-node
+Environment="PATH=/home/bu/Envs/adopt-a-node/bin"
+Environment="FLASK_CONFIG=production"
+ExecStart=/home/bu/Envs/adopt-a-node/bin/celery -A app.tasks worker --loglevel=info &
+
+[Install]
+WantedBy=multi-user.target
+# ----
+
+# start the celery service
+sudo systemctl start adopt-celery
+sudo systemctl enable adopt-celery
+service adopt-celery start
+#--------------------------------------
 
 # setup nginx
 sudo vim /etc/nginx/sites-available/default
