@@ -64,6 +64,3 @@ def create_celery(config_name):
                 return TaskBase.__call__(self, *args, **kwargs)
     celery.Task = ContextTask
     return celery
-
-# TODO: make the config dynamic
-celery = create_celery('development')

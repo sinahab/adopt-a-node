@@ -1,7 +1,9 @@
 
-from app import celery
+import os
+from app import create_celery
 
-from app.utils.ssh import ssh_scope
+config_name = os.getenv('FLASK_CONFIG') or 'development'
+celery = create_celery(config_name)
 
 @celery.task(name="tasks.add")
 def configure_node(node_id):
