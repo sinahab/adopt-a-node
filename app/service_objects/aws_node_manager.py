@@ -42,7 +42,6 @@ class AWSNodeManager(NodeManager):
                 },
             ]
         )
-
         instance = response['Instances'][0]
 
         # update node's values in the db
@@ -73,3 +72,14 @@ class AWSNodeManager(NodeManager):
 
     def update_provider_attributes(self):
         pass
+
+    def get_instance(self):
+        """
+        Queries AWS for the node's associated instance
+        """
+        response = self.manager.describe_instances(
+            InstanceIds=[self.node.provider_id]
+        )
+
+        instances = response['Reservations'][0]['Instances']
+        return(instances[0])

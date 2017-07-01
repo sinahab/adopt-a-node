@@ -28,7 +28,18 @@ class TestAWSNodeManager(TestBase):
         """
         node = Node(provider='aws')
         manager = AWSNodeManager(node, aws_sdk=boto3)
-        snapshot = manager.create_droplet_from_latest_snapshot()
+        manager.create_droplet_from_latest_snapshot()
 
         # value returned by FakeAwsClient
         self.assertEqual(node.provider_id, 'i-test123')
+
+    def test_get_instance(self):
+        """
+        Queries AWS for the node's associated instance
+        """
+        node = Node(provider='aws')
+        manager = AWSNodeManager(node, aws_sdk=boto3)
+        instance = manager.get_instance()
+
+        # value returned by FakeAwsClient
+        self.assertEqual(instance['InstanceId'], 'i-test-instance')

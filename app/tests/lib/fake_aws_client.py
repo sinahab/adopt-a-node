@@ -1,12 +1,11 @@
 
-
 class FakeAwsClient:
     def __init__(self, resource, aws_access_key_id, aws_secret_access_key, region_name):
         return
 
     def describe_images(*args, **kwargs):
         """
-        Returns a list of AWS instances
+        Returns a list of AWS images
         """
         response = {'Images':
             [
@@ -91,6 +90,67 @@ class FakeAwsClient:
                 },
                 'RetryAttempts': 0
             }
+        }
+
+        return(response)
+
+    def describe_instances(*args, **kwargs):
+        """
+        Returns a list of AWS instances
+        """
+        response = {
+            'Reservations': [{
+                'Groups': [],
+                'Instances': [{
+                    'AmiLaunchIndex': 0, 'ImageId': 'ami-35e0f14c', 'InstanceId': 'i-test-instance',
+                    'InstanceType': 't2.micro', 'KeyName': 'bu-keypair-uswest2',
+                    'Monitoring': {'State': 'disabled'},
+                    'Placement': {'AvailabilityZone': 'us-west-2a', 'GroupName': '', 'Tenancy': 'default'},
+                    'PrivateDnsName': 'ip-10-0-0-220.us-west-2.compute.internal',
+                    'PrivateIpAddress': '10.0.0.220', 'ProductCodes': [],
+                    'PublicDnsName': '',
+                    'State': {'Code': 80, 'Name': 'stopped'},
+                    'StateTransitionReason': 'User initiated (2017-07-01 22:53:08 GMT)',
+                    'SubnetId': 'subnet-0b33196c', 'VpcId': 'vpc-e5889682',
+                    'Architecture': 'x86_64', 'BlockDeviceMappings': [{
+                        'DeviceName': '/dev/sda1', 'Ebs': {
+                            'DeleteOnTermination': True, 'Status': 'attached',
+                            'VolumeId': 'vol-0d5ab0d9de3dbb261'
+                        }
+                    }],
+                    'ClientToken': '', 'EbsOptimized': False, 'EnaSupport': True,
+                    'Hypervisor': 'xen', 'NetworkInterfaces': [{
+                        'Attachment': {
+                            'AttachmentId': 'eni-attach-22c68bca', 'DeleteOnTermination': True,
+                            'DeviceIndex': 0, 'Status': 'attached'
+                        },
+                        'Description': '',
+                        'Groups': [{
+                            'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff'
+                        }],
+                        'Ipv6Addresses': [], 'MacAddress': '02:49:0d:19:8c:82',
+                        'NetworkInterfaceId': 'eni-0e502623', 'OwnerId': '870168114151',
+                        'PrivateDnsName': 'ip-10-0-0-220.us-west-2.compute.internal',
+                        'PrivateIpAddress': '10.0.0.220', 'PrivateIpAddresses': [{
+                            'Primary': True, 'PrivateDnsName': 'ip-10-0-0-220.us-west-2.compute.internal',
+                            'PrivateIpAddress': '10.0.0.220'
+                        }],
+                        'SourceDestCheck': True, 'Status': 'in-use',
+                        'SubnetId': 'subnet-0b33196c', 'VpcId': 'vpc-e5889682'
+                    }],
+                    'RootDeviceName': '/dev/sda1', 'RootDeviceType': 'ebs',
+                    'SecurityGroups': [{
+                        'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff'
+                    }],
+                    'SourceDestCheck': True,
+                    'StateReason': {
+                        'Code': 'Client.UserInitiatedShutdown',
+                        'Message': 'Client.UserInitiatedShutdown: User initiated shutdown'
+                    }, 'VirtualizationType': 'hvm'
+                }],
+                'OwnerId': '870168114151', 'ReservationId': 'r-01beabb7681060c8b'
+            }],
+            'ResponseMetadata': {}
         }
 
         return(response)
