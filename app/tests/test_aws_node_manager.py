@@ -1,6 +1,7 @@
 
 from .test_base import TestBase
 
+from app import db
 from app.models.node import Node
 from app.service_objects.aws_node_manager import AWSNodeManager, boto3
 
@@ -24,7 +25,7 @@ class TestAWSNodeManager(TestBase):
 
     def test_create_droplet_from_latest_snapshot(self):
         """
-        Creates a new droplet from the latest template snapshot
+        Tests that an AWS instance is created for the node.
         """
         node = Node(provider='aws')
         manager = AWSNodeManager(node, aws_sdk=boto3)
@@ -33,13 +34,29 @@ class TestAWSNodeManager(TestBase):
         # value returned by FakeAwsClient
         self.assertEqual(node.provider_id, 'i-test123')
 
+    def test_update_provider_attributes(self):
+        """
+        Test that the node's db attributes are updated to match ones returned by AWS.
+        """
+        node = Node(provider='aws', provider_status='pending')
+        db.session.add(node)
+        db.session.commit()
+
+        manager = AWSNodeManager(node, aws_sdk=boto3)
+        manager.update_provider_attributes()
+
+        # values returned by FakeAwsClient
+        self.assertEqual(node.provider_status, 'stopped')
+        self.assertEqual(node.ipv4_address, '12.123.123.12')
+        self.assertEqual(node.provider_data['InstanceType'], 't2.micro')
+
     def test_get_instance(self):
         """
-        Queries AWS for the node's associated instance
+        That that AWS SDK is called with the correct query.
         """
-        node = Node(provider='aws')
+        node = Node(provider='aws', provider_id='123test')
         manager = AWSNodeManager(node, aws_sdk=boto3)
-        instance = manager.get_instance()
+        instance = manager.get_instance(node.provider_id)
 
         # value returned by FakeAwsClient
         self.assertEqual(instance['InstanceId'], 'i-test-instance')

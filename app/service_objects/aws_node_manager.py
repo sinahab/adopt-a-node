@@ -71,14 +71,31 @@ class AWSNodeManager(NodeManager):
         pass
 
     def update_provider_attributes(self):
-        pass
+        """
+        Queries AWS and updates the node's data in the db accordingly
+        """
+        instance = self.get_instance(self.node.provider_id)
 
-    def get_instance(self):
+        # drop unnecessary or hard-to-save data
+        instance.pop('LaunchTime', None)
+        instance.pop('BlockDeviceMappings', None)
+        instance.pop('NetworkInterfaces', None)
+        instance.pop('PrivateIpAddresses', None)
+
+        self.node.ipv4_address = instance['PublicIpAddress']
+        self.node.provider_status = instance['State']['Name']
+        self.node.provider_data = instance
+
+        db.session.add(self.node)
+        db.session.commit()
+        return(instance)
+
+    def get_instance(self, instance_id):
         """
         Queries AWS for the node's associated instance
         """
         response = self.manager.describe_instances(
-            InstanceIds=[self.node.provider_id]
+            InstanceIds=[instance_id]
         )
 
         instances = response['Reservations'][0]['Instances']

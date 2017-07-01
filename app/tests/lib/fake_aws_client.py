@@ -1,4 +1,6 @@
 
+import datetime
+
 class FakeAwsClient:
     def __init__(self, resource, aws_access_key_id, aws_secret_access_key, region_name):
         return
@@ -104,16 +106,19 @@ class FakeAwsClient:
                 'Instances': [{
                     'AmiLaunchIndex': 0, 'ImageId': 'ami-35e0f14c', 'InstanceId': 'i-test-instance',
                     'InstanceType': 't2.micro', 'KeyName': 'bu-keypair-uswest2',
+                    'LaunchTime': datetime.datetime(2017, 7, 1, 21, 9, 26),
                     'Monitoring': {'State': 'disabled'},
                     'Placement': {'AvailabilityZone': 'us-west-2a', 'GroupName': '', 'Tenancy': 'default'},
                     'PrivateDnsName': 'ip-10-0-0-220.us-west-2.compute.internal',
                     'PrivateIpAddress': '10.0.0.220', 'ProductCodes': [],
-                    'PublicDnsName': '',
+                    'PublicDnsName': 'ec2-35-164-120-82.us-west-2.compute.amazonaws.com',
+                    'PublicIpAddress': '12.123.123.12',
                     'State': {'Code': 80, 'Name': 'stopped'},
                     'StateTransitionReason': 'User initiated (2017-07-01 22:53:08 GMT)',
                     'SubnetId': 'subnet-0b33196c', 'VpcId': 'vpc-e5889682',
                     'Architecture': 'x86_64', 'BlockDeviceMappings': [{
                         'DeviceName': '/dev/sda1', 'Ebs': {
+                            'AttachTime': datetime.datetime(2017, 7, 1, 21, 9, 26),
                             'DeleteOnTermination': True, 'Status': 'attached',
                             'VolumeId': 'vol-0d5ab0d9de3dbb261'
                         }
@@ -121,13 +126,12 @@ class FakeAwsClient:
                     'ClientToken': '', 'EbsOptimized': False, 'EnaSupport': True,
                     'Hypervisor': 'xen', 'NetworkInterfaces': [{
                         'Attachment': {
+                            'AttachTime': datetime.datetime(2017, 7, 1, 21, 9, 26),
                             'AttachmentId': 'eni-attach-22c68bca', 'DeleteOnTermination': True,
                             'DeviceIndex': 0, 'Status': 'attached'
                         },
                         'Description': '',
-                        'Groups': [{
-                            'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff'
-                        }],
+                        'Groups': [{ 'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff' }],
                         'Ipv6Addresses': [], 'MacAddress': '02:49:0d:19:8c:82',
                         'NetworkInterfaceId': 'eni-0e502623', 'OwnerId': '870168114151',
                         'PrivateDnsName': 'ip-10-0-0-220.us-west-2.compute.internal',
@@ -152,5 +156,4 @@ class FakeAwsClient:
             }],
             'ResponseMetadata': {}
         }
-
         return(response)

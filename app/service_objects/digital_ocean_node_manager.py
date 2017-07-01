@@ -55,6 +55,7 @@ class DigitalOceanNodeManager(NodeManager):
         self.node.provider_status = droplet.status
         self.node.provider_data = droplet.__dict__
 
+        db.session.add(self.node)
         db.session.commit()
         return
 
