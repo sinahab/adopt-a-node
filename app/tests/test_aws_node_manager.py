@@ -21,3 +21,14 @@ class TestAWSNodeManager(TestBase):
 
         # value returned by FakeAwsClient
         self.assertEqual(snapshot['ImageId'], 'ami-test2')
+
+    def test_create_droplet_from_latest_snapshot(self):
+        """
+        Creates a new droplet from the latest template snapshot
+        """
+        node = Node(provider='aws')
+        manager = AWSNodeManager(node, aws_sdk=boto3)
+        snapshot = manager.create_droplet_from_latest_snapshot()
+
+        # value returned by FakeAwsClient
+        self.assertEqual(node.provider_id, 'i-test123')

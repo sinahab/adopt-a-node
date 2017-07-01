@@ -1,10 +1,14 @@
 
+
 class FakeAwsClient:
     def __init__(self, resource, aws_access_key_id, aws_secret_access_key, region_name):
         return
 
     def describe_images(*args, **kwargs):
-        images = {'Images':
+        """
+        Returns a list of AWS instances
+        """
+        response = {'Images':
             [
                 {
                     'Architecture': 'x86_64', 'CreationDate': '2017-07-01T18:52:24.000Z', 'ImageId': 'ami-test1',
@@ -35,4 +39,58 @@ class FakeAwsClient:
             }
         }
 
-        return(images)
+        return(response)
+
+    def run_instances(*args, **kwargs):
+        """
+        Launches new instances on AWS
+        """
+        response = {
+            'Groups': [],
+            'Instances': [{
+                'AmiLaunchIndex': 0, 'ImageId': 'ami-35e0f14c', 'InstanceId': 'i-test123',
+                'InstanceType': 't2.micro', 'KeyName': 'bu-keypair-uswest2',
+                'Monitoring': {'State': 'disabled'},
+                'Placement': {'AvailabilityZone': 'us-west-2a', 'GroupName': '', 'Tenancy': 'default'},
+                'PrivateDnsName': 'ip-10-0-0-71.us-west-2.compute.internal', 'PrivateIpAddress': '10.0.0.71',
+                'ProductCodes': [], 'PublicDnsName': '',
+                'State': {'Code': 0, 'Name': 'pending'},
+                'StateTransitionReason': '', 'SubnetId': 'subnet-0b33196c',
+                'VpcId': 'vpc-e5889682', 'Architecture': 'x86_64',
+                'BlockDeviceMappings': [], 'ClientToken': '', 'EbsOptimized': False, 'Hypervisor': 'xen',
+                'NetworkInterfaces': [{
+                    'Attachment': {
+                        'AttachmentId': 'eni-attach-b4c08d5c',
+                        'DeleteOnTermination': True, 'DeviceIndex': 0,
+                        'Status': 'attaching'
+                    },
+                    'Description': '',
+                    'Groups': [{
+                        'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff'
+                    }], 'Ipv6Addresses': [], 'MacAddress': '02:c9:ab:7b:ac:b8',
+                    'NetworkInterfaceId': 'eni-a65c2a8b', 'OwnerId': '870168114151',
+                    'PrivateDnsName': 'ip-10-0-0-71.us-west-2.compute.internal',
+                    'PrivateIpAddress': '10.0.0.71', 'PrivateIpAddresses': [{
+                        'Primary': True, 'PrivateDnsName': 'ip-10-0-0-71.us-west-2.compute.internal',
+                        'PrivateIpAddress': '10.0.0.71'
+                    }], 'SourceDestCheck': True, 'Status': 'in-use',
+                    'SubnetId': 'subnet-0b33196c', 'VpcId': 'vpc-e5889682'
+                }],
+                'RootDeviceName': '/dev/sda1', 'RootDeviceType': 'ebs',
+                'SecurityGroups': [{'GroupName': 'bu_SG_uswest2', 'GroupId': 'sg-841e33ff'}],
+                'SourceDestCheck': True,
+                'StateReason': {'Code': 'pending', 'Message': 'pending'}, 'VirtualizationType': 'hvm'
+            }],
+            'OwnerId': '870168114151', 'ReservationId': 'r-0073b0ad807ed0204',
+            'ResponseMetadata': {
+                'RequestId': '620c1a65-08eb-4840-bd4c-417c0d28d344', 'HTTPStatusCode': 200,
+                'HTTPHeaders': {
+                    'content-type': 'text/xml;charset=UTF-8', 'transfer-encoding': 'chunked',
+                    'vary': 'Accept-Encoding', 'date': 'Sat, 01 Jul 2017 21:13:10 GMT',
+                    'server': 'AmazonEC2'
+                },
+                'RetryAttempts': 0
+            }
+        }
+
+        return(response)

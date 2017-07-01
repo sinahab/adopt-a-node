@@ -37,7 +37,9 @@ class DigitalOceanNodeManager(NodeManager):
 
         # update node's values in the db
         self.node.provider_id = droplet.id
+        db.session.add(self.node)
         db.session.commit()
+
         self.update_provider_attributes()
 
         return
