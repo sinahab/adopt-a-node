@@ -10,7 +10,8 @@ class TestBase(TestCase):
         config_name = 'test'
         app = create_app(config_name)
         app.config.update(
-            SQLALCHEMY_DATABASE_URI='postgresql://test:asdfasdf@localhost:5432/adoptanode_test'
+            SQLALCHEMY_DATABASE_URI='postgresql://test:asdfasdf@localhost:5432/adoptanode_test',
+            AWS_ACCOUNT_ID='1234'
         )
         return app
 
