@@ -35,3 +35,4 @@ class User(db.Model, UserMixin):
         return "Email(%r)" % (self.email)
 
 from .node import Node
+from .invoice import Invoice

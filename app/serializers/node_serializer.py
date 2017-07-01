@@ -13,7 +13,7 @@ class NodeSerializer():
         elif self.node.status in ('provisioned', 'configured'):
             return({'message': 'Provisioning', 'link': None })
         elif self.node.status == 'up':
-            return({'message': self.node.ipv4_address, 'link': "https://bitnodes.21.co/nodes/%s-8333/{ip}".format(ip=self.node.ipv4_address)})
+            return({'message': self.node.ipv4_address, 'link': "https://bitnodes.21.co/nodes/{ip}-8333/".format(ip=self.node.ipv4_address)})
         elif self.node.status == 'updating_client':
             return({'message': 'Upgrading client', 'link': None })
         elif self.node.status == 'taking_snapshot':

@@ -25,7 +25,7 @@
                             <tr>
                                 <td class='p1 px3'>
                                     {% if node.info()['link'] %}
-                                        <a href="{{ node.info['link'] }}" target='_blank'>
+                                        <a href="{{ node.info()['link'] }}" target='_blank'>
                                             {{ node.info()['message'] }}
                                         </a>
                                     {% else %}
