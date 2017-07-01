@@ -41,9 +41,17 @@ client = Client(api_uri="https://test.bitpay.com")
 and use the test.bitpay.com Merchant UI.
 
 ## In production
+To deploy app:
 ```
+workon adopt-a-node
+pip install -r requirements.txt
+
 export FLASK_APP=run.py
 flask db upgrade
+
+# make sure correct production secrets exist in instance/config.py
+
+ps aux | grep celery # and kill existing celery workers
 celery -A app.tasks worker --loglevel=info &
 service adopt-a-node restart
 ```
