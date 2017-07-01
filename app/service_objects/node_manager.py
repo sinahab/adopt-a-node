@@ -12,7 +12,7 @@ class NodeManager(ABC):
         pass
 
     @abstractmethod
-    def get_provider_attributes(self):
+    def update_provider_attributes(self):
         """
         Queries the provider and updates the node's data in the db accordingly
         """
