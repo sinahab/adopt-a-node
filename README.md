@@ -73,6 +73,11 @@ View scheduled Celery tasks:
 celery -A app.tasks inspect scheduled
 ```
 
+View Celery logs:
+```
+sudo journalctl -u adopt-celery
+```
+
 To run shell:
 ```
 flask shell
@@ -80,7 +85,7 @@ flask shell
 
 To run tests:
 ```
-python tests.py
+FLASK_CONFIG=test python tests.py
 ```
 
 Database migrations:
