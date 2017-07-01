@@ -5,7 +5,7 @@ from app import create_celery
 config_name = os.getenv('FLASK_CONFIG') or 'development'
 celery = create_celery(config_name)
 
-@celery.task(name="tasks.add")
+@celery.task(name="tasks.configure_node")
 def configure_node(node_id):
     """
     Checks to see whether the node has been successfully provisioned.
