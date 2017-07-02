@@ -1,5 +1,6 @@
 
 import os
+import time
 from datetime import datetime
 
 from flask import current_app
@@ -68,12 +69,17 @@ class AWSNodeManager(NodeManager):
         """
         Boots up the node
         """
-        instance = self.get_instance()
-        instance.start()
-        return
+        self.manager.start_instances(
+            InstanceIds=[self.node.provider_id]
+        )
 
     def take_snapshot(self):
-        pass
+        """
+        Creates a snapshot from the given node.
+        """
+        image_name = str(int(time.time()))
+        image = self.manager.create_image(InstanceId=self.node.provider_id, Name=image_name)
+        return(image)
 
     def update_provider_attributes(self):
         """
