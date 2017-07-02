@@ -5,7 +5,7 @@ from app.models.node import CLOUD_PROVIDERS
 # (which give user real-time price estimate).
 PROVIDERS = {
     'digital_ocean': { 'price_per_month': 10.00, 'currency': 'USD' },
-    'aws': {}
+    'aws': { 'price_per_month': 10.00, 'currency': 'USD' }
 }
 
 def calculate_price(provider, number_of_months):

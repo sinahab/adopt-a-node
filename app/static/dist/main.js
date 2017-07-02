@@ -19,7 +19,8 @@ this.x=t,this.y=i,this.scroller.options.useTransform?this.indicatorStyle[h.style
 // NOTE: keep sync'd with prices on the server @ app/utils/invoice.py
 // (which are actually used to create invoice)
 const providers = {
-    'digital_ocean': { 'price_per_month': 10.00, 'currency': 'USD' }
+    'digital_ocean': { 'price_per_month': 10.00, 'currency': 'USD' },
+    'aws': { 'price_per_month': 10.00, 'currency': 'USD' }
 }
 
 $( document ).ready(function() {
