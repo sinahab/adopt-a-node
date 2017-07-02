@@ -5,7 +5,7 @@ from app import db
 from app.models.node import Node
 from app.service_objects.aws_node_manager import AWSNodeManager, boto3
 
-from app.tests.lib.fake_aws_client import FakeAwsClient
+from app.tests.support.fake_aws_client import FakeAwsClient
 
 # setup test doubles
 setattr(boto3, 'client', FakeAwsClient)
