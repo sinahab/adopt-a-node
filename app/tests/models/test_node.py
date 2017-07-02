@@ -1,10 +1,14 @@
 
 from app.tests.test_base import TestBase
+from unittest.mock import patch
+
 from app import db
 
 import sqlalchemy
 
 from app.models.node import Node
+from app.service_objects.aws_node_manager import AWSNodeManager
+from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
 
 class TestNode(TestBase):
     def test_node(self):
@@ -26,3 +30,13 @@ class TestNode(TestBase):
         """
         with self.assertRaises(AssertionError):
             node = Node(provider='linode', name="Bob's node")
+
+    def test_node_manager(self):
+        """
+        Test that the right node manager is used, given the node's provider.
+        """
+        node_one = Node(provider='aws', name="Bob's node")
+        self.assertEqual(node_one.node_manager().__class__, AWSNodeManager)
+
+        node_two = Node(provider='digital_ocean', name="Bob's node")
+        self.assertEqual(node_two.node_manager().__class__, DigitalOceanNodeManager)

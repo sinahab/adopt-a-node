@@ -10,6 +10,7 @@ from datetime import datetime
 from app import db
 from .state_mixin import StateMixin
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
+from app.service_objects.aws_node_manager import AWSNodeManager
 
 CLOUD_PROVIDERS = ('aws', 'digital_ocean')
 
@@ -70,7 +71,7 @@ class Node(db.Model, StateMixin):
         This needs to happen after a delay, so that provisioning is already complete.
         """
         try:
-            DigitalOceanNodeManager(self).create_server_from_latest_snapshot()
+            self.node_manager().create_server_from_latest_snapshot()
 
             self.launched_at = datetime.utcnow()
             db.session.add(self)
@@ -86,44 +87,52 @@ class Node(db.Model, StateMixin):
         """
         Configures the BU client to have the provided attributes (EB, AD, and subVersion).
         """
-        DigitalOceanNodeManager(self).update_bitcoin_conf()
+        self.node_manager().update_bitcoin_conf()
         return
 
     def _start_client(self):
         """
         Starts the BU client on the server.
         """
-        DigitalOceanNodeManager(self).restart_bitcoind()
+        self.node_manager().restart_bitcoind()
         return
 
     def _stop_client(self):
         """
         Stops the BU client on the server.
         """
-        DigitalOceanNodeManager(self).stop_bitcoind()
+        self.node_manager().stop_bitcoind()
         return
 
     def _power_off(self):
         """
         Powers off the server.
         """
-        DigitalOceanNodeManager(self).power_off()
+        self.node_manager().power_off()
         return
 
     def _power_on(self):
         """
         Powers on the server.
         """
-        DigitalOceanNodeManager(self).power_on()
+        self.node_manager().power_on()
         return
 
     def _take_snapshot(self):
         """
         Takes a snapshot of the server
         """
-        DigitalOceanNodeManager(self).take_snapshot()
+        self.node_manager().take_snapshot()
         # TODO: schedule job to check if taking snapshot has been completed, and if so, to make the 'finish_taking_snapshot' transition.
         return
+
+    def node_manager(self):
+        if self.provider == 'aws':
+            return(AWSNodeManager(self))
+        elif self.provider == 'digital_ocean':
+            return(DigitalOceanNodeManager(self))
+        else:
+            raise Exception('No supported NodeManager could be found.')
 
     @validates('provider')
     def validate_email(self, key, provider):
