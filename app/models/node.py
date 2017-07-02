@@ -126,7 +126,17 @@ class Node(db.Model, StateMixin):
         # TODO: schedule job to check if taking snapshot has been completed, and if so, to make the 'finish_taking_snapshot' transition.
         return
 
+    def update_provider_attributes(self):
+        """
+        Udates the provider attributes for the node.
+        """
+        self.node_manager().update_provider_attributes()
+        return
+
     def node_manager(self):
+        """
+        Returns the appropriate NodeManager for the node, according to it's provider.
+        """
         if self.provider == 'aws':
             return(AWSNodeManager(self))
         elif self.provider == 'digital_ocean':
