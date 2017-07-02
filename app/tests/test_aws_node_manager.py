@@ -56,7 +56,7 @@ class TestAWSNodeManager(TestBase):
         """
         node = Node(provider='aws', provider_id='123test')
         manager = AWSNodeManager(node, aws_sdk=boto3)
-        instance = manager.get_instance(node.provider_id)
+        instance = manager.get_instance()
 
         # value returned by FakeAwsClient
         self.assertEqual(instance['InstanceId'], 'i-test-instance')

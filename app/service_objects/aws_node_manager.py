@@ -65,7 +65,12 @@ class AWSNodeManager(NodeManager):
         return(latest_available_image)
 
     def power_on(self):
-        pass
+        """
+        Boots up the node
+        """
+        instance = self.get_instance()
+        instance.start()
+        return
 
     def take_snapshot(self):
         pass
@@ -74,7 +79,7 @@ class AWSNodeManager(NodeManager):
         """
         Queries AWS and updates the node's data in the db accordingly
         """
-        instance = self.get_instance(self.node.provider_id)
+        instance = self.get_instance()
 
         # drop unnecessary or hard-to-save data
         instance.pop('LaunchTime', None)
@@ -90,12 +95,12 @@ class AWSNodeManager(NodeManager):
         db.session.commit()
         return(instance)
 
-    def get_instance(self, instance_id):
+    def get_instance(self):
         """
         Queries AWS for the node's associated instance
         """
         response = self.manager.describe_instances(
-            InstanceIds=[instance_id]
+            InstanceIds=[self.node.provider_id]
         )
 
         instances = response['Reservations'][0]['Instances']
