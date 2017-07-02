@@ -5,7 +5,7 @@ from ..utils.ssh import ssh_scope
 
 class NodeManager(ABC):
     @abstractmethod
-    def create_droplet_from_latest_snapshot(self):
+    def create_server_from_latest_snapshot(self):
         """
         Clones a new server from the latest template snapshot
         """

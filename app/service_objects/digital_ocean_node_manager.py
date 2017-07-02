@@ -14,7 +14,7 @@ class DigitalOceanNodeManager(NodeManager):
         self.node = node
         return
 
-    def create_droplet_from_latest_snapshot(self):
+    def create_server_from_latest_snapshot(self):
         """
         Creates a new droplet from the latest template snapshot
         """

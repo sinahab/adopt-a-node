@@ -20,7 +20,7 @@ class AWSNodeManager(NodeManager):
         )
         return
 
-    def create_droplet_from_latest_snapshot(self):
+    def create_server_from_latest_snapshot(self):
         """
         Creates a new instance from the latest template snapshot
         """

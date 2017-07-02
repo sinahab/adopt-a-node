@@ -70,7 +70,7 @@ class Node(db.Model, StateMixin):
         This needs to happen after a delay, so that provisioning is already complete.
         """
         try:
-            DigitalOceanNodeManager(self).create_droplet_from_latest_snapshot()
+            DigitalOceanNodeManager(self).create_server_from_latest_snapshot()
 
             self.launched_at = datetime.utcnow()
             db.session.add(self)
