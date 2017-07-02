@@ -6,7 +6,7 @@
 # They will occasionally require provide prompts for input.
 
 sudo apt-get update
-sudo apt-get -y upgrade
+sudo apt-get -y -f upgrade
 
 USR="bu"
 adduser $USR
@@ -52,3 +52,11 @@ chmod 744 BU_auto_node.sh
 sudo ./BU_auto_node.sh
 
 # sudo su testme -c '/usr/local/bin/bitcoind -datadir=/home/testme/.bitcoin -daemon'
+
+#-------------------------------------
+
+# add these to the bottom of .bitcoin/bitcoin.conf
+# the app replaces them with the user-chosen values.
+excessiveblocksize=16000000
+excessiveacceptdepth=12
+net.subversionOverride=/BitcoinUnlimited:v1.0.2.0(EB16; AD12) template/
