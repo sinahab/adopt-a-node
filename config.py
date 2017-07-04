@@ -57,8 +57,7 @@ class ProductionConfig(Config):
     """
     Production configurations
     """
-
-    DEBUG = False
+    DEBUG=False
 
     # TODO: update this when site is launched.
     APP_BASE_URI = 'http://165.227.15.19'

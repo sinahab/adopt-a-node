@@ -181,7 +181,7 @@ Group=www-data
 WorkingDirectory=/home/bu/adopt-a-node
 Environment="PATH=/home/bu/Envs/adopt-a-node/bin"
 Environment="FLASK_CONFIG=production"
-ExecStart=/home/bu/Envs/adopt-a-node/bin/gunicorn --workers 3 --bind unix:adopt-a-node.sock -m 007 wsgi:app
+ExecStart=/home/bu/Envs/adopt-a-node/bin/gunicorn --config /home/bu/adopt-a-node/gunicorn_config.py --bind unix:adopt-a-node.sock -m 007 wsgi:app
 
 [Install]
 WantedBy=multi-user.target
