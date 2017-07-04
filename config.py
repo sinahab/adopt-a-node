@@ -24,6 +24,7 @@ class Config(object):
     SECURITY_CONFIRM_URL = '/confirm'
     SECURITY_POST_LOGIN_VIEW = '/nodes'
     SECURITY_POST_LOGOUT_VIEW = '/'
+    SECURITY_POST_REGISTER_VIEW = '/adopt'
     SECURITY_UNAUTHORIZED_VIEW = '/'
 
     SECURITY_FORGOT_PASSWORD_TEMPLATE = 'security/forgot_password.html'

@@ -7,7 +7,12 @@
         <div class='m0 center py4'>
             <p class='h1 p1 pt4'>Signal Your Support for Larger Blocks</h1>
             <p class='mb4 pt1 px2 pb3 roboto'>Adopt a Bitcoin Unlimited Full Node with the Click of a Button</p>
-            <a class='button--primary' href="{{ url_for('node.new') }}">Adopt a node</a>
+
+            {% if current_user.is_authenticated %}
+                <a class='button--primary' href="{{ url_for('node.new') }}">Adopt a node</a>
+            {% else %}
+                <a class='button--primary' href="{{ url_for('security.register') }}">Adopt a node</a>
+            {% endif %}
         </div>
     </div>
 
@@ -141,9 +146,11 @@
                 <p>We hope you will join us in moving towards this goal by adopting a node.</p>
             </div>
 
-            <a class='px3 py2 capitalize button--primary' href="{{ url_for('node.new') }}">
-                Adopt a node
-            </a>
+            {% if current_user.is_authenticated %}
+                <a class='px3 py2 capitalize button--primary' href="{{ url_for('node.new') }}">Adopt a node</a>
+            {% else %}
+                <a class='px3 py2 capitalize button--primary' href="{{ url_for('security.register') }}">Adopt a node</a>
+            {% endif %}
         </div>
     </div>
 
