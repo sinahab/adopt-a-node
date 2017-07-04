@@ -225,6 +225,7 @@ sudo vim /etc/nginx/sites-available/default
 # ----
 server {
     listen 80 default_server;
+    server_name adoptanode.com;
 
     location / {
         include proxy_params;
@@ -235,3 +236,24 @@ server {
 
 sudo nginx -t  # check for syntax errors
 sudo systemctl restart nginx
+
+#--------
+
+# Setting up HTTPS with Lets Encrypt
+# Inspired by: https://certbot.eff.org/#ubuntuxenial-nginx
+sudo apt-get update
+sudo apt-get install software-properties-common
+sudo add-apt-repository ppa:certbot/certbot
+sudo apt-get update
+sudo apt-get install python-certbot-nginx
+
+sudo certbot --nginx
+
+# schedule 'certbot renew' cronjob to run every day (it'll only actually update when it's within 3 months of expiry)
+# schedule in root's crontab (so it has sudo privileges as required by certbot)
+sudo su - root
+crontab -e
+# add the following line:
+# 30 2 * * * /usr/bin/certbot renew
+
+#--------

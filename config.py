@@ -60,7 +60,7 @@ class ProductionConfig(Config):
     DEBUG=False
 
     # TODO: update this when site is launched.
-    APP_BASE_URI = 'http://165.227.15.19'
+    APP_BASE_URI = 'https://adoptanode.com'
     APP_BASE_PUBLIC_URI = APP_BASE_URI
 
 class TestingConfig(Config):
