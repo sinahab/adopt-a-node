@@ -6,6 +6,8 @@ from app import db
 
 import sqlalchemy
 
+from flask import current_app
+
 from app.models.node import Node
 from app.service_objects.aws_node_manager import AWSNodeManager
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
@@ -40,3 +42,10 @@ class TestNode(TestBase):
 
         node_two = Node(provider='digital_ocean', name="Bob's node")
         self.assertEqual(node_two.node_manager().__class__, DigitalOceanNodeManager)
+
+    def test_configure(self):
+        """
+        Test that message is relayed to the appropriate node manager.
+        """
+        print(current_app.config['BITPAY_TOKEN'])
+        return

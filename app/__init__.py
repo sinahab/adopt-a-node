@@ -43,7 +43,9 @@ def create_app(config_name):
 def configure_app_with_db(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
-    app.config.from_pyfile('config.py')
+
+    config_file = "{env}.py".format(env=config_name)
+    app.config.from_pyfile(config_file)
 
     db.init_app(app)
 
