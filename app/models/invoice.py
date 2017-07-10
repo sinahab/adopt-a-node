@@ -49,12 +49,6 @@ class Invoice(db.Model, StateMixin):
         { 'trigger': 'invalidate', 'source': ['paid'], 'dest': 'invalid' }
     ]
 
-    def _provision_node(self):
-        """
-        Provisions the node paid for by the invoice.
-        """
-        self.node.provision()
-
     def _generate_on_bitpay(self):
         """
         Generates an invoice on Bitpay
@@ -62,9 +56,15 @@ class Invoice(db.Model, StateMixin):
         BitpayClient().create_invoice_on_bitpay(self)
         return
 
+    def _provision_node(self):
+        """
+        Provisions the node paid for by the invoice.
+        """
+        self.node.provision()
+
     def possible_transitions_to(self, dest):
         """
-        Returns all possible transitions between the current state as source and the provided dest  destination states
+        Returns all possible transitions between the current state as source and the provided dest destination states
         """
         possible_transitions = list(
             filter(
