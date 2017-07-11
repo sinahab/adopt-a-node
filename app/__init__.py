@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_assets import Environment
 from flask_migrate import Migrate
+import logging
 
 from celery import Celery
 
@@ -17,6 +18,10 @@ db = SQLAlchemy()
 
 def create_app(config_name):
     app = configure_app_with_db(config_name)
+
+    # add logging
+    app.logger.addHandler(logging.StreamHandler())
+    app.logger.setLevel(logging.INFO)
 
     # assets
     assets = Environment(app)

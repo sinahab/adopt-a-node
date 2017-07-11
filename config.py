@@ -50,7 +50,6 @@ class DevelopmentConfig(Config):
     BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
 
     APP_BASE_URI = 'http://localhost:5000'
-
     # separate public uri for development, since needs to use ngrok (or something else) to make it accessible to Bitpay servers.
     APP_BASE_PUBLIC_URI = 'http://27474f51.ngrok.io'
 
@@ -68,6 +67,7 @@ class ProductionConfig(Config):
     """
     Production configurations
     """
+    SQLALCHEMY_ECHO = True
     DEBUG=False
 
     BITPAY_URI = 'https://bitpay.com'
