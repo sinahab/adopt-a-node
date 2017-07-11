@@ -6,7 +6,7 @@ class NodeSerializer():
         self.node = node
 
     def info(self):
-        if self.node.status == 'new' and self.node.invoice.status == 'generated' and self.node.invoice.generated_minutes_ago() < 30:
+        if self.node.status == 'new' and self.node.invoice.status == 'generated' and self.node.invoice.generated_minutes_ago() and self.node.invoice.generated_minutes_ago() < 30:
             return({'message': 'Pending payment', 'link': self.node.invoice.bitpay_data['url'] })
         elif self.node.status == 'new' and self.node.invoice.status in ('paid', 'confirmed'):
             return({'message': 'Pending block confirmations', 'link': None })
