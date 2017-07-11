@@ -10,7 +10,7 @@ class BitpayClient():
         with open(current_app.config['BITPAY_PEM_FILE'], 'r') as pem_file:
             pem = pem_file.read().rstrip().replace('\\n', '\n')
         tokens = current_app.config['BITPAY_TOKEN']
-        self.client = Client(api_uri="https://test.bitpay.com", pem=pem, tokens=tokens)
+        self.client = Client(api_uri=current_app.config['BITPAY_URI'], pem=pem, tokens=tokens)
 
     def create_invoice_on_bitpay(self, invoice):
         """

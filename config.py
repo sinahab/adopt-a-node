@@ -37,8 +37,6 @@ class Config(object):
 
     SECURITY_MSG_LOGIN = ('Please sign in first.', 'info')
 
-    BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
-
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 class DevelopmentConfig(Config):
@@ -48,10 +46,23 @@ class DevelopmentConfig(Config):
 
     SQLALCHEMY_ECHO = True
 
+    BITPAY_URI = 'https://test.bitpay.com'
+    BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
+
     APP_BASE_URI = 'http://localhost:5000'
 
     # separate public uri for development, since needs to use ngrok (or something else) to make it accessible to Bitpay servers.
     APP_BASE_PUBLIC_URI = 'http://27474f51.ngrok.io'
+
+class TestingConfig(Config):
+    """
+    Testing configurations
+    """
+
+    BITPAY_URI = 'https://test.bitpay.com'
+    BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
+
+    TESTING = True
 
 class ProductionConfig(Config):
     """
@@ -59,15 +70,11 @@ class ProductionConfig(Config):
     """
     DEBUG=False
 
+    BITPAY_URI = 'https://bitpay.com'
+    BITPAY_PEM_FILE = 'instance/bitpay-key-production.pem'
+
     APP_BASE_URI = 'https://adoptanode.com'
     APP_BASE_PUBLIC_URI = APP_BASE_URI
-
-class TestingConfig(Config):
-    """
-    Testing configurations
-    """
-
-    TESTING = True
 
 app_config = {
     'development': DevelopmentConfig,
