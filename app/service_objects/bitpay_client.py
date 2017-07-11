@@ -1,6 +1,6 @@
 
 from datetime import datetime
-from flask import current_app
+from flask import current_app, flash
 
 from app import db
 from bitpay.client import Client
@@ -33,8 +33,14 @@ class BitpayClient():
             }
         }
 
-        bitpay_invoice = self.client.create_invoice(params)
-        self._update_invoice_bitpay_params(invoice, bitpay_invoice)
+        try:
+            bitpay_invoice = self.client.create_invoice(params)
+            self._update_invoice_bitpay_params(invoice, bitpay_invoice)
+
+        except Exception as e:
+            current_app.logger.error(e)
+            flash('There was an error. Please contact bu.adoptanode@gmail.com for more info.')
+
         return(invoice)
 
     def fetch_invoice(self, invoice):
@@ -73,6 +79,6 @@ class BitpayClient():
             db.session.commit()
 
         except Exception as e:
-            print(e)
+            current_app.logger.error(e)
 
         return(invoice)
