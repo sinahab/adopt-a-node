@@ -78,8 +78,13 @@ class Invoice(db.Model, StateMixin):
         """
         Returns an number specifying how many minutes ago the invoice was generated on Bitpay.
         """
-        diff = datetime.now(timezone.utc) - self.bitpay_invoice_created_at
-        return(diff.seconds / 60)
+        mins_ago = None
+
+        if self.bitpay_invoice_created_at:
+            diff = datetime.now(timezone.utc) - self.bitpay_invoice_created_at
+            mins_ago = diff.seconds / 60
+
+        return(mins_ago)
 
     def __repr__(self):
         return "Bitpay invoice (%r)" % (self.bitpay_id)

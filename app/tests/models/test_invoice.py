@@ -1,5 +1,6 @@
 
 from app.tests.test_base import TestBase
+import datetime
 from unittest.mock import patch
 
 from app import db
@@ -9,18 +10,23 @@ from app.models.invoice import Invoice
 
 class TestInvoice(TestBase):
 
-    @patch('app.models.invoice.BitpayClient')
-    def test_generate(self, mock_bitpay_class):
-        """
-        Uses the BitpayClient to generate an invoice.
-        """
-        # setup
+    def setUp(self):
+        super(TestInvoice, self).setUp()
+
         node = Node(provider='aws', name="Bob's node")
         user = User(email='test@example.com', password='abcd')
         db.session.add(node)
         db.session.add(user)
         db.session.commit()
 
+
+    @patch('app.models.invoice.BitpayClient')
+    def test_generate(self, mock_bitpay_class):
+        """
+        Uses the BitpayClient to generate an invoice.
+        """
+        user = User.query.all()[0]
+        node = Node.query.all()[0]
         invoice = Invoice(user_id=user.id, node_id=node.id, price=10.00, currency='USD')
         db.session.add(invoice)
         db.session.commit()
@@ -35,20 +41,29 @@ class TestInvoice(TestBase):
         """
         Test the corret number of minutes are returned.
         """
-        # TODO:
-        pass
+        user = User.query.all()[0]
+        node = Node.query.all()[0]
+        invoice_created_at = datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(minutes=15)
+        invoice = Invoice(user_id=user.id, node_id=node.id, price=10.00, currency='USD',
+            status='generated',
+            bitpay_invoice_created_at=invoice_created_at
+        )
+        db.session.add(invoice)
+        db.session.commit()
+
+        self.assertEqual(invoice.generated_minutes_ago(), 15)
+
+        invoice.bitpay_invoice_created_at = None
+        db.session.add(invoice)
+        db.session.commit()
+        self.assertEqual(invoice.generated_minutes_ago(), None)
 
     def test_transitions_to(self):
         """
         Test that it returns all possible transitions
         """
-        # setup
-        node = Node(provider='aws', name="Bob's node")
-        user = User(email='test@example.com', password='abcd')
-        db.session.add(node)
-        db.session.add(user)
-        db.session.commit()
-
+        user = User.query.all()[0]
+        node = Node.query.all()[0]
         invoice = Invoice(user_id=user.id, node_id=node.id, price=10.00, currency='USD')
         invoice.status = 'paid'
         db.session.add(invoice)
