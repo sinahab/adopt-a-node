@@ -23,7 +23,7 @@ class TestInvoice(TestBase):
     @patch('app.models.invoice.BitpayClient')
     def test_generate(self, mock_bitpay_class):
         """
-        Uses the BitpayClient to generate an invoice.
+        Test that the BitpayClient is used to generate an invoice.
         """
         user = User.query.all()[0]
         node = Node.query.all()[0]
@@ -31,11 +31,32 @@ class TestInvoice(TestBase):
         db.session.add(invoice)
         db.session.commit()
 
-        invoice.generate()
-
         mock_bitpay = mock_bitpay_class.return_value
+        mock_bitpay.create_invoice_on_bitpay.return_value = True
+
+        invoice.generate()
         mock_bitpay_class.assert_called()
         mock_bitpay.create_invoice_on_bitpay.assert_called_with(invoice)
+        self.assertEqual(invoice.status, 'generated')
+
+    @patch('app.models.invoice.BitpayClient')
+    def test_generate_failure(self, mock_bitpay_class):
+        """
+        Test that BitpayClient's failure to create an invoice, results in the transition not completing.
+        """
+        user = User.query.all()[0]
+        node = Node.query.all()[0]
+        invoice = Invoice(user_id=user.id, node_id=node.id, price=10.00, currency='USD')
+        db.session.add(invoice)
+        db.session.commit()
+
+        mock_bitpay = mock_bitpay_class.return_value
+        mock_bitpay.create_invoice_on_bitpay.return_value = False
+
+        invoice.generate()
+        mock_bitpay_class.assert_called()
+        mock_bitpay.create_invoice_on_bitpay.assert_called_with(invoice)
+        self.assertEqual(invoice.status, 'new')
 
     def test_generated_minutes_ago(self):
         """

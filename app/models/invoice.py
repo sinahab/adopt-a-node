@@ -41,7 +41,7 @@ class Invoice(db.Model, StateMixin):
         'invalid'  # invoice was paid, but payment was not confirmed within 1 hour after receipt. Need to contact Bitpay to resolve these, in case they go through later.
     ]
     transitions = [
-        { 'trigger': 'generate', 'source': ['new'], 'dest': 'generated', 'before': '_generate_on_bitpay' },
+        { 'trigger': 'generate', 'source': ['new'], 'dest': 'generated', 'conditions': '_generate_on_bitpay' },
         { 'trigger': 'pay', 'source': ['generated'], 'dest': 'paid' },
         { 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed' },
         { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete', 'before': '_provision_node' },
@@ -53,8 +53,8 @@ class Invoice(db.Model, StateMixin):
         """
         Generates an invoice on Bitpay
         """
-        BitpayClient().create_invoice_on_bitpay(self)
-        return
+        invoice_created_successfully = BitpayClient().create_invoice_on_bitpay(self)
+        return(invoice_created_successfully)
 
     def _provision_node(self):
         """

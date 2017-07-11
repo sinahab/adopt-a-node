@@ -36,12 +36,13 @@ class BitpayClient():
         try:
             bitpay_invoice = self.client.create_invoice(params)
             self._update_invoice_bitpay_params(invoice, bitpay_invoice)
+            return(True)
 
         except Exception as e:
             current_app.logger.error(e)
             flash('There was an error. Please contact bu.adoptanode@gmail.com for more info.')
 
-        return(invoice)
+        return(False)
 
     def fetch_invoice(self, invoice):
         """
