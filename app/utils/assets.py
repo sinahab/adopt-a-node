@@ -7,6 +7,7 @@ bundles = {
         'js/vendor/drawer.min.js',
         'js/adopt.js',
         'js/main.js',
+        'js/google-analytics.js',
         output='dist/main.js'),
 
     'css': Bundle(
