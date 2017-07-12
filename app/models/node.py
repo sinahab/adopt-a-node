@@ -13,6 +13,7 @@ from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManag
 from app.service_objects.aws_node_manager import AWSNodeManager
 
 CLOUD_PROVIDERS = ('aws', 'digital_ocean')
+BU_VERSION = '1.0.2'
 
 class Node(db.Model, StateMixin):
     __tablename__= 'nodes'
@@ -24,7 +25,7 @@ class Node(db.Model, StateMixin):
     bu_ad = Column(INTEGER, nullable=False, server_default='16')
     bu_eb = Column(INTEGER, nullable=False, server_default='12')
     name = Column(VARCHAR)
-    bu_version = Column(VARCHAR)
+    bu_version = Column(VARCHAR, default=BU_VERSION)
     status = Column(VARCHAR, nullable=False, server_default='new')
     launched_at = Column(TIMESTAMP(timezone=True))
     months_adopted = Column(INTEGER)

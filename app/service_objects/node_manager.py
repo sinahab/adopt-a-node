@@ -83,7 +83,7 @@ class NodeManager(ABC):
         ad = str(self.node.bu_ad)
         name = self.node.name
         version = self.node.bu_version
-        subversion_sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version}(EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
+        subversion_sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version} (EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
         subversion_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=subversion_sed_params)
 
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
