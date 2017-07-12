@@ -28,7 +28,7 @@ class NodeSerializer():
         return(True)
 
     def should_show_details_button(self):
-        if self.node.status == 'new':
+        if self.node.status in ('new', 'provisioned'):
             return(False)
 
         return(True)
