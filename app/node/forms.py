@@ -8,9 +8,9 @@ from app.models.node import CLOUD_PROVIDERS
 
 def validate_name_alphanumeric(form, field):
     if field.data:
-        alphanumeric = re.match('^[\w-]+$', field.data) is not None
+        alphanumeric = re.match('^[a-zA-Z0-9_]+$', field.data) is not None
         if not alphanumeric:
-            raise ValidationError('Name: must only include alphanumeric characters.')
+            raise ValidationError('Name: must only include alphanumeric or underscore characters.')
 
 class NewNodeForm(FlaskForm):
     """
