@@ -120,6 +120,9 @@ def update(id):
         try:
             db.session.add(node)
             db.session.commit()
+
+            node.configure()
+            
             flash('You have successfully edited the node.')
 
         except Exception as e:

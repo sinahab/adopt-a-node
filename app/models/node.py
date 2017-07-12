@@ -53,7 +53,7 @@ class Node(db.Model, StateMixin):
     ]
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision'},  # provision a server on the desired cloud provider
-        { 'trigger': 'configure', 'source': ['provisioned', 'on'], 'dest': 'configured', 'before': '_configure', 'after': 'start_client'},  # configure bitcoin.conf according to the user's desired values.
+        { 'trigger': 'configure', 'source': ['provisioned', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_client'},  # configure bitcoin.conf according to the user's desired values.
         { 'trigger': 'start_client', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_start_client'},  # start the BU daemon
         { 'trigger': 'stop_client', 'source': 'up', 'dest': 'on', 'before': '_stop_client'},  # stop the BU daemon
         { 'trigger': 'power_off', 'source': 'on', 'dest': 'off', 'before': '_power_off'},  # power off the associated server
