@@ -45,7 +45,7 @@ class NodeManager(ABC):
         Stops bitcoind on the node.
         """
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
-            client.exec_command('bitcoin-cli stop')
+            client.exec_command('sudo service bitcoind stop;')
         return
 
     def start_bitcoind(self):
@@ -53,7 +53,7 @@ class NodeManager(ABC):
         Starts bitcoind on the node.
         """
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
-            client.exec_command('bitcoind -daemon; exit')
+            client.exec_command('sudo service bitcoind start;')
         return
 
     def restart_bitcoind(self):
@@ -61,7 +61,7 @@ class NodeManager(ABC):
         Restarts bitcoind on the node.
         """
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
-            client.exec_command('bitcoin-cli stop; sleep 20; bitcoind -daemon; exit')
+            client.exec_command('sudo service bitcoind restart;')
         return
 
     def update_bitcoin_conf(self):

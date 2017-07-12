@@ -32,13 +32,6 @@ sudo service ssh restart
 
 #--------------------------------------
 
-# do not require sudo for poweroff, as this is required for automation in the app
-sudo visudo
-# then type in:
-bu ALL = NOPASSWD: /sbin/poweroff
-
-#--------------------------------------
-
 sudo apt-get install tmux
 tmux new -s bu
 
@@ -60,3 +53,50 @@ sudo ./BU_auto_node.sh
 excessiveblocksize=16000000
 excessiveacceptdepth=12
 net.subversionOverride=/BitcoinUnlimited:v1.0.2.0(EB16; AD12) template/
+
+#-------------------------------------
+
+# create a systemd service for bitcoind
+sudo vim /etc/systemd/system/bitcoind.service
+# with the following contents:
+# ----
+[Unit]
+Description=Bitcoin BU Node / bitcoind
+After=network.target
+
+[Service]
+Type=forking
+User=bu
+ExecStart=/usr/local/bin/bitcoind -conf=/home/bu/.bitcoin/bitcoin.conf -disablewallet -daemon
+ExecStop=/usr/local/bin/bitcoin-cli -conf=/home/bu/.bitcoin/bitcoin.conf stop
+PIDFile=/home/bu/.bitcoin/bitcoind.pid
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target
+# ----
+
+systemctl daemon-reload
+systemctl enable bitcoind
+bitcoin-cli stop
+service bitcoind start
+
+# stop bitcoind from starting at boot in /etc/rc.local
+sudo vim /etc/rc.local
+# comment out the line: su bu -c '/usr/local/bin/bitcoind -datadir=/home/bu/.bitcoin -daemon'
+# leave the line: exit 0
+
+
+#--------------------------------------
+
+# do not require sudo for these commands, as this is required for automation in the app
+sudo visudo
+# then type in:
+bu ALL=(ALL) NOPASSWD:ALL
+bu ALL = NOPASSWD: /sbin/poweroff
