@@ -4,7 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_assets import Environment
 from flask_migrate import Migrate
+
 import logging
+from raven.handlers.logging import SentryHandler
 
 from celery import Celery
 
@@ -20,8 +22,9 @@ def create_app(config_name):
     app = configure_app_with_db(config_name)
 
     # add logging
-    app.logger.addHandler(logging.StreamHandler())
-    app.logger.setLevel(logging.INFO)
+    stream_handler = logging.StreamHandler()
+    stream_handler.setLevel(logging.INFO)
+    app.logger.addHandler(stream_handler)
 
     # assets
     assets = Environment(app)
@@ -56,6 +59,12 @@ def configure_app_with_db(config_name):
 
     migrate = Migrate(app, db)
 
+    # add Sentry for error tracking
+    if config_name == 'production':
+        sentry_handler = SentryHandler(dsn=app.config['SENTRY_DSN'])
+        sentry_handler.setLevel(logging.ERROR)
+        app.logger.addHandler(sentry_handler)
+
     return app
 
 # inspired by https://github.com/thrisp/flask-celery-example/blob/master/app.py
@@ -64,10 +73,12 @@ def create_celery(config_name):
     celery = Celery('tasks', broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task
+
     class ContextTask(TaskBase):
         abstract = True
         def __call__(self, *args, **kwargs):
             with app.app_context():
                 return TaskBase.__call__(self, *args, **kwargs)
+
     celery.Task = ContextTask
     return celery
