@@ -49,9 +49,9 @@ class DevelopmentConfig(Config):
     BITPAY_URI = 'https://test.bitpay.com'
     BITPAY_PEM_FILE = 'instance/bitpay-key.pem'
 
-    APP_BASE_URI = 'http://localhost:5000'
+    APP_BASE_URI = 'http://localhost:8000'
     # separate public uri for development, since needs to use ngrok (or something else) to make it accessible to Bitpay servers.
-    APP_BASE_PUBLIC_URI = 'http://27474f51.ngrok.io'
+    APP_BASE_PUBLIC_URI = 'http://2388f506.ngrok.io'
 
 class TestingConfig(Config):
     """

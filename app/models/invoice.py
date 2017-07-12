@@ -43,8 +43,8 @@ class Invoice(db.Model, StateMixin):
     transitions = [
         { 'trigger': 'generate', 'source': ['new'], 'dest': 'generated', 'conditions': '_generate_on_bitpay' },
         { 'trigger': 'pay', 'source': ['generated'], 'dest': 'paid' },
-        { 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed' },
-        { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete', 'before': '_provision_node' },
+        { 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed', 'before': '_provision_node' },
+        { 'trigger': 'complete', 'source': ['generated', 'paid', 'confirmed'], 'dest': 'complete' },
         { 'trigger': 'expire', 'source': ['generated'], 'dest': 'expired' },
         { 'trigger': 'invalidate', 'source': ['paid'], 'dest': 'invalid' }
     ]

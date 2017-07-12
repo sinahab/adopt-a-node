@@ -9,9 +9,9 @@ class NodeSerializer():
         if self.node.status == 'new' and self.node.invoice.status == 'generated' and self.node.invoice.generated_minutes_ago() and self.node.invoice.generated_minutes_ago() < 30:
             return({'message': 'Pending payment', 'link': self.node.invoice.bitpay_data['url'] })
         elif self.node.status == 'new' and self.node.invoice.status in ('paid', 'confirmed'):
-            return({'message': 'Pending block confirmations', 'link': None })
+            return({'message': 'Pending block confirmation', 'link': None })
         elif self.node.status in ('provisioned', 'configured'):
-            return({'message': 'Provisioning', 'link': None })
+            return({'message': 'Provisioning. This will take 30 minutes.', 'link': None })
         elif self.node.status == 'up':
             return({'message': self.node.ipv4_address, 'link': "https://bitnodes.21.co/nodes/{ip}-8333/".format(ip=self.node.ipv4_address)})
         elif self.node.status == 'updating_client':

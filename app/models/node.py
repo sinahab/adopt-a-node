@@ -77,7 +77,7 @@ class Node(db.Model, StateMixin):
             db.session.add(self)
             db.session.commit()
 
-            configure_node.apply_async(args=(self.id,), countdown=2700)
+            configure_node.apply_async(args=(self.id,), countdown=1800)
         except Exception as e:
             print(e)
 

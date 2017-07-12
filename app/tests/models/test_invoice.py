@@ -90,5 +90,5 @@ class TestInvoice(TestBase):
         db.session.add(invoice)
         db.session.commit()
 
-        expected_transitions = [{ 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed' }]
+        expected_transitions = [{ 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed', 'before': '_provision_node' }]
         self.assertEqual(invoice.possible_transitions_to('confirmed'), expected_transitions)

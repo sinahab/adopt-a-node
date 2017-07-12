@@ -18,7 +18,7 @@ def configure_node(node_id):
     if True:
         node.configure()
     else:
-        configure_node.apply_async((node_id), countdown=2700)
+        configure_node.apply_async((node_id), countdown=1800)
 
     return
 

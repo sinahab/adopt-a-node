@@ -61,7 +61,7 @@ class TestNode(TestBase):
 
         node_manager.create_server_from_latest_snapshot.assert_called()
         self.assertTrue(datetime.datetime.now(datetime.timezone.utc) - node.launched_at < datetime.timedelta(minutes=1))
-        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=2700)
+        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=1800)
 
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')

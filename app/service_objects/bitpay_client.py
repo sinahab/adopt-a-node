@@ -25,7 +25,7 @@ class BitpayClient():
             'notificationURL': "{base_public_uri}/bitpay".format(base_public_uri=current_app.config['APP_BASE_PUBLIC_URI']),
             'orderId': invoice.order_id, # this id makes it easier to track orders in the Bitpay merchant UI.
             'posData': invoice.id, # this is a unique identifier that will be sent back by Bitpay with notifications.
-            'transactionSpeed': 'low',
+            'transactionSpeed': 'medium',
             'extendedNotifications': True,
             'buyer': {
                 'email': invoice.user.email,
