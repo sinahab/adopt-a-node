@@ -1,5 +1,5 @@
 
-from flask import flash, redirect, render_template, url_for, abort
+from flask import flash, redirect, render_template, url_for, abort, current_app
 from flask_security import current_user, login_required
 
 from . import node
@@ -123,7 +123,7 @@ def update(id):
             flash('You have successfully edited the node.')
 
         except Exception as e:
-            print(e)
+            current_app.logger.error(e)
 
         # redirect to the nodes page
         return redirect(url_for('node.index'))

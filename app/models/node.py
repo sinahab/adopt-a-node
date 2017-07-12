@@ -1,4 +1,5 @@
 
+from flask import current_app
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, JSONB, BOOLEAN
@@ -80,7 +81,7 @@ class Node(db.Model, StateMixin):
 
             configure_node.apply_async(args=(self.id,), countdown=1800)
         except Exception as e:
-            print(e)
+            current_app.logger.error(e)
 
         return
 
