@@ -257,3 +257,37 @@ crontab -e
 # 30 2 * * * /usr/bin/certbot renew
 
 #--------
+
+# add swap space
+# basically following this structure: https://www.digitalocean.com/community/tutorials/how-to-add-swap-on-ubuntu-14-04
+
+# check current setup
+sudo swapon -s
+free -m
+df -h
+
+# create swap file
+sudo fallocate -l 4G /swapfile
+ls -lh /swapfile # verify
+sudo chmod 600 /swapfile
+ls -lh /swapfile # verify
+sudo mkswap /swapfile
+sudo swapon /swapfile
+sudo swapon -s # verify
+free -m
+
+# make the swap file permanent
+sudo vim /etc/fstab
+# add this line to bottom of file:
+/swapfile   none    swap    sw    0   0
+
+# upate swap configs
+sudo sysctl vm.swappiness=10
+sudo sysctl vm.vfs_cache_pressure=50
+
+sudo vim /etc/sysctl.conf
+# at the bottom add:
+vm.swappiness=10
+vm.vfs_cache_pressure = 50
+
+#--------
