@@ -60,10 +60,7 @@ class Node(db.Model, StateMixin):
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
         { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
         { 'trigger': 'finish_taking_snapshot', 'source': 'taking_snapshot', 'dest': 'off'},  # finish taking a snapshot of the server
-
-        # TODO: implement these
-        { 'trigger': 'begin_updating_client', 'source': 'on', 'dest': 'updating_client'},  # begin updating BU client on the server
-        { 'trigger': 'finish_updating_client', 'source': 'updating_client', 'dest': 'on'},  # finish updating BU client on the server
+        { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' }  # rebuild server from latest snapshot
     ]
 
     def _provision(self):
@@ -84,6 +81,22 @@ class Node(db.Model, StateMixin):
             current_app.logger.error(e)
 
         return
+
+    def _rebuild(self):
+        """
+        Rebuilds the existing server from the latest snapshot.
+        Also, schedules the node for configuration.
+        This needs to happen after a delay, so that provisioning is already complete.
+        """
+        try:
+            self.node_manager().rebuild_server_from_latest_snapshot()
+
+            self.bu_version = BU_VERSION
+            db.session.commit()
+
+            configure_node.apply_async(args=(self.id,), countdown=1800)
+        except Exception as e:
+            current_app.logger.error(e)
 
     def _configure(self):
         """

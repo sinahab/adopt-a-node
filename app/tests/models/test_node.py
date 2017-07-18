@@ -7,7 +7,7 @@ from app import db
 
 import sqlalchemy
 
-from app.models.node import Node
+from app.models.node import Node, BU_VERSION
 from app.service_objects.aws_node_manager import AWSNodeManager
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
 
@@ -62,6 +62,29 @@ class TestNode(TestBase):
         node_manager.create_server_from_latest_snapshot.assert_called()
         self.assertTrue(datetime.datetime.now(datetime.timezone.utc) - node.launched_at < datetime.timedelta(minutes=1))
         mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=1800)
+
+    @patch('app.models.node.configure_node')
+    @patch('app.models.node.DigitalOceanNodeManager')
+    @patch('app.models.node.AWSNodeManager')
+    def test_rebuild(self, mock_aws_node_manager, mock_digital_ocean_node_manager, mock_configure_task):
+        """
+        Test that:
+        1) The correct node manager is used to provision an instance.
+        2) A celery task to configure the node is queued for 45 minutes from now.
+        3) The Node's bu_version attribute is updated to reflect the latest value in models/node.py.
+        """
+        node = Node(provider='digital_ocean', name="Bob's node", bu_version='0.3' ,status='off')
+        db.session.add(node)
+        db.session.commit()
+        self.assertEqual(node.bu_version, '0.3')
+
+        node_manager = mock_digital_ocean_node_manager.return_value
+
+        node.rebuild()
+
+        node_manager.rebuild_server_from_latest_snapshot.assert_called()
+        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=1800)
+        self.assertEqual(node.bu_version, BU_VERSION)
 
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')
