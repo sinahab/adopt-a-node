@@ -1,7 +1,7 @@
 
 import os
 import time
-import digitalocean
+from digitalocean import Manager, Droplet
 from datetime import datetime
 from flask import current_app
 
@@ -10,7 +10,7 @@ from .node_manager import NodeManager
 
 class DigitalOceanNodeManager(NodeManager):
     def __init__(self, node):
-        self.manager = digitalocean.Manager(token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'])
+        self.manager = Manager(token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'])
         self.node = node
         return
 
@@ -21,7 +21,7 @@ class DigitalOceanNodeManager(NodeManager):
         snapshot = self.get_latest_snapshot()
 
         # create new droplet from snapshot
-        droplet = digitalocean.Droplet(
+        droplet = Droplet(
             token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
             name = str(self.node.id),
             region='sfo2',
@@ -41,6 +41,16 @@ class DigitalOceanNodeManager(NodeManager):
         db.session.commit()
 
         self.update_provider_attributes()
+
+        return
+
+    def rebuild_server_from_latest_snapshot(self):
+        """
+        Rebuilds the current droplet from the latest snapshot
+        """
+        snapshot = self.get_latest_snapshot()
+        droplet = self.manager.get_droplet(self.node.provider_id)
+        droplet.rebuild(image_id=snapshot.id)
 
         return
 

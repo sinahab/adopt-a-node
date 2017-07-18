@@ -51,7 +51,7 @@ class DevelopmentConfig(Config):
 
     APP_BASE_URI = 'http://localhost:8000'
     # separate public uri for development, since needs to use ngrok (or something else) to make it accessible to Bitpay servers.
-    APP_BASE_PUBLIC_URI = 'http://2388f506.ngrok.io'
+    APP_BASE_PUBLIC_URI = 'http://7f0a0ac3.ngrok.io'
 
 class TestingConfig(Config):
     """
