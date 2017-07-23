@@ -14,7 +14,7 @@ from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManag
 from app.service_objects.aws_node_manager import AWSNodeManager
 
 CLOUD_PROVIDERS = ('aws', 'digital_ocean')
-BU_VERSION = '1.0.2'
+BU_VERSION = '1.0.3'
 
 class Node(db.Model, StateMixin):
     __tablename__= 'nodes'
