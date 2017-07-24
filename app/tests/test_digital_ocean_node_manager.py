@@ -4,7 +4,7 @@ from unittest.mock import patch, MagicMock
 
 from app import db
 from app.models.node import Node
-from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager
+from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager, DIGITAL_OCEAN_REGIONS
 
 from app.tests.support.fake_digital_ocean_manager import FakeDigitalOceanManager
 
@@ -44,3 +44,15 @@ class TestDigitalOceanNodeManager(TestBase):
         mock_do_manager_class.assert_called()
         # values from FakeDigitalOceanManager
         self.assertEqual(latest_snapshot.id, '456')
+
+    def test_pick_random_region(self):
+        """
+        Test that it picks a random Digital Ocean region
+        """
+        node = Node(provider='digital_ocean')
+
+        returned_region = DigitalOceanNodeManager(node)._pick_random_region()
+        self.assertTrue(returned_region['name'] in list(map(lambda r: r['name'], DIGITAL_OCEAN_REGIONS)))
+
+        actual_region = list(filter(lambda r: r['name'] == returned_region['name'], DIGITAL_OCEAN_REGIONS))[0]
+        self.assertEqual(returned_region['slug'], actual_region['slug'])

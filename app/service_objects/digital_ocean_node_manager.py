@@ -1,5 +1,6 @@
 
 import os
+import random
 import time
 from digitalocean import Manager, Droplet
 from datetime import datetime
@@ -7,6 +8,21 @@ from flask import current_app
 
 from app import db
 from .node_manager import NodeManager
+
+# Queried from https://developers.digitalocean.com/documentation/v2/#list-all-regions
+DIGITAL_OCEAN_REGIONS = [
+    { 'slug': 'sfo1', 'name': 'San Francisco 1' },
+    { 'slug': 'sfo2', 'name': 'San Francisco 2' },
+    { 'slug': 'nyc1', 'name': 'New York 1' },
+    { 'slug': 'nyc3', 'name': 'New York 3' },
+    { 'slug': 'ams2', 'name': 'Amsterdam 2' },
+    { 'slug': 'ams3', 'name': 'Amsterdam 3' },
+    { 'slug': 'sgp1', 'name': 'Singapore 1' },
+    { 'slug': 'lon1', 'name': 'London 1' },
+    { 'slug': 'fra1', 'name': 'Frankfurt 1' },
+    { 'slug': 'tor1', 'name': 'Toronto 1' },
+    { 'slug': 'blr1', 'name': 'Bangalore 1' }
+]
 
 class DigitalOceanNodeManager(NodeManager):
     def __init__(self, node):
@@ -24,7 +40,7 @@ class DigitalOceanNodeManager(NodeManager):
         droplet = Droplet(
             token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
             name = str(self.node.id),
-            region='sfo2',
+            region=self._pick_random_region()['slug'],
             image=snapshot.id,
             size_slug='1gb',
             ssh_keys= [9581853],
@@ -93,3 +109,9 @@ class DigitalOceanNodeManager(NodeManager):
         snapshots = self.manager.get_droplet_snapshots()
         latest_snapshot = max(snapshots, key=lambda snapshot: datetime.strptime(snapshot.created_at, '%Y-%m-%dT%H:%M:%SZ'))
         return(latest_snapshot)
+
+    def _pick_random_region(self):
+        """
+        Picks a random Digital Ocean region to spin up the node
+        """
+        return(random.choice(DIGITAL_OCEAN_REGIONS))
