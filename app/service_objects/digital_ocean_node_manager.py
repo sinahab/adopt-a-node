@@ -40,7 +40,7 @@ class DigitalOceanNodeManager(NodeManager):
         droplet = Droplet(
             token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
             name = str(self.node.id),
-            region=self._pick_random_region()['slug'],
+            region='sfo2',
             image=snapshot.id,
             size_slug='1gb',
             ssh_keys= [9581853],
