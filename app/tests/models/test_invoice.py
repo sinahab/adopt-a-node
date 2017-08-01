@@ -86,9 +86,14 @@ class TestInvoice(TestBase):
         user = User.query.all()[0]
         node = Node.query.all()[0]
         invoice = Invoice(user_id=user.id, node_id=node.id, price=10.00, currency='USD')
+
         invoice.status = 'paid'
         db.session.add(invoice)
         db.session.commit()
-
-        expected_transitions = [{ 'trigger': 'confirm', 'source': ['generated', 'paid'], 'dest': 'confirmed', 'before': '_provision_node' }]
+        expected_transitions = [{ 'trigger': 'confirm', 'source': ['expired', 'invalid', 'generated', 'paid'], 'dest': 'confirmed', 'before': '_provision_node' }]
         self.assertEqual(invoice.possible_transitions_to('confirmed'), expected_transitions)
+
+        invoice.status = 'invalid'
+        db.session.commit()
+        expected_transitions = [{ 'trigger': 'pay', 'source': ['expired', 'invalid', 'generated'], 'dest': 'paid' }]
+        self.assertEqual(invoice.possible_transitions_to('paid'), expected_transitions)
