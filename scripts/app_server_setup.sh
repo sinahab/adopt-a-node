@@ -219,6 +219,33 @@ sudo systemctl enable adopt-celery
 service adopt-celery start
 #--------------------------------------
 
+# create a systemd unit file for celery beat (our task scheduler)
+sudo vim /etc/systemd/system/adopt-celery-beat.service
+# with the following contents:
+# ----
+[Unit]
+Description=Celery beat to schedule tasks
+After=network.target
+
+[Service]
+User=bu
+Group=www-data
+WorkingDirectory=/home/bu/adopt-a-node
+Environment="PATH=/home/bu/Envs/adopt-a-node/bin"
+Environment="FLASK_CONFIG=production"
+ExecStart=/home/bu/Envs/adopt-a-node/bin/celery beat -A app.tasks
+
+[Install]
+WantedBy=multi-user.target
+# ----
+
+# start the celery service
+sudo systemctl start adopt-celery-beat
+sudo systemctl enable adopt-celery-beat
+service adopt-celery-beat start
+
+#--------------------------------------
+
 # setup nginx
 sudo vim /etc/nginx/sites-available/default
 # comment out existing config and add the following:

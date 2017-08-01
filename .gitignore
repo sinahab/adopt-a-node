@@ -8,3 +8,6 @@ __pycache__/
 
 # tmp directory
 tmp/
+
+# celery beat generated schedule
+celerybeat-schedule.db

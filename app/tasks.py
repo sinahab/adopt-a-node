@@ -1,6 +1,7 @@
 
 import os
 from datetime import datetime, timedelta
+from celery.schedules import crontab
 from app import create_celery, db
 
 config_name = os.getenv('FLASK_CONFIG') or 'development'
@@ -41,3 +42,11 @@ def delete_unprovisioned_nodes():
             db.session.commit()
 
 from app.models.node import Node
+
+@celery.on_after_configure.connect
+def setup_periodic_tasks(sender, **kwargs):
+    # Executes every Thursdays at 7:30 a.m.
+    sender.add_periodic_task(
+        crontab(hour=7, minute=30, day_of_week=4),
+        delete_unprovisioned_nodes()
+    )
