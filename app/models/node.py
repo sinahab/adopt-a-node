@@ -51,6 +51,7 @@ class Node(db.Model, StateMixin):
         'taking_snapshot',  # a snapshot of the server is currently being taken.
         'updating_client'   # the BU client on server is being updated.
     ]
+
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision'},  # provision a server on the desired cloud provider
         { 'trigger': 'configure', 'source': ['provisioned', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_client'},  # configure bitcoin.conf according to the user's desired values.
