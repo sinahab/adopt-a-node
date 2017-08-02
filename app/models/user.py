@@ -3,7 +3,7 @@
 from sqlalchemy import Column
 from sqlalchemy.sql import func
 from sqlalchemy.dialects.postgresql import INTEGER, TIMESTAMP, VARCHAR, BOOLEAN
-from flask_security import UserMixin
+from flask_security import UserMixin, SQLAlchemyUserDatastore
 
 from app import db
 from .role import Role
@@ -33,6 +33,20 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return "Email(%r)" % (self.email)
+
+    def make_admin(self):
+        """
+        Makes the user an admin
+        """
+        user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+        user_datastore.add_role_to_user(self, 'admin')
+
+    def unmake_admin(self):
+        """
+        Makes the user not an admin.
+        """
+        user_datastore = SQLAlchemyUserDatastore(db, User, Role)
+        user_datastore.remove_role_from_user(self, 'admin')
 
 from .node import Node
 from .invoice import Invoice

@@ -2,7 +2,6 @@
 from flask_testing import TestCase
 
 from app import create_app, db
-from app.models.user import User
 
 class TestBase(TestCase):
 
@@ -17,6 +16,7 @@ class TestBase(TestCase):
 
     def setUp(self):
         db.create_all()
+        db.session.execute("INSERT INTO roles(name) VALUES ('admin')")
 
     def tearDown(self):
         db.session.remove()
