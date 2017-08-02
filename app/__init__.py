@@ -43,6 +43,9 @@ def create_app(config_name):
     from .node import node as node_blueprint
     app.register_blueprint(node_blueprint)
 
+    from .admin import admin as admin_blueprint
+    app.register_blueprint(admin_blueprint)
+
     from .bitpay import bitpay as bitpay_blueprint
     app.register_blueprint(bitpay_blueprint)
 
