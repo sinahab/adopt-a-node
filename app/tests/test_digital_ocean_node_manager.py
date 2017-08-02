@@ -1,6 +1,7 @@
 
 from .test_base import TestBase
 from unittest.mock import patch, MagicMock
+from app.utils.misc import DotDict
 
 from app import db
 from app.models.node import Node
@@ -17,16 +18,22 @@ class TestDigitalOceanNodeManager(TestBase):
         """
 
         node = Node(provider='digital_ocean', provider_id='droplet123')
+        db.session.add(node)
+        db.session.commit()
+
+        fake_digital_ocean_manager = FakeDigitalOceanManager(token='asd123')
 
         mock_do_manager = mock_do_manager_class.return_value
-        mock_do_manager.get_droplet_snapshots.return_value = FakeDigitalOceanManager(token='asd123').get_droplet_snapshots()
+        mock_do_manager.get_droplet_snapshots.return_value = fake_digital_ocean_manager.get_droplet_snapshots()
+        mock_do_manager.get_droplet.return_value = fake_digital_ocean_manager.get_droplet()
         mock_droplet = mock_do_manager.get_droplet.return_value
 
         DigitalOceanNodeManager(node).rebuild_server_from_latest_snapshot()
 
         mock_do_manager.get_droplet.assert_called_with(node.provider_id)
-        mock_droplet.rebuild.assert_called_with(image_id='456') # value from FakeDigitalOceanManager
-
+        # test that provider attributes have been updated from Digital Ocean
+        n = Node.query.filter_by(provider_id='droplet123').all()[0]
+        self.assertEqual(n.provider_status, 'exploding')
 
     @patch('app.service_objects.digital_ocean_node_manager.Manager')
     def test_get_latest_snapshot(self, mock_do_manager_class):

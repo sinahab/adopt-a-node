@@ -67,7 +67,7 @@ class DigitalOceanNodeManager(NodeManager):
         snapshot = self.get_latest_snapshot()
         droplet = self.manager.get_droplet(self.node.provider_id)
         droplet.rebuild(image_id=snapshot.id)
-
+        self.update_provider_attributes()
         return
 
     def update_provider_attributes(self):

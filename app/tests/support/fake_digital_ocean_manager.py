@@ -1,6 +1,9 @@
 
 from app.utils.misc import DotDict
 
+def rebuild(*args, **kwargs):
+    return
+
 class FakeDigitalOceanManager:
     def __init__(self, token):
         return
@@ -34,3 +37,15 @@ class FakeDigitalOceanManager:
 
         snapshots = [snapshot_one, snapshot_two]
         return(snapshots)
+
+    def get_droplet(self):
+        droplet = DotDict({
+            'name' : 'mylilnode',
+            'ip_address' : '127.0.0.4',
+            'status': 'exploding',
+            'log': 'bla'
+        })
+
+        droplet.rebuild = rebuild
+
+        return(droplet)
