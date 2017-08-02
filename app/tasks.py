@@ -34,12 +34,31 @@ def delete_unprovisioned_nodes():
     """
     ten_days_ago = datetime.utcnow() - timedelta(days=10)
     nodes = Node.query.filter(Node.status=='new', Node.provider_id==None, Node.created_at <= ten_days_ago).all()
-
+    
     for node in nodes:
-        if node.invoice.status == 'expired':
+        if not node.invoice:
+            db.session.delete(node)
+            db.session.commit()
+        elif node.invoice.status == 'expired':
             db.session.delete(node.invoice)
             db.session.delete(node)
             db.session.commit()
+
+@celery.task(name='tasks.update_node_provider_attributes')
+def update_node_provider_attributes():
+    """
+    Updates provider attributes for all nodes.
+    """
+    nodes = Node.query.filter(
+        (Node.status=='up') |
+        (Node.status=='on') |
+        (Node.status=='off') |
+        (Node.status=='taking_snapshot') |
+        (Node.status=='updating_client')
+    ).all()
+
+    for node in nodes:
+        node.update_provider_attributes()
 
 from app.models.node import Node
 
@@ -49,4 +68,10 @@ def setup_periodic_tasks(sender, **kwargs):
     sender.add_periodic_task(
         crontab(hour=7, minute=30, day_of_week=4),
         delete_unprovisioned_nodes()
+    )
+
+    # Executes every day at 1:30am
+    sender.add_periodic_task(
+        crontab(hour=1, minute=10),
+        update_node_provider_attributes()
     )
