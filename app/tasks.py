@@ -16,11 +16,14 @@ def configure_node(node_id):
     """
     node = Node.query.get(node_id)
 
-    # TODO: the if statement should check that the node has been successfully provisioned
-    if True:
+    node.update_provider_attributes()
+
+    if node.provider_status == 'active':
         node.configure()
-    else:
+    elif node.provider_status in ['new', 'off']:
         configure_node.apply_async((node_id), countdown=1800)
+    else:
+        raise Exception('Error: celery configuration task failed because provider_status is not understood.')
 
     return
 
@@ -34,7 +37,7 @@ def delete_unprovisioned_nodes():
     """
     ten_days_ago = datetime.utcnow() - timedelta(days=10)
     nodes = Node.query.filter(Node.status=='new', Node.provider_id==None, Node.created_at <= ten_days_ago).all()
-    
+
     for node in nodes:
         if not node.invoice:
             db.session.delete(node)

@@ -1,16 +1,79 @@
 
 from datetime import datetime, timedelta
 
-from unittest.mock import patch
+from unittest.mock import patch, PropertyMock
 from .test_base import TestBase
 
 from app import db
 from app.models.user import User
 from app.models.node import Node
 from app.models.invoice import Invoice
-from app.tasks import delete_unprovisioned_nodes, update_node_provider_attributes
+from app.tasks import configure_node, delete_unprovisioned_nodes, update_node_provider_attributes
+from app.tests.support.fake_digital_ocean_manager import FakeDigitalOceanManager
 
 class TestTasks(TestBase):
+
+    @patch('app.tasks.Node')
+    def test_configure_node_successful(self, mock_node_class):
+        """
+        Test that, if the node is active, it configures it.
+        """
+        mock_node = mock_node_class.query.get.return_value
+        mock_node.provider_status = 'active'
+
+        configure_node(123)
+
+        mock_node.update_provider_attributes.assert_called()
+        mock_node.configure.assert_called()
+
+    @patch('app.tasks.configure_node')
+    @patch('app.tasks.Node')
+    def test_configure_node_unsuccessful_new(self, mock_node_class, mock_configure_node):
+        """
+        Test that,
+        if the node is new,
+        it reschedules configuration for a later time.
+        """
+        mock_node = mock_node_class.query.get.return_value
+
+        mock_node.provider_status = 'new'
+        configure_node(123)
+        mock_node.update_provider_attributes.assert_called()
+        mock_node.configure.assert_not_called()
+        mock_configure_node.apply_async.assert_called()
+
+    @patch('app.tasks.configure_node')
+    @patch('app.tasks.Node')
+    def test_configure_node_unsuccessful_off(self, mock_node_class, mock_configure_node):
+        """
+        Test that,
+        if the node is off,
+        it reschedules configuration for a later time.
+        """
+        mock_node = mock_node_class.query.get.return_value
+
+        mock_node.provider_status = 'off'
+        configure_node(123)
+        mock_node.update_provider_attributes.assert_called()
+        mock_node.configure.assert_not_called()
+        mock_configure_node.apply_async.assert_called()
+
+    @patch('app.tasks.configure_node')
+    @patch('app.tasks.Node')
+    def test_configure_node_unsuccessful_unknown(self, mock_node_class, mock_configure_node):
+        """
+        Test that,
+        if the node has an unrecognized status,
+        it throws an exception.
+        """
+        mock_node = mock_node_class.query.get.return_value
+
+        mock_node.provider_status = 'exploding'
+        with self.assertRaises(Exception):
+            configure_node(123)
+        mock_node.update_provider_attributes.assert_called()
+        mock_node.configure.assert_not_called()
+        mock_configure_node.apply_async.assert_not_called()
 
     def test_delete_unprovisioned_nodes(self):
         """
