@@ -1,5 +1,5 @@
 
-from .test_base import TestBase
+from app.tests.test_base import TestBase
 
 from app import db
 from app.models.node import Node

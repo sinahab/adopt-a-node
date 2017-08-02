@@ -92,3 +92,7 @@ class NodeManager(ABC):
             client.exec_command(subversion_command)
 
         return
+
+    def update_node(self):
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
+            client.exec_command('sudo apt-get update & sudo apt-get -y -f upgrade & sudo reboot')

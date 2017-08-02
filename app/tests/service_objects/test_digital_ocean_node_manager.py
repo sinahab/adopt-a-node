@@ -1,5 +1,5 @@
 
-from .test_base import TestBase
+from app.tests.test_base import TestBase
 from unittest.mock import patch, MagicMock
 from app.utils.misc import DotDict
 
