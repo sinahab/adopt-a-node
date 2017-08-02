@@ -51,8 +51,9 @@ flask db upgrade
 
 # make sure correct production secrets exist in instance/config.py
 
-service adopt-celery restart
 service adopt-web restart
+service adopt-celery restart
+service adopt-celery-beat restart
 ```
 
 ## In development
