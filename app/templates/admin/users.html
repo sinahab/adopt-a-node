@@ -14,15 +14,17 @@
                     <tr>
                         <th class='p1 px3'> Email </th>
                         <th class='p1 px3'> Is Admin? </th>
+                        <th class='p1 px3'> Count nodes </th>
                         <th class='p1 px3'> Created at </th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for user in users.items %}
                         <tr>
-                            <td class='p1 px3'> {{ user.email }} </td>
-                            <td class='p1 px3'> {{ user.has_role('admin') }} </td>
-                            <td class='p1 px3'> {{ user.created_at.strftime("%m-%d-%Y") }} </td>
+                            <td class='p1 px3'> {{ user.email() }} </td>
+                            <td class='p1 px3'> {{ user.is_admin() }} </td>
+                            <td class='p1 px3'> {{ user.count_nodes() }} </td>
+                            <td class='p1 px3'> {{ user.created_at() }} </td>
                         </tr>
                     {% endfor %}
                 </tbody>

@@ -7,9 +7,10 @@ from . import admin
 from app.models.user import User
 from app.models.node import Node
 from app.serializers.admin_node_serializer import AdminNodeSerializer
+from app.serializers.admin_user_serializer import AdminUserSerializer
 
 NODES_PER_PAGE = 10
-USERS_PER_PAGE = 10
+USERS_PER_PAGE = 5
 
 @admin.route('/admin/', methods=['GET'])
 @roles_required('admin')
@@ -35,6 +36,7 @@ def users(page=1):
     Show the admin users dashboard
     """
     users = User.query.paginate(page, USERS_PER_PAGE, False)
+    users.items = list(map(lambda u: AdminUserSerializer(u), users.items))
     return render_template('admin/users.html', users=users, title="Admin -> Users")
 
 @admin.route('/admin/nodes/<int:page>', methods=['GET'])
