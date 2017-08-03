@@ -24,7 +24,7 @@
                         <td class='p1 px3'>Users</td>
                         <td class='p1 px3'> {{ counts['user_count'] }} </td>
                         <td class='p1 px3 capitalize table__button-container'>
-                            <a href="{{ url_for('admin.users') }}" class='table__button small p1'>view</a>
+                            <a href="{{ url_for('admin.users', page=1) }}" class='table__button small p1'>view</a>
                         </td>
                     </tr>
                     <tr>

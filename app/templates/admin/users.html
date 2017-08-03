@@ -2,12 +2,37 @@
 {% block title %}Admin{% endblock %}
 {% block content %}
     <div class='pt1 pb3 center'>
-        <p class='h2 pb2 slate-gray roboto'>Admin -> Users</p>
+        <p class='h2 pb2 slate-gray roboto'>
+            <a href="{{ url_for('admin.index') }}">Admin</a> -> Users
+        </p>
 
         {% include "layouts/_messages.html" %}
 
-        <div class='pb2'>
-            <p class='pt1 pb3'>You're on the admin page!</p>
+        <div class='p2 overflow-x--auto'>
+            <table class='inline-block table__nodes'>
+                <thead>
+                    <tr>
+                        <th class='p1 px3'> Email </th>
+                        <th class='p1 px3'> Is Admin? </th>
+                        <th class='p1 px3'> Created at </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users.items %}
+                        <tr>
+                            <td class='p1 px3'> {{ user.email }} </td>
+                            <td class='p1 px3'> {{ user.has_role('admin') }} </td>
+                            <td class='p1 px3'> {{ user.created_at.strftime("%m-%d-%Y") }} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class='py4'>
+                {% if users.has_prev %}<a href="{{ url_for('admin.users', page=users.prev_num) }}">&lt;&lt; Previous users</a>{% else %}&lt;&lt; Previous users{% endif %} |
+                {% if users.has_next %}<a href="{{ url_for('admin.users', page=users.next_num) }}">Next users &gt;&gt;</a>{% else %}Next users &gt;&gt;{% endif %}
+            </div>
+
         </div>
 
 

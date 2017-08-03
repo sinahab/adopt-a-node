@@ -41,7 +41,7 @@
             </table>
 
             <div class='py4'>
-                {% if nodes.has_prev %}<a href="{{ url_for('admin.nodes', page=nodes.prev_num) }}">&lt;&lt; Previous nodes</a>{% else %}&lt;&lt; Prevopis nodes{% endif %} |
+                {% if nodes.has_prev %}<a href="{{ url_for('admin.nodes', page=nodes.prev_num) }}">&lt;&lt; Previous nodes</a>{% else %}&lt;&lt; Previous nodes{% endif %} |
                 {% if nodes.has_next %}<a href="{{ url_for('admin.nodes', page=nodes.next_num) }}">Next nodes &gt;&gt;</a>{% else %}Next nodes &gt;&gt;{% endif %}
             </div>
 

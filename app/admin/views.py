@@ -6,9 +6,9 @@ from . import admin
 
 from app.models.user import User
 from app.models.node import Node
-from app.serializers.admin_node_serializer import AdminNodeSerializer
 
 NODES_PER_PAGE = 10
+USERS_PER_PAGE = 10
 
 @admin.route('/admin/', methods=['GET'])
 @roles_required('admin')
@@ -29,11 +29,12 @@ def index():
 @admin.route('/admin/users/', methods=['GET'])
 @roles_required('admin')
 @login_required
-def users():
+def users(page=1):
     """
     Show the admin users dashboard
     """
-    return render_template('admin/users.html', title="Admin -> Users")
+    users = User.query.paginate(page, USERS_PER_PAGE, False)
+    return render_template('admin/users.html', users=users, title="Admin -> Users")
 
 @admin.route('/admin/nodes/<int:page>', methods=['GET'])
 @roles_required('admin')
