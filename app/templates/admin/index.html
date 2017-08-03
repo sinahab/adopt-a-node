@@ -10,6 +10,33 @@
             <p class='pt1 pb3'>You're on the admin page!</p>
         </div>
 
+        <div class='p2 overflow-x--auto'>
+            <table class='inline-block table__nodes'>
+                <thead>
+                    <tr>
+                        <th class='p1 px3'> Model </th>
+                        <th class='p1 px3'> Count </th>
+                        <th class='p1 px3'> </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class='p1 px3'>Users</td>
+                        <td class='p1 px3'> {{ counts['user_count'] }} </td>
+                        <td class='p1 px3 capitalize table__button-container'>
+                            <a href="{{ url_for('admin.users') }}" class='table__button small p1'>view</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class='p1 px3'>Nodes</td>
+                        <td class='p1 px3'> {{ counts['node_count'] }} (running) </td>
+                        <td class='p1 px3 capitalize table__button-container'>
+                            <a href="{{ url_for('admin.nodes', page=1) }}" class='table__button small p1'>view</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
     </div>
 {% endblock %}

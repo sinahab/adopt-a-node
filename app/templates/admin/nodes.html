@@ -1,0 +1,51 @@
+{% extends "layouts/base_with_header.html" %}
+{% block title %}Admin{% endblock %}
+{% block content %}
+    <div class='pt1 pb3 center'>
+        <p class='h2 pb2 slate-gray roboto'>
+            <a href="{{ url_for('admin.index') }}">Admin</a> -> Nodes
+        </p>
+
+        {% include "layouts/_messages.html" %}
+
+        <div class='p2 overflow-x--auto'>
+            <table class='inline-block table__nodes'>
+                <thead>
+                    <tr>
+                        <th class='p1 px3'> IPv4 Address </th>
+                        <th class='p1 px3'> Status </th>
+                        <th class='p1 px3'> Name </th>
+                        <th class='p1 px3'> EB </th>
+                        <th class='p1 px3'> AD </th>
+                        <th class='p1 px3'> Launched At </th>
+                        <th class='p1 px3'> Months Adopted </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for node in nodes.items %}
+                        <tr>
+                            <td class='p1 px3'> {{ node.ipv4_address }} </td>
+                            <td class='p1 px3'> {{ node.status }} </td>
+                            <td class='p1 px3'> {{ node.name }} </td>
+                            <td class='p1 px3'> {{ node.bu_eb }} </td>
+                            <td class='p1 px3'> {{ node.bu_ad }} </td>
+                            <td class='p1 px3'>
+                                {% if node.launched_at %}
+                                    {{ node.launched_at.strftime("%m-%d-%Y") }}
+                                {% endif %}
+                            </td>
+                            <td class='p1 px3'> {{ node.months_adopted }} </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <div class='py4'>
+                {% if nodes.has_prev %}<a href="{{ url_for('admin.nodes', page=nodes.prev_num) }}">&lt;&lt; Previous nodes</a>{% else %}&lt;&lt; Prevopis nodes{% endif %} |
+                {% if nodes.has_next %}<a href="{{ url_for('admin.nodes', page=nodes.next_num) }}">Next nodes &gt;&gt;</a>{% else %}Next nodes &gt;&gt;{% endif %}
+            </div>
+
+        </div>
+
+    </div>
+{% endblock %}
