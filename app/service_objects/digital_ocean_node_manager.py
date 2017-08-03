@@ -102,6 +102,15 @@ class DigitalOceanNodeManager(NodeManager):
         droplet.power_on(return_dict=True)
         return
 
+    def destroy_node(self):
+        """
+        Destroys the node
+        """
+        droplet = self.manager.get_droplet(self.node.provider_id)
+        droplet.destroy()
+
+        self.update_provider_attributes()
+
     def get_latest_snapshot(self):
         """
         Gets the latest snapshot object from Digital Ocean

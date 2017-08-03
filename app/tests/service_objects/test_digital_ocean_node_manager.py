@@ -7,7 +7,7 @@ from app import db
 from app.models.node import Node
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager, DIGITAL_OCEAN_REGIONS
 
-from app.tests.support.fake_digital_ocean_manager import FakeDigitalOceanManager
+from app.tests.support.fake_digital_ocean_manager import FakeManager
 
 class TestDigitalOceanNodeManager(TestBase):
 
@@ -21,11 +21,11 @@ class TestDigitalOceanNodeManager(TestBase):
         db.session.add(node)
         db.session.commit()
 
-        fake_digital_ocean_manager = FakeDigitalOceanManager(token='asd123')
+        fake_digital_ocean_manager = FakeManager(token='asd123')
 
         mock_do_manager = mock_do_manager_class.return_value
         mock_do_manager.get_droplet_snapshots.return_value = fake_digital_ocean_manager.get_droplet_snapshots()
-        mock_do_manager.get_droplet.return_value = fake_digital_ocean_manager.get_droplet()
+        mock_do_manager.get_droplet.return_value = fake_digital_ocean_manager.get_droplet(node.provider_id)
         mock_droplet = mock_do_manager.get_droplet.return_value
 
         DigitalOceanNodeManager(node).rebuild_server_from_latest_snapshot()
@@ -43,14 +43,31 @@ class TestDigitalOceanNodeManager(TestBase):
 
         node = Node(provider='digital_ocean')
 
-        mock_do_manager_class.return_value = FakeDigitalOceanManager(token='asdf')
-        mock_manager = mock_do_manager_class.return_value
+        mock_do_manager = mock_do_manager_class.return_value
+        mock_do_manager.get_droplet_snapshots.return_value = FakeManager(token='asdf').get_droplet_snapshots()
 
         latest_snapshot = DigitalOceanNodeManager(node).get_latest_snapshot()
 
         mock_do_manager_class.assert_called()
-        # values from FakeDigitalOceanManager
+        mock_do_manager.get_droplet_snapshots.assert_called()
+        # values from FakeManager
         self.assertEqual(latest_snapshot.id, '456')
+
+    @patch('app.service_objects.digital_ocean_node_manager.Manager')
+    def test_destroy_node(self, mock_do_manager_class):
+        """
+        Test that it destroys the droplet
+        """
+        node = Node(provider='digital_ocean', provider_id='123', status='up')
+
+        mock_manager = mock_do_manager_class.return_value
+        mock_manager.get_droplet.return_value = FakeManager(token='asdf').get_droplet(node.provider_id)
+        mock_droplet = mock_manager.get_droplet.return_value
+
+        latest_snapshot = DigitalOceanNodeManager(node).destroy_node()
+
+        mock_do_manager_class.assert_called()
+        mock_droplet.destroy.assert_called()
 
     def test_pick_random_region(self):
         """

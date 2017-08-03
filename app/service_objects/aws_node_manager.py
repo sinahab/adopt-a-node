@@ -73,6 +73,12 @@ class AWSNodeManager(NodeManager):
             InstanceIds=[self.node.provider_id]
         )
 
+    def destroy_node(self):
+        """
+        Destroys the node
+        """
+        pass
+
     def take_snapshot(self):
         """
         Creates a snapshot from the given node.

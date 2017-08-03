@@ -88,6 +88,26 @@ class TestNode(TestBase):
 
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')
+    def test_expire(self, mock_aws_manager_class, mock_do_manager_class):
+        """
+        Test that the node status is set to 'expired',
+        and that the node is deleted on the according cloud provider.
+        """
+        node = Node(provider='digital_ocean', name="mynode", bu_version='0.3' , status='up')
+        db.session.add(node)
+        db.session.commit()
+
+        mock_do_manager = mock_do_manager_class.return_value
+
+        node.expire()
+
+        n = Node.query.filter_by(name='mynode').all()[0]
+        self.assertEqual(n.status, 'expired')
+        mock_do_manager.destroy_node.assert_called()
+
+
+    @patch('app.models.node.DigitalOceanNodeManager')
+    @patch('app.models.node.AWSNodeManager')
     def test_configure(self, aws_node_manager, digital_ocean_node_manager):
         """
         Test that message is relayed to the appropriate node manager.

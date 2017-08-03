@@ -1,10 +1,11 @@
 
 from app.utils.misc import DotDict
+from unittest.mock import patch, MagicMock
 
 def rebuild(*args, **kwargs):
     return
 
-class FakeDigitalOceanManager:
+class FakeManager:
     def __init__(self, token):
         return
 
@@ -38,7 +39,7 @@ class FakeDigitalOceanManager:
         snapshots = [snapshot_one, snapshot_two]
         return(snapshots)
 
-    def get_droplet(self):
+    def get_droplet(self, provider_id):
         droplet = DotDict({
             'name' : 'mylilnode',
             'ip_address' : '127.0.0.4',
@@ -47,5 +48,6 @@ class FakeDigitalOceanManager:
         })
 
         droplet.rebuild = rebuild
+        droplet.destroy = MagicMock()
 
         return(droplet)

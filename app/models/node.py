@@ -50,7 +50,8 @@ class Node(db.Model, StateMixin):
         'on',   # the server is on, but the BU daemon is not running
         'off',  # the server is powered off
         'taking_snapshot',  # a snapshot of the server is currently being taken.
-        'updating_client'   # the BU client on server is being updated.
+        'updating_client',   # the BU client on server is being updated.
+        'expired'   # the node is no longer provisioned (its adoption period ended)
     ]
 
     transitions = [
@@ -62,7 +63,8 @@ class Node(db.Model, StateMixin):
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
         { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
         { 'trigger': 'finish_taking_snapshot', 'source': 'taking_snapshot', 'dest': 'off'},  # finish taking a snapshot of the server
-        { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' }  # rebuild server from latest snapshot
+        { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' },  # rebuild server from latest snapshot
+        { 'trigger': 'expire', 'source': ['up', 'on', 'off'], 'dest': 'expired', 'before': '_expire' }  # expire node
     ]
 
     def _provision(self):
@@ -83,6 +85,12 @@ class Node(db.Model, StateMixin):
             current_app.logger.error(e)
 
         return
+
+    def _expire(self):
+        """
+        Expires the node & deletes the node on cloud provider.
+        """
+        self.node_manager().destroy_node()
 
     def _rebuild(self):
         """

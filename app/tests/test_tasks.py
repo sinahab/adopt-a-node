@@ -9,7 +9,6 @@ from app.models.user import User
 from app.models.node import Node
 from app.models.invoice import Invoice
 from app.tasks import configure_node, delete_unprovisioned_nodes, update_node_provider_attributes
-from app.tests.support.fake_digital_ocean_manager import FakeDigitalOceanManager
 
 class TestTasks(TestBase):
 

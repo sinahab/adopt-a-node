@@ -32,6 +32,13 @@ class NodeManager(ABC):
         """
         pass
 
+    @abstractmethod
+    def destroy_node(self):
+        """
+        Destroys the node
+        """
+        pass
+
     def power_off(self):
         """
         Powers off the node.
