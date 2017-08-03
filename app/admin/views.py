@@ -10,7 +10,7 @@ from app.serializers.admin_node_serializer import AdminNodeSerializer
 from app.serializers.admin_user_serializer import AdminUserSerializer
 
 NODES_PER_PAGE = 8
-USERS_PER_PAGE = 5
+USERS_PER_PAGE = 8
 
 @admin.route('/admin/', methods=['GET'])
 @roles_required('admin')
@@ -28,7 +28,7 @@ def index():
 
     return render_template('admin/index.html', title="Admin", counts=counts)
 
-@admin.route('/admin/users/', methods=['GET'])
+@admin.route('/admin/users/<int:page>', methods=['GET'])
 @roles_required('admin')
 @login_required
 def users(page=1):

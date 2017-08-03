@@ -40,6 +40,7 @@ class User(db.Model, UserMixin):
         """
         user_datastore = SQLAlchemyUserDatastore(db, User, Role)
         user_datastore.add_role_to_user(self, 'admin')
+        db.session.commit()
 
     def unmake_admin(self):
         """
@@ -47,6 +48,7 @@ class User(db.Model, UserMixin):
         """
         user_datastore = SQLAlchemyUserDatastore(db, User, Role)
         user_datastore.remove_role_from_user(self, 'admin')
+        db.session.commit()
 
 from .node import Node
 from .invoice import Invoice
