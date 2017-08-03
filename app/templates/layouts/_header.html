@@ -8,6 +8,10 @@
             <a class='inline-block link--white right mx2 py2' href="{{ url_for('security.logout') }}">Sign out</a>
             <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.new') }}">Adopt a Node</a>
             <a class='inline-block link--white right mx2 py2' href="{{ url_for('node.index') }}">My Nodes</a>
+
+            {% if current_user.has_role('admin') %}
+                <a class='inline-block link--white right mx2 py2' href="{{ url_for('admin.index') }}">Admin</a>
+            {% endif %}
         </div>
 
         <div class='header--mobile'>
@@ -15,6 +19,10 @@
                 <span class="drawer-hamburger-icon"></span>
             </button>
             <nav class="drawer-nav bg-off-black center py2" role="navigation">
+                {% if current_user.has_role('admin') %}
+                    <div class='px1 py3'><a class='link--white' href="{{ url_for('admin.index') }}">Admin</a>
+                {% endif %}
+                
                 <div class='px1 py3'><a class='link--white' href="{{ url_for('node.index') }}">My Nodes</a>
                 <div class='px1 py3'><a class='link--white' href="{{ url_for('node.new') }}">Adopt a Node</a>
                 <div class='px1 py3'><a class='link--white' href="{{ url_for('security.logout') }}">Sign out</a>
