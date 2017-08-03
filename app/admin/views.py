@@ -46,6 +46,6 @@ def nodes(page=1):
     """
     Show the admin nodes dashboard
     """
-    nodes = Node.query.order_by(Node.launched_at.asc()).paginate(page, NODES_PER_PAGE, False)
+    nodes = Node.query.filter(Node.is_template_node == False).order_by(Node.launched_at.asc()).paginate(page, NODES_PER_PAGE, False)
     nodes.items = list(map(lambda n: AdminNodeSerializer(n), nodes.items))
     return render_template('admin/nodes.html', nodes=nodes, title="Admin -> Nodes")
