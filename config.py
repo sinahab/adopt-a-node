@@ -36,6 +36,7 @@ class Config(object):
     SECURITY_SEND_LOGIN_TEMPLATE = 'security/send_login.html'
 
     SECURITY_MSG_LOGIN = ('Please sign in first.', 'info')
+    SECURITY_MSG_UNAUTHORIZED = ('', 'info')
 
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
