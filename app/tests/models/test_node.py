@@ -98,3 +98,22 @@ class TestNode(TestBase):
         aws_node_manager.assert_called()
         aws_manager_instance.update_bitcoin_conf.assert_called()
         digital_ocean_node_manager.assert_not_called()
+
+    def test_expires_at(self):
+        """
+        Test that it returns the datetime at which the node expires.
+        """
+        launched_at = datetime.datetime(2017, 1, 5, 12, 13, 14, tzinfo=datetime.timezone.utc)
+        node = Node(
+            provider='aws',
+            name="Bob's node",
+            status='provisioned',
+            launched_at=launched_at,
+            months_adopted=3
+        )
+        db.session.add(node)
+        db.session.commit()
+
+        expected_expires_at = datetime.datetime(2017, 4, 5, 12, 13, 14, tzinfo=datetime.timezone.utc)
+
+        self.assertEqual(node.expires_at(), expected_expires_at)

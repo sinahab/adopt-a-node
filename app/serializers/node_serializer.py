@@ -1,6 +1,4 @@
 
-from dateutil.relativedelta import relativedelta
-
 class NodeSerializer():
     def __init__(self, node):
         self.node = node
@@ -53,8 +51,9 @@ class NodeSerializer():
             return('')
 
     def expires_at(self):
-        if self.node.launched_at:
-            expires_at = self.node.launched_at + relativedelta(months=self.node.months_adopted)
+        expires_at = self.node.expires_at()
+
+        if expires_at:
             return(expires_at.strftime("%m-%d-%Y"))
         else:
             return('')

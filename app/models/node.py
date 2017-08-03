@@ -7,6 +7,7 @@ from sqlalchemy.orm import validates
 from sqlalchemy import event
 
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from app import db
 from .state_mixin import StateMixin
@@ -159,6 +160,17 @@ class Node(db.Model, StateMixin):
             return(DigitalOceanNodeManager(self))
         else:
             raise Exception('No supported NodeManager could be found.')
+
+    def expires_at(self):
+        """
+        Returns the datetime at which the node expires.
+        """
+        expires_at = None
+
+        if self.launched_at:
+            expires_at = self.launched_at + relativedelta(months=self.months_adopted)
+
+        return(expires_at)
 
     @validates('provider')
     def validate_email(self, key, provider):
