@@ -6,6 +6,7 @@ from . import admin
 
 from app.models.user import User
 from app.models.node import Node
+from app.serializers.admin_node_serializer import AdminNodeSerializer
 
 NODES_PER_PAGE = 10
 USERS_PER_PAGE = 10
@@ -43,5 +44,6 @@ def nodes(page=1):
     """
     Show the admin nodes dashboard
     """
-    nodes = Node.query.paginate(page, NODES_PER_PAGE, False)
+    nodes = Node.query.order_by(Node.launched_at.asc()).paginate(page, NODES_PER_PAGE, False)
+    nodes.items = list(map(lambda n: AdminNodeSerializer(n), nodes.items))
     return render_template('admin/nodes.html', nodes=nodes, title="Admin -> Nodes")

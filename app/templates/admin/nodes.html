@@ -14,6 +14,7 @@
                     <tr>
                         <th class='p1 px3'> IPv4 Address </th>
                         <th class='p1 px3'> Status </th>
+                        <th class='p1 px3'> User </th>
                         <th class='p1 px3'> Name </th>
                         <th class='p1 px3'> EB </th>
                         <th class='p1 px3'> AD </th>
@@ -24,17 +25,14 @@
                 <tbody>
                     {% for node in nodes.items %}
                         <tr>
-                            <td class='p1 px3'> {{ node.ipv4_address }} </td>
-                            <td class='p1 px3'> {{ node.status }} </td>
-                            <td class='p1 px3'> {{ node.name }} </td>
-                            <td class='p1 px3'> {{ node.bu_eb }} </td>
-                            <td class='p1 px3'> {{ node.bu_ad }} </td>
-                            <td class='p1 px3'>
-                                {% if node.launched_at %}
-                                    {{ node.launched_at.strftime("%m-%d-%Y") }}
-                                {% endif %}
-                            </td>
-                            <td class='p1 px3'> {{ node.months_adopted }} </td>
+                            <td class='p1 px3'> {{ node.ip_address() }} </td>
+                            <td class='p1 px3'> {{ node.status() }} </td>
+                            <td class='p1 px3'> {{ node.user_email() }} </td>
+                            <td class='p1 px3'> {{ node.name() }} </td>
+                            <td class='p1 px3'> {{ node.eb() }} </td>
+                            <td class='p1 px3'> {{ node.ad() }} </td>
+                            <td class='p1 px3'> {{ node.launched_at() }} </td>
+                            <td class='p1 px3'> {{ node.months_adopted() }} </td>
                         </tr>
                     {% endfor %}
                 </tbody>
