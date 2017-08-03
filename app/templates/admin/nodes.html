@@ -14,10 +14,8 @@
                     <tr>
                         <th class='p1 px3'> IPv4 Address </th>
                         <th class='p1 px3'> Status </th>
+                        <th class='p1 px3'> Invoice </th>
                         <th class='p1 px3'> User </th>
-                        <th class='p1 px3'> Name </th>
-                        <th class='p1 px3'> EB </th>
-                        <th class='p1 px3'> AD </th>
                         <th class='p1 px3'> Launched At </th>
                         <th class='p1 px3'> Months Adopted </th>
                     </tr>
@@ -27,10 +25,8 @@
                         <tr>
                             <td class='p1 px3'> {{ node.ip_address() }} </td>
                             <td class='p1 px3'> {{ node.status() }} </td>
+                            <td class='p1 px3'> {{ node.invoice_info() }} </td>
                             <td class='p1 px3'> {{ node.user_email() }} </td>
-                            <td class='p1 px3'> {{ node.name() }} </td>
-                            <td class='p1 px3'> {{ node.eb() }} </td>
-                            <td class='p1 px3'> {{ node.ad() }} </td>
                             <td class='p1 px3'> {{ node.launched_at() }} </td>
                             <td class='p1 px3'> {{ node.months_adopted() }} </td>
                         </tr>

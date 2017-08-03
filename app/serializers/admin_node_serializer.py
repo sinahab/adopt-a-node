@@ -11,6 +11,16 @@ class AdminNodeSerializer():
     def status(self):
         return(self.node.status)
 
+    def invoice_info(self):
+        invoice = self.node.invoice
+
+        if invoice:
+            invoice_info = "{order_id} | {status}".format(
+                order_id=invoice.order_id,
+                status=invoice.status,
+            )
+            return(invoice_info)
+
     def name(self):
         return(self.node.name)
 

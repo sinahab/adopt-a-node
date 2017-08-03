@@ -9,7 +9,7 @@ from app.models.node import Node
 from app.serializers.admin_node_serializer import AdminNodeSerializer
 from app.serializers.admin_user_serializer import AdminUserSerializer
 
-NODES_PER_PAGE = 10
+NODES_PER_PAGE = 8
 USERS_PER_PAGE = 5
 
 @admin.route('/admin/', methods=['GET'])
