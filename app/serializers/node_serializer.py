@@ -12,6 +12,8 @@ class NodeSerializer():
             return({'message': 'Provisioning. This will take 30 minutes.', 'link': None })
         elif self.node.status == 'up':
             return({'message': self.node.ipv4_address, 'link': "https://bitnodes.21.co/nodes/{ip}-8333/".format(ip=self.node.ipv4_address)})
+        elif self.node.status == 'expired':
+            return({'message': 'Expired', 'link': None })
         elif self.node.status == 'updating_client':
             return({'message': 'Upgrading client', 'link': None })
         elif self.node.status == 'taking_snapshot':
@@ -26,7 +28,7 @@ class NodeSerializer():
         return(True)
 
     def should_show_details_button(self):
-        if self.node.status in ('new', 'provisioned'):
+        if self.node.status in ('new', 'provisioned', 'expired'):
             return(False)
 
         return(True)
