@@ -1,6 +1,7 @@
 
 import os
 from datetime import datetime, timedelta
+import pytz
 from celery.schedules import crontab
 from app import create_celery, db
 
@@ -47,6 +48,17 @@ def delete_unprovisioned_nodes():
             db.session.delete(node)
             db.session.commit()
 
+@celery.task(name='tasks.expire_nodes')
+def expire_nodes():
+    """
+    Expire nodes which have expired.
+    """
+    nodes = Node.query.filter_by(status='up').all()
+    nodes = list(filter(lambda n: n.has_expired(), nodes))
+
+    for node in nodes:
+        node.expire()
+
 @celery.task(name='tasks.update_node_provider_attributes')
 def update_node_provider_attributes():
     """
@@ -63,8 +75,6 @@ def update_node_provider_attributes():
     for node in nodes:
         node.update_provider_attributes()
 
-from app.models.node import Node
-
 @celery.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
     # Executes every Thursdays at 7:30 a.m.
@@ -73,8 +83,16 @@ def setup_periodic_tasks(sender, **kwargs):
         delete_unprovisioned_nodes()
     )
 
-    # Executes every day at 1:30am
+    # Executes every day at 1:10am
     sender.add_periodic_task(
         crontab(hour=1, minute=10),
         update_node_provider_attributes()
     )
+
+    # Executes every day at 1:30am
+    sender.add_periodic_task(
+        crontab(hour=1, minute=30),
+        expire_nodes()
+    )
+
+from app.models.node import Node

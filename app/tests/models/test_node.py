@@ -159,3 +159,18 @@ class TestNode(TestBase):
         expected_expires_at = datetime.datetime(2017, 4, 5, 12, 13, 14, tzinfo=datetime.timezone.utc)
 
         self.assertEqual(node.expires_at(), expected_expires_at)
+
+    def test_has_expired(self):
+        """
+        Test that it correctly returns whether the node is expired or not.
+        """
+        two_days_ago = datetime.datetime.utcnow() - datetime.timedelta(days=2)
+        two_months_ago = datetime.datetime.utcnow() - datetime.timedelta(days=60)
+        node_one = Node(provider='digital_ocean', status='up', launched_at=two_days_ago, months_adopted=1)
+        node_two = Node(provider='digital_ocean', status='up', launched_at=two_months_ago, months_adopted=1)
+        db.session.add(node_one)
+        db.session.add(node_two)
+        db.session.commit()
+
+        self.assertEqual(node_one.has_expired(), False)
+        self.assertEqual(node_two.has_expired(), True)

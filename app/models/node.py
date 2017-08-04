@@ -8,6 +8,7 @@ from sqlalchemy import event
 
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
+import pytz
 
 from app import db
 from .state_mixin import StateMixin
@@ -185,6 +186,16 @@ class Node(db.Model, StateMixin):
             expires_at = self.launched_at + relativedelta(months=self.months_adopted)
 
         return(expires_at)
+
+    def has_expired(self):
+        """
+        Returns a boolean; is the node expired or not?
+        """
+        if self.launched_at:
+            now = datetime.utcnow().replace(tzinfo=pytz.timezone('utc'))
+            return(self.expires_at() < now)
+        else:
+            return(False)
 
     @validates('provider')
     def validate_email(self, key, provider):
