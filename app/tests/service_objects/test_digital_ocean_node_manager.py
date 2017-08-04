@@ -63,6 +63,7 @@ class TestDigitalOceanNodeManager(TestBase):
         mock_manager = mock_do_manager_class.return_value
         mock_manager.get_droplet.return_value = FakeManager(token='asdf').get_droplet(node.provider_id)
         mock_droplet = mock_manager.get_droplet.return_value
+        mock_droplet.destroy.return_value = False
 
         latest_snapshot = DigitalOceanNodeManager(node).destroy_node()
 

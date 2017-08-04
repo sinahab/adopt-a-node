@@ -64,7 +64,7 @@ class Node(db.Model, StateMixin):
         { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
         { 'trigger': 'finish_taking_snapshot', 'source': 'taking_snapshot', 'dest': 'off'},  # finish taking a snapshot of the server
         { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' },  # rebuild server from latest snapshot
-        { 'trigger': 'expire', 'source': ['up', 'on', 'off'], 'dest': 'expired', 'before': '_expire' }  # expire node
+        { 'trigger': 'expire', 'source': ['up', 'on', 'off'], 'dest': 'expired', 'conditions': '_expire' }  # expire node
     ]
 
     def _provision(self):
@@ -90,7 +90,13 @@ class Node(db.Model, StateMixin):
         """
         Expires the node & deletes the node on cloud provider.
         """
-        self.node_manager().destroy_node()
+        res = self.node_manager().destroy_node()
+
+        self.provider_status = 'expired_by_adoptanode'
+        db.session.add(self)
+        db.session.commit()
+
+        return(res)
 
     def _rebuild(self):
         """

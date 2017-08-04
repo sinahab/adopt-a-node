@@ -107,9 +107,8 @@ class DigitalOceanNodeManager(NodeManager):
         Destroys the node
         """
         droplet = self.manager.get_droplet(self.node.provider_id)
-        droplet.destroy()
-
-        self.update_provider_attributes()
+        resp = droplet.destroy()
+        return(resp)
 
     def get_latest_snapshot(self):
         """
