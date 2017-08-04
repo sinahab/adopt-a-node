@@ -14,10 +14,10 @@ class Config(object):
 
     SECURITY_CONFIRMABLE = False
     SECURITY_REGISTERABLE = True
-    SECURITY_RECOVERABLE = False # Needs email setup
+    SECURITY_RECOVERABLE = True
     SECURITY_TRACKABLE = True
     SECURITY_PASSWORDLESS = False
-    SECURITY_CHANGEABLE = False # Enable this in the future, to allow changing of passwords.
+    SECURITY_CHANGEABLE = True
 
     SECURITY_SEND_REGISTER_EMAIL = False # Needs email setup.
 

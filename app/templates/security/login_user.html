@@ -15,7 +15,7 @@
                 <a class='bold' href="{{ url_for('security.register') }}">Sign up</a>.
             </p>
 
-            <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class='left-align pt1 pb4'>
+            <form action="{{ url_for_security('login') }}" method="POST" name="login_user_form" class='left-align pt1 pb3'>
 
                 {{ login_user_form.hidden_tag() }}
                 {{ render_field_with_errors(login_user_form.email) }}
@@ -30,6 +30,8 @@
                 {{ login_user_form.submit(class='button--secondary width-100')|safe }}
 
             </form>
+
+            <a href="{{ url_for_security('forgot_password') }}" class='block pb3 bold'>Forgot password</a>
 
         </div>
     </div>
