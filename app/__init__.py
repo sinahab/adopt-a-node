@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_security import Security, SQLAlchemyUserDatastore
 from flask_assets import Environment
 from flask_migrate import Migrate
+from flask_mail import Mail
 
 import logging
 from raven.handlers.logging import SentryHandler
@@ -19,7 +20,7 @@ import os
 db = SQLAlchemy()
 
 def create_app(config_name):
-    app = configure_app_with_db(config_name)
+    app = configure_app(config_name)
 
     # add logging
     stream_handler = logging.StreamHandler()
@@ -51,7 +52,7 @@ def create_app(config_name):
 
     return app
 
-def configure_app_with_db(config_name):
+def configure_app(config_name):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_object(app_config[config_name])
 
@@ -61,6 +62,8 @@ def configure_app_with_db(config_name):
     db.init_app(app)
 
     migrate = Migrate(app, db)
+
+    mail = Mail(app)
 
     # add Sentry for error tracking
     if config_name == 'production':
@@ -72,7 +75,7 @@ def configure_app_with_db(config_name):
 
 # inspired by https://github.com/thrisp/flask-celery-example/blob/master/app.py
 def create_celery(config_name):
-    app = configure_app_with_db(config_name)
+    app = configure_app(config_name)
     celery = Celery('tasks', broker=app.config['CELERY_BROKER_URL'])
     celery.conf.update(app.config)
     TaskBase = celery.Task

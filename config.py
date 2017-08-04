@@ -3,8 +3,14 @@ class Config(object):
     """
     Common configurations
     """
-
     DEBUG = True
+
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_USERNAME = 'bu.adoptanode@gmail.com'
+    MAIL_USE_SSL = True
+    MAIL_PORT = 465
+    MAIL_DEFAULT_SENDER = ('Adopt-a-Node', 'bu.adoptanode@gmail.com')
+    MAIL_SUPPRESS_SEND = False
 
     SECURITY_CONFIRMABLE = False
     SECURITY_REGISTERABLE = True
