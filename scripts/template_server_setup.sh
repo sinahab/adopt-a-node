@@ -44,7 +44,7 @@ scp BU_auto_node.sh bu@remotehost.edu:/home/bu/
 chmod 744 BU_auto_node.sh
 sudo ./BU_auto_node.sh
 
-# sudo su testme -c '/usr/local/bin/bitcoind -datadir=/home/testme/.bitcoin -daemon'
+# sudo su bu -c '/usr/local/bin/bitcoind -datadir=/home/bu/.bitcoin -daemon'
 
 #-------------------------------------
 
