@@ -318,3 +318,8 @@ vm.swappiness=10
 vm.vfs_cache_pressure = 50
 
 #--------
+
+# do not require sudo for these commands, as this is required for automation in the app
+sudo visudo
+# then type in:
+bu ALL=(ALL) NOPASSWD:ALL
