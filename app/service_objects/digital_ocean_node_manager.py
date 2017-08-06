@@ -53,12 +53,35 @@ class DigitalOceanNodeManager(NodeManager):
 
         # update node's values in the db
         self.node.provider_id = droplet.id
+        self.node.launched_at = datetime.utcnow()
         db.session.add(self.node)
         db.session.commit()
 
-        self.update_provider_attributes()
-
         return
+
+    def create_server(self):
+        """
+        Creates a new instance.
+        """
+        droplet = Droplet(
+            token=current_app.config['DIGITAL_OCEAN_ACCESS_TOKEN'],
+            name = str(self.node.id),
+            region=self._pick_random_region()['slug'],
+            image=26773262, # Ubuntu 16.04.3 x64 distro image
+            size_slug='1gb',
+            ssh_keys= [9581853],
+            backups=False,
+            ipv6= False,
+            private_networking= False,
+            monitoring=False
+        )
+        droplet.create()
+
+        self.node.provider_id = droplet.id
+        self.node.launched_at = datetime.utcnow()
+        self.node.provider_region = droplet.region
+        db.session.add(self.node)
+        db.session.commit()
 
     def rebuild_server_from_latest_snapshot(self):
         """
@@ -102,13 +125,20 @@ class DigitalOceanNodeManager(NodeManager):
         droplet.power_on(return_dict=True)
         return
 
-    def destroy_node(self):
+    def destroy_server(self):
         """
         Destroys the node
         """
         droplet = self.manager.get_droplet(self.node.provider_id)
         resp = droplet.destroy()
         return(resp)
+
+    def open_bitcoind_port(self):
+        """
+        Opens TCP port 8333 on the machine
+        """
+        # Port 8333 is already open on Digital Ocean machines
+        return
 
     def get_latest_snapshot(self):
         """

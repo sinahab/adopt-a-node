@@ -3,6 +3,7 @@ from app.tests.test_base import TestBase
 from unittest.mock import patch, MagicMock
 from app.utils.misc import DotDict
 
+import datetime
 from app import db
 from app.models.node import Node
 from app.service_objects.digital_ocean_node_manager import DigitalOceanNodeManager, DIGITAL_OCEAN_REGIONS
@@ -36,6 +37,29 @@ class TestDigitalOceanNodeManager(TestBase):
         self.assertEqual(n.provider_status, 'exploding')
 
     @patch('app.service_objects.digital_ocean_node_manager.Manager')
+    @patch('app.service_objects.digital_ocean_node_manager.Droplet')
+    def test_create_server(self, mock_do_droplet_class, mock_do_manager_class):
+        """
+        Test that it creates a new server
+        """
+        node = Node(provider='digital_ocean', name='test123')
+        db.session.add(node)
+        db.session.commit()
+
+        mock_do_droplet = mock_do_droplet_class.return_value
+        mock_do_droplet.id = 14123
+        mock_do_droplet.region = 'test_region'
+
+        DigitalOceanNodeManager(node).create_server()
+
+        mock_do_droplet_class.assert_called()
+        mock_do_droplet.create.assert_called()
+        db.session.refresh(node)
+        self.assertEqual(node.provider_id, '14123')
+        self.assertEqual(node.provider_region, 'test_region')
+        self.assertTrue(datetime.datetime.now(datetime.timezone.utc) - node.launched_at < datetime.timedelta(minutes=1))
+
+    @patch('app.service_objects.digital_ocean_node_manager.Manager')
     def test_get_latest_snapshot(self, mock_do_manager_class):
         """
         Test that it gets and returns the latest snapshot object from Digital Ocean
@@ -54,7 +78,7 @@ class TestDigitalOceanNodeManager(TestBase):
         self.assertEqual(latest_snapshot.id, '456')
 
     @patch('app.service_objects.digital_ocean_node_manager.Manager')
-    def test_destroy_node(self, mock_do_manager_class):
+    def test_destroy_server(self, mock_do_manager_class):
         """
         Test that it destroys the droplet
         """
@@ -65,7 +89,7 @@ class TestDigitalOceanNodeManager(TestBase):
         mock_droplet = mock_manager.get_droplet.return_value
         mock_droplet.destroy.return_value = False
 
-        latest_snapshot = DigitalOceanNodeManager(node).destroy_node()
+        latest_snapshot = DigitalOceanNodeManager(node).destroy_server()
 
         mock_do_manager_class.assert_called()
         mock_droplet.destroy.assert_called()

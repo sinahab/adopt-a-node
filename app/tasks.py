@@ -8,6 +8,15 @@ from app import create_celery, db
 config_name = os.getenv('FLASK_CONFIG') or 'development'
 celery = create_celery(config_name)
 
+@celery.task(name="tasks.install_bitcoind")
+def install_bitcoind(node_id):
+    """
+    It installs bitcoind on the node.
+    """
+    node = Node.query.get(node_id)
+    node.install()
+    return
+
 @celery.task(name="tasks.configure_node")
 def configure_node(node_id):
     """

@@ -33,6 +33,7 @@ class Node(db.Model, StateMixin):
     launched_at = Column(TIMESTAMP(timezone=True))
     months_adopted = Column(INTEGER)
     provider_id = Column(VARCHAR)
+    provider_region = Column(VARCHAR)
     provider_status = Column(VARCHAR)
     provider_data = Column(JSONB)
     is_template_node = Column(BOOLEAN, server_default='False')
@@ -46,20 +47,22 @@ class Node(db.Model, StateMixin):
     states = [
         'new',  # a new node db record, with no associated remote object on a cloud provider.
         'provisioned',  # a remote server has been spun up, on one of the cloud providers
-        'configured',   # bitcoin.conf has been updated to the user's desired values.
-        'up',  # BU daemon is running.
-        'on',   # the server is on, but the BU daemon is not running
+        'installed',  # bitcoind has been installed on the server
+        'configured',   # bitcoind ports are open, and bitcoin.conf has been updated to the user's desired values.
+        'up',  # bitcoind is running.
+        'on',   # the server is on, but the bitcoind is not running
         'off',  # the server is powered off
         'taking_snapshot',  # a snapshot of the server is currently being taken.
-        'updating_client',   # the BU client on server is being updated.
+        'updating_client',   # bitcoind is being updated.
         'expired'   # the node is no longer provisioned (its adoption period ended)
     ]
 
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision'},  # provision a server on the desired cloud provider
-        { 'trigger': 'configure', 'source': ['provisioned', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_client'},  # configure bitcoin.conf according to the user's desired values.
-        { 'trigger': 'start_client', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_start_client'},  # start the BU daemon
-        { 'trigger': 'stop_client', 'source': 'up', 'dest': 'on', 'before': '_stop_client'},  # stop the BU daemon
+        { 'trigger': 'install', 'source': 'provisioned', 'dest': 'installed', 'before': '_install'},  # install bitcoind on the server
+        { 'trigger': 'configure', 'source': ['installed', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_bitcoind'},  # configure bitcoin.conf according to the user's desired values.
+        { 'trigger': 'start_bitcoind', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_start_bitcoind'},  # start the BU daemon
+        { 'trigger': 'stop_bitcoind', 'source': 'up', 'dest': 'on', 'before': '_stop_bitcoind'},  # stop the BU daemon
         { 'trigger': 'power_off', 'source': 'on', 'dest': 'off', 'before': '_power_off'},  # power off the associated server
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
         { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
@@ -71,27 +74,36 @@ class Node(db.Model, StateMixin):
     def _provision(self):
         """
         Provisions a server on the given cloud provider.
-        Also, schedules the node for configuration.
+        Also, schedules for bitcoind to be installed on the machine.
         This needs to happen after a delay, so that provisioning is already complete.
         """
         try:
-            self.node_manager().create_server_from_latest_snapshot()
+            self.node_manager().create_server()
+            db.session.refresh(self)
+            install_bitcoind.apply_async(args=(self.id,), countdown=120)
 
-            self.launched_at = datetime.utcnow()
-            db.session.add(self)
-            db.session.commit()
-
-            configure_node.apply_async(args=(self.id,), countdown=1800)
         except Exception as e:
             current_app.logger.error(e)
 
         return
 
+    def _install(self):
+        """
+        Installs bitcoind on the machine, and opens port 8333 on the machine.
+        Also, schedules for bitcoind to be configured.
+        This needs to happen after a delay, so that provisioning is already complete.
+        """
+        db.session.expire_on_commit = False
+        self.update_provider_attributes()
+        self.node_manager().install_bitcoind()
+        self.node_manager().open_bitcoind_port()
+        configure_node.apply_async(args=(self.id,), countdown=1800)
+
     def _expire(self):
         """
         Expires the node & deletes the node on cloud provider.
         """
-        res = self.node_manager().destroy_node()
+        res = self.node_manager().destroy_server()
 
         self.provider_status = 'expired_by_adoptanode'
         db.session.add(self)
@@ -122,14 +134,14 @@ class Node(db.Model, StateMixin):
         self.node_manager().update_bitcoin_conf()
         return
 
-    def _start_client(self):
+    def _start_bitcoind(self):
         """
         Starts the BU client on the server.
         """
         self.node_manager().restart_bitcoind()
         return
 
-    def _stop_client(self):
+    def _stop_bitcoind(self):
         """
         Stops the BU client on the server.
         """
@@ -198,7 +210,7 @@ class Node(db.Model, StateMixin):
             return(False)
 
     @validates('provider')
-    def validate_email(self, key, provider):
+    def validate_provider(self, key, provider):
         assert provider in CLOUD_PROVIDERS
         return provider
 
@@ -209,5 +221,5 @@ class Node(db.Model, StateMixin):
 event.listen(Node, 'init', Node.init_state_machine)
 event.listen(Node, 'load', Node.init_state_machine)
 
-from app.tasks import configure_node
+from app.tasks import configure_node, install_bitcoind
 from .user import User

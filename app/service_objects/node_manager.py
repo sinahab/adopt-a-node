@@ -1,7 +1,8 @@
 
 from abc import ABC, abstractmethod
 from flask import current_app
-from ..utils.ssh import ssh_scope
+from app.utils.ssh import ssh_scope
+from scp import SCPClient
 
 class NodeManager(ABC):
     @abstractmethod
@@ -10,6 +11,13 @@ class NodeManager(ABC):
         Clones a new server from the latest template snapshot
         """
         pass
+
+    @abstractmethod
+    def create_server(self):
+        """
+        Creates a new instance.
+        NOTE: Does not update the db.
+        """
 
     @abstractmethod
     def update_provider_attributes(self):
@@ -33,11 +41,44 @@ class NodeManager(ABC):
         pass
 
     @abstractmethod
-    def destroy_node(self):
+    def open_bitcoind_port(self):
+        """
+        Open port 8333 for bitcoind
+        """
+        pass
+
+    @abstractmethod
+    def destroy_server(self):
         """
         Destroys the node
         """
         pass
+
+    def install_bitcoind(self):
+        """
+        Installs Bitcoind on the node
+        """
+        # use the default user on each provider for setup
+        if self.node.provider == 'digital_ocean':
+            os_user = 'root'
+        elif self.node.provider == 'aws':
+            os_user = 'ubuntu'
+        else:
+            raise Exception('Error: provider not supported')
+
+        with ssh_scope(self.node.ipv4_address, os_user) as client:
+            with SCPClient(client.get_transport()) as scp:
+                scp.put('scripts/bu.sh', '/tmp/')
+
+            client.exec_command('chmod 744 /tmp/bu.sh')
+
+            command = "tmux new-session -d -s bu 'sudo "
+            command += "ADOPTANODE_USER={adoptanode_user} ".format(adoptanode_user=current_app.config['ADOPTANODE_USER'])
+            command += "ADOPTANODE_PASSWORD={adoptanode_password} ".format(adoptanode_password=current_app.config['ADOPTANODE_PASSWORD'])
+            command += "ADOPTANODE_SMTP_EMAIL={adoptanode_smtp_email} ".format(adoptanode_smtp_email=current_app.config['ADOPTANODE_SMTP_EMAIL'])
+            command += "ADOPTANODE_SMTP_PASSWORD={adoptanode_smtp_password} ".format(adoptanode_smtp_password=current_app.config['ADOPTANODE_SMTP_PASSWORD'])
+            command +=  "/tmp/bu.sh'"
+            client.exec_command(command)
 
     def power_off(self):
         """
@@ -78,12 +119,12 @@ class NodeManager(ABC):
         # updating eb
         eb = str(int(self.node.bu_eb * 1000000))
         eb_sed_params = "s/excessiveblocksize.*/excessiveblocksize={eb}/".format(eb=eb)
-        eb_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=eb_sed_params)
+        eb_command = "sudo sed -i -e '{sed_params}' /var/lib/bitcoind/bitcoin.conf".format(sed_params=eb_sed_params)
 
         # updating ad
         ad = str(self.node.bu_ad)
         ad_sed_params = "s/excessiveacceptdepth.*/excessiveacceptdepth={ad}/".format(ad=ad)
-        ad_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=ad_sed_params)
+        ad_command = "sudo sed -i -e '{sed_params}' /var/lib/bitcoind/bitcoin.conf".format(sed_params=ad_sed_params)
 
         # updating net.subversionOverride
         eb = str(int(self.node.bu_eb))
@@ -91,7 +132,7 @@ class NodeManager(ABC):
         name = self.node.name
         version = self.node.bu_version
         subversion_sed_params = "s/net.subversionOverride.*/net.subversionOverride=\/BitcoinUnlimited:{version}(EB{eb}; AD{ad}) {name}\//".format(version=version, eb=eb, ad=ad, name=name)
-        subversion_command = "sed -i -e '{sed_params}' .bitcoin/bitcoin.conf".format(sed_params=subversion_sed_params)
+        subversion_command = "sudo sed -i -e '{sed_params}' /var/lib/bitcoind/bitcoin.conf".format(sed_params=subversion_sed_params)
 
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
             client.exec_command(eb_command)
@@ -100,6 +141,6 @@ class NodeManager(ABC):
 
         return
 
-    def update_node(self):
+    def update_server(self):
         with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
-            client.exec_command('sudo apt-get update & sudo apt-get -y -f upgrade & sudo reboot')
+            client.exec_command('sudo apt-get -y update & sudo apt-get -y -f upgrade & sudo reboot')

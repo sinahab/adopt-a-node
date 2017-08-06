@@ -8,9 +8,20 @@ from app import db
 from app.models.user import User
 from app.models.node import Node
 from app.models.invoice import Invoice
-from app.tasks import configure_node, delete_unprovisioned_nodes, update_node_provider_attributes
+from app.tasks import install_bitcoind, configure_node, delete_unprovisioned_nodes, update_node_provider_attributes
 
 class TestTasks(TestBase):
+
+    @patch('app.tasks.Node')
+    def test_install_bitcoind(self, mock_node_class):
+        """
+        Test that it installs bitcoind
+        """
+        mock_node = mock_node_class.query.get.return_value
+
+        install_bitcoind(123)
+
+        mock_node.install.assert_called()
 
     @patch('app.tasks.Node')
     def test_configure_node_successful(self, mock_node_class):

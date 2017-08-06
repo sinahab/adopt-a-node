@@ -42,26 +42,66 @@ class TestNode(TestBase):
         node_two = Node(provider='digital_ocean', name="Bob's node")
         self.assertEqual(node_two.node_manager().__class__, DigitalOceanNodeManager)
 
-    @patch('app.models.node.configure_node')
+    @patch('app.models.node.install_bitcoind')
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')
-    def test_provision(self, mock_aws_node_manager, mock_digital_ocean_node_manager, mock_configure_task):
+    def test_provision(self, mock_aws_node_manager, mock_digital_ocean_node_manager, mock_install_task):
         """
         Test that:
         1) The correct node manager is used to provision an instance.
-        2) The launched_at value for the node is updated.
-        3) A celery task to configure the node is queued for 45 minutes from now.
+        2) A celery task to install bitcoind on the node is queued for 1 minute from now.
         """
         node = Node(provider='digital_ocean', name="Bob's node")
+        db.session.add(node)
+        db.session.commit()
         node_manager = mock_digital_ocean_node_manager.return_value
 
         self.assertEqual(node.launched_at, None)
 
         node.provision()
 
-        node_manager.create_server_from_latest_snapshot.assert_called()
-        self.assertTrue(datetime.datetime.now(datetime.timezone.utc) - node.launched_at < datetime.timedelta(minutes=1))
+        node_manager.create_server.assert_called()
+        mock_install_task.apply_async.assert_called_with(args=(node.id,), countdown=120)
+
+    @patch('app.models.node.configure_node')
+    @patch('app.models.node.DigitalOceanNodeManager')
+    @patch('app.models.node.AWSNodeManager')
+    def test_install(self, aws_node_manager, digital_ocean_node_manager, mock_configure_task):
+        """
+        Test that:
+        1) it installs bitcoind
+        2) opens port 8333
+        3) schedules a Celery task to configure the node in 30 minutes.
+        """
+        node = Node(provider='aws', name="Bob's node", status='provisioned')
+        db.session.add(node)
+        db.session.commit()
+        aws_manager_instance = aws_node_manager.return_value
+
+        node.install()
+
+        aws_node_manager.assert_called()
+        aws_manager_instance.install_bitcoind.assert_called()
+        aws_manager_instance.open_bitcoind_port.assert_called()
         mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=1800)
+        digital_ocean_node_manager.assert_not_called()
+
+    @patch('app.models.node.DigitalOceanNodeManager')
+    @patch('app.models.node.AWSNodeManager')
+    def test_configure(self, aws_node_manager, digital_ocean_node_manager):
+        """
+        Test that message is relayed to the appropriate node manager.
+        """
+        node = Node(provider='aws', name="Bob's node", status='installed')
+        db.session.add(node)
+        db.session.commit()
+        aws_manager_instance = aws_node_manager.return_value
+
+        node.configure()
+
+        aws_node_manager.assert_called()
+        aws_manager_instance.update_bitcoin_conf.assert_called()
+        digital_ocean_node_manager.assert_not_called()
 
     @patch('app.models.node.configure_node')
     @patch('app.models.node.DigitalOceanNodeManager')
@@ -98,11 +138,11 @@ class TestNode(TestBase):
         db.session.commit()
 
         mock_do_manager = mock_do_manager_class.return_value
-        mock_do_manager.destroy_node.return_value = True
+        mock_do_manager.destroy_server.return_value = True
 
         node.expire()
 
-        mock_do_manager.destroy_node.assert_called()
+        mock_do_manager.destroy_server.assert_called()
         n = Node.query.filter_by(name='mynode').all()[0]
         self.assertEqual(n.status, 'expired')
         self.assertEqual(n.provider_status, 'expired_by_adoptanode')
@@ -119,27 +159,13 @@ class TestNode(TestBase):
         db.session.commit()
 
         mock_do_manager = mock_do_manager_class.return_value
-        mock_do_manager.destroy_node.return_value = False
+        mock_do_manager.destroy_server.return_value = False
 
         node.expire()
 
-        mock_do_manager.destroy_node.assert_called()
+        mock_do_manager.destroy_server.assert_called()
         n = Node.query.filter_by(name='mynode').all()[0]
         self.assertEqual(n.status, 'up')
-
-
-    @patch('app.models.node.DigitalOceanNodeManager')
-    @patch('app.models.node.AWSNodeManager')
-    def test_configure(self, aws_node_manager, digital_ocean_node_manager):
-        """
-        Test that message is relayed to the appropriate node manager.
-        """
-        node = Node(provider='aws', name="Bob's node", status='provisioned')
-        aws_manager_instance = aws_node_manager.return_value
-        node.configure()
-        aws_node_manager.assert_called()
-        aws_manager_instance.update_bitcoin_conf.assert_called()
-        digital_ocean_node_manager.assert_not_called()
 
     def test_expires_at(self):
         """

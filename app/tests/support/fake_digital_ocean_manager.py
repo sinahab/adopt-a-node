@@ -44,6 +44,7 @@ class FakeManager:
             'name' : 'mylilnode',
             'ip_address' : '127.0.0.4',
             'status': 'exploding',
+            'region': 'test_region',
             'log': 'bla'
         })
 

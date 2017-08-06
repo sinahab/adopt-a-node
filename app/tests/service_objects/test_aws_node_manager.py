@@ -48,7 +48,7 @@ class TestAWSNodeManager(TestBase):
         self.assertEqual(n.provider_data['privateIpAddress'], '172.26.1.133')
 
     @patch('app.service_objects.aws_node_manager.boto3')
-    def test_destroy_node_successful(self, mock_boto3):
+    def test_destroy_server_successful(self, mock_boto3):
         """
         Test that it destroys the node,
         and returns True when successful
@@ -68,19 +68,19 @@ class TestAWSNodeManager(TestBase):
                     'isTerminal': True,
                     'operationDetails': 'string',
                     'operationType': 'DeleteInstance',
-                    'status': 'Completed',
+                    'status': 'Succeeded',
                     'statusChangedAt': datetime.datetime(2015, 1, 1),
                     'errorCode': 'string',
                     'errorDetails': 'string'
                 }]
         }
 
-        resp = AWSNodeManager(node).destroy_node()
+        resp = AWSNodeManager(node).destroy_server()
         mock_manager.delete_instance.assert_called_with(instanceName='random_name')
         self.assertEqual(resp, True)
 
     @patch('app.service_objects.aws_node_manager.boto3')
-    def test_destroy_node_unsuccessful(self, mock_boto3):
+    def test_destroy_server_unsuccessful(self, mock_boto3):
         """
         Test that it destroys the node,
         and returns False when unsuccessful
@@ -107,7 +107,7 @@ class TestAWSNodeManager(TestBase):
                 }]
         }
 
-        resp = AWSNodeManager(node).destroy_node()
+        resp = AWSNodeManager(node).destroy_server()
         mock_manager.delete_instance.assert_called_with(instanceName='random_name')
         self.assertEqual(resp, False)
 
@@ -234,11 +234,101 @@ class TestAWSNodeManager(TestBase):
 
         AWSNodeManager(node).create_server_from_latest_snapshot()
 
-        mock_manager.create_instances_from_snapshot.assert_called_with(
-            instanceNames=[str(node.id)],
-            availabilityZone='us-west-2',
-            instanceSnapshotName='snapshot1',
-            bundleId='nano_1_0'
-        )
         n = Node.query.filter_by(name='Node 1').all()[0]
         self.assertEqual(n.provider_id, 'random_node')
+
+    @patch('app.service_objects.aws_node_manager.boto3')
+    def test_create_server(self, mock_boto3):
+        """
+        Test that it creates a new instance.
+        """
+        node = Node(provider='aws', name='Node 1')
+        db.session.add(node)
+        db.session.commit()
+
+        mock_manager = mock_boto3.client.return_value
+        mock_manager.create_instances.return_value = {
+            'operations': [
+                {
+                    'id': 'string',
+                    'resourceName': 'random_node',
+                    'resourceType': 'Instance',
+                    'createdAt': datetime.datetime(2015, 1, 1),
+                    'location': {'availabilityZone': 'string', 'regionName': 'test-region'},
+                    'isTerminal': False,
+                    'operationDetails': 'string',
+                    'operationType': 'CreateInstance',
+                    'status': 'Started',
+                    'statusChangedAt': datetime.datetime(2015, 1, 1),
+                    'errorCode': 'string',
+                    'errorDetails': 'string'
+                },
+            ]
+        }
+
+        AWSNodeManager(node).create_server()
+        db.session.refresh(node)
+        self.assertEqual(node.provider_id, 'random_node')
+        self.assertEqual(node.provider_region, 'test-region')
+        self.assertTrue(datetime.datetime.now(datetime.timezone.utc) - node.launched_at < datetime.timedelta(minutes=1))
+
+    @patch('app.service_objects.aws_node_manager.boto3')
+    def test_open_bitcoind_port(self, mock_boto3):
+        """
+        Test that it opens the new network port
+        """
+        node = Node(provider='aws', name='Node 1', provider_id='test_instance')
+        db.session.add(node)
+        db.session.commit()
+
+        mock_manager = mock_boto3.client.return_value
+
+        AWSNodeManager(node).open_bitcoind_port()
+
+        mock_manager.open_instance_public_ports.assert_called_with(
+            portInfo={'fromPort': 8333, 'toPort': 8333, 'protocol': 'tcp'},
+            instanceName='test_instance'
+        )
+
+    @patch('app.service_objects.aws_node_manager.random')
+    def test_pick_node_region_existing(self, mock_random):
+        """
+        Test that it returns the node's region, if the node already has a region.
+        """
+        node = Node(provider='aws', name='Node 1', provider_id='test_instance', provider_region='test-region')
+        db.session.add(node)
+        db.session.commit()
+
+        returned_region_name = AWSNodeManager(node)._pick_node_region()
+
+        self.assertEqual(returned_region_name, 'test-region')
+        mock_random.choice.assert_not_called()
+
+    @patch('app.service_objects.aws_node_manager.random')
+    def test_pick_node_region_new(self, mock_random):
+        """
+        Test that it returns a random region, if the node does not already have a region.
+        """
+        node = Node(provider='aws', name='Node 1', provider_id='test_instance')
+        db.session.add(node)
+        db.session.commit()
+        mock_random.choice.return_value = { 'displayName': 'Singapore', 'name': 'ap-southeast-1' }
+
+        returned_region_name = AWSNodeManager(node)._pick_node_region()
+
+        self.assertEqual(returned_region_name, 'ap-southeast-1')
+        mock_random.choice.assert_called()
+
+    @patch('app.service_objects.aws_node_manager.random')
+    def test_pick_availability_zone(self, mock_random):
+        """
+        Test that it returns an availability zone which matches the region.
+        """
+        node = Node(provider='aws', name='Node 1', provider_id='test_instance', provider_region='us-east-1')
+        db.session.add(node)
+        db.session.commit()
+
+        returned_availability_zone = AWSNodeManager(node)._pick_node_availability_zone()
+
+        self.assertEqual(returned_availability_zone, 'us-east-1a')
+        mock_random.choice.assert_not_called()
