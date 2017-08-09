@@ -20,9 +20,7 @@ AWS_REGIONS = [
     { 'displayName': 'London', 'name': 'eu-west-2' },
     { 'displayName': 'Frankfurt', 'name': 'eu-central-1' },
     { 'displayName': 'Singapore', 'name': 'ap-southeast-1' },
-    { 'displayName': 'Sydney', 'name': 'ap-southeast-2' },
-    { 'displayName': 'Tokyo', 'name': 'ap-northeast-1' },
-    { 'displayName': 'Mumbai', 'name': 'ap-south-1' }
+    { 'displayName': 'Tokyo', 'name': 'ap-northeast-1' }
 ]
 
 class AWSNodeManager(NodeManager):
