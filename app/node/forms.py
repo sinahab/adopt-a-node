@@ -32,7 +32,7 @@ class NewNodeForm(FlaskForm):
     ])
 
     provider = SelectField('Cloud Provider',
-        choices=[('digital_ocean', 'Digital Ocean')],
+        choices=[('digital_ocean', 'Digital Ocean'), (('aws', 'AWS'))],
         validators=[
             DataRequired(message='Cloud Provider: cannot be blank.'),
             AnyOf(values=CLOUD_PROVIDERS, message='Cloud Provider: must be allowed value.')

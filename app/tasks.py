@@ -28,9 +28,9 @@ def configure_node(node_id):
 
     node.update_provider_attributes()
 
-    if node.provider_status == 'active':
+    if node.provider_status in ['active', 'running']:
         node.configure()
-    elif node.provider_status in ['new', 'off']:
+    elif node.provider_status in ['new', 'off', 'pending']:
         configure_node.apply_async((node_id), countdown=1800)
     else:
         raise Exception('Error: celery configuration task failed because provider_status is not understood.')

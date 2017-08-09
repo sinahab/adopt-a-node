@@ -63,10 +63,11 @@ class TestNode(TestBase):
         node_manager.create_server.assert_called()
         mock_install_task.apply_async.assert_called_with(args=(node.id,), countdown=120)
 
+    @patch('app.models.node.current_app')
     @patch('app.models.node.install_bitcoind')
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')
-    def test_provision_existing(self, mock_aws_manager_class, mock_do_manager_class, mock_install_task):
+    def test_provision_existing(self, mock_aws_manager_class, mock_do_manager_class, mock_install_task, mock_app):
         """
         Test that it raises an exception when the node already has an associated server.
         """
