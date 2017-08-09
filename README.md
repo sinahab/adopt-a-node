@@ -5,6 +5,8 @@ To setup the app: view [setup.md](./docs/setup.md)
 
 To work on app locally: view [dev.md](./docs/dev.md)
 
+To update nodes to a new version of BU: view [update.md](./docs/update.md)
+
 To run tests:
 ```
 FLASK_CONFIG=test python tests.py

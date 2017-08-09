@@ -104,6 +104,27 @@ class TestNode(TestBase):
         mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=1800)
         digital_ocean_node_manager.assert_not_called()
 
+    @patch('app.models.node.configure_node')
+    @patch('app.models.node.DigitalOceanNodeManager')
+    @patch('app.models.node.AWSNodeManager')
+    def test_update_bitcoind(self, aws_node_manager, digital_ocean_node_manager, mock_configure_task):
+        """
+        Test that:
+        1) it updates bitcoind
+        2) schedules a Celery task to configure the node in 30 minutes.
+        """
+        node = Node(provider='aws', name="Bob's node", status='up')
+        db.session.add(node)
+        db.session.commit()
+        aws_manager_instance = aws_node_manager.return_value
+
+        node.update_bitcoind()
+
+        aws_node_manager.assert_called()
+        aws_manager_instance.update_bitcoind.assert_called()
+        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=900)
+        digital_ocean_node_manager.assert_not_called()
+
     @patch('app.models.node.DigitalOceanNodeManager')
     @patch('app.models.node.AWSNodeManager')
     def test_configure(self, aws_node_manager, digital_ocean_node_manager):

@@ -80,6 +80,17 @@ class NodeManager(ABC):
             command +=  "/tmp/bu.sh'"
             client.exec_command(command)
 
+    def update_bitcoind(self):
+        """
+        Installs an updated version of Bitcoind on the node
+        """
+        with ssh_scope(self.node.ipv4_address, current_app.config['OS_USER']) as client:
+            with SCPClient(client.get_transport()) as scp:
+                scp.put('scripts/update.sh', '/tmp/')
+
+            client.exec_command('chmod 744 /tmp/update.sh')
+            client.exec_command("tmux new-session -d -s bu 'sudo /tmp/update.sh'")
+
     def power_off(self):
         """
         Powers off the node.

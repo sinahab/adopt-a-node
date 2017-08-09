@@ -60,11 +60,12 @@ class Node(db.Model, StateMixin):
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision'},  # provision a server on the desired cloud provider
         { 'trigger': 'install', 'source': 'provisioned', 'dest': 'installed', 'before': '_install'},  # install bitcoind on the server
-        { 'trigger': 'configure', 'source': ['installed', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_bitcoind'},  # configure bitcoin.conf according to the user's desired values.
+        { 'trigger': 'configure', 'source': ['installed', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': '_start_bitcoind'},  # configure bitcoin.conf according to the user's desired values.
         { 'trigger': 'start_bitcoind', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_start_bitcoind'},  # start the BU daemon
         { 'trigger': 'stop_bitcoind', 'source': 'up', 'dest': 'on', 'before': '_stop_bitcoind'},  # stop the BU daemon
         { 'trigger': 'power_off', 'source': 'on', 'dest': 'off', 'before': '_power_off'},  # power off the associated server
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
+        { 'trigger': 'update_bitcoind', 'source': ['up', 'on'], 'dest': 'installed', 'before': '_update_bitcoind' },  # install an updated version of bitcoind on the server
         { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
         { 'trigger': 'finish_taking_snapshot', 'source': 'taking_snapshot', 'dest': 'off'},  # finish taking a snapshot of the server
         { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' },  # rebuild server from latest snapshot
@@ -94,13 +95,22 @@ class Node(db.Model, StateMixin):
         """
         Installs bitcoind on the machine, and opens port 8333 on the machine.
         Also, schedules for bitcoind to be configured.
-        This needs to happen after a delay, so that provisioning is already complete.
+        This needs to happen after a delay, so that installation is already complete.
         """
-        db.session.expire_on_commit = False
         self.update_provider_attributes()
         self.node_manager().install_bitcoind()
         self.node_manager().open_bitcoind_port()
         configure_node.apply_async(args=(self.id,), countdown=1800)
+
+    def _update_bitcoind(self):
+        """
+        Updates bitcoind on the machine.
+        Also, schedules for bitcoind to be configured.
+        This needs to happen after a delay, so that installation is complete.
+        """
+        self.update_provider_attributes()
+        self.node_manager().update_bitcoind()
+        configure_node.apply_async(args=(self.id,), countdown=300)
 
     def _expire(self):
         """
