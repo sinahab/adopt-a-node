@@ -78,6 +78,9 @@ class Node(db.Model, StateMixin):
         This needs to happen after a delay, so that provisioning is already complete.
         """
         try:
+            if self.provider_id:
+                raise Exception("Error: node is already associated with a server.")
+
             self.node_manager().create_server()
             db.session.refresh(self)
             install_bitcoind.apply_async(args=(self.id,), countdown=120)
