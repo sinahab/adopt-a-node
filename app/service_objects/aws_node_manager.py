@@ -110,14 +110,6 @@ class AWSNodeManager(NodeManager):
 
         return(latest_available_snapshot)
 
-    def take_snapshot(self):
-        """
-        Creates a snapshot from the given node.
-        """
-        snapshot_name = str(int(time.time()))
-        snapshot = self.manager.create_instance_snapshot(instanceName=self.node.provider_id, instanceSnapshotName=snapshot_name)
-        return(snapshot)
-
     def create_server_from_latest_snapshot(self):
         """
         Creates a new instance from the latest template snapshot

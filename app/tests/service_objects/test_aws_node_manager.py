@@ -176,20 +176,6 @@ class TestAWSNodeManager(TestBase):
         self.assertEqual(returned_snapshot['name'], 'snapshot2')
 
     @patch('app.service_objects.aws_node_manager.boto3')
-    def test_take_snapshot(self, mock_boto3):
-        """
-        Test that it creates a snapshot from the given node.
-        """
-        node = Node(provider='aws', name='Node 1', provider_id='random_name')
-        db.session.add(node)
-        db.session.commit()
-
-        mock_manager = mock_boto3.client.return_value
-
-        returned_snapshot = AWSNodeManager(node).take_snapshot()
-        mock_manager.create_instance_snapshot.assert_called()
-
-    @patch('app.service_objects.aws_node_manager.boto3')
     def test_create_server_from_latest_snapshot(self, mock_boto3):
         """
         Test that it creates a new instance from the latest template snapshot.

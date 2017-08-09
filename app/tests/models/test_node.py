@@ -122,7 +122,7 @@ class TestNode(TestBase):
 
         aws_node_manager.assert_called()
         aws_manager_instance.update_bitcoind.assert_called()
-        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=900)
+        mock_configure_task.apply_async.assert_called_with(args=(node.id,), countdown=300)
         digital_ocean_node_manager.assert_not_called()
 
     @patch('app.models.node.DigitalOceanNodeManager')

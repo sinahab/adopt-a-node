@@ -27,13 +27,6 @@ class NodeManager(ABC):
         pass
 
     @abstractmethod
-    def take_snapshot(self):
-        """
-        Creates a snapshot from the given server.
-        """
-        pass
-
-    @abstractmethod
     def power_on(self):
         """
         Boots up the node

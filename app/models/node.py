@@ -66,8 +66,6 @@ class Node(db.Model, StateMixin):
         { 'trigger': 'power_off', 'source': 'on', 'dest': 'off', 'before': '_power_off'},  # power off the associated server
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
         { 'trigger': 'update_bitcoind', 'source': ['up', 'on'], 'dest': 'installed', 'before': '_update_bitcoind' },  # install an updated version of bitcoind on the server
-        { 'trigger': 'begin_taking_snapshot', 'source': 'off', 'dest': 'taking_snapshot', 'before': '_take_snapshot'},  # begin taking a snapshot of the server
-        { 'trigger': 'finish_taking_snapshot', 'source': 'taking_snapshot', 'dest': 'off'},  # finish taking a snapshot of the server
         { 'trigger': 'rebuild', 'source': 'off', 'dest': 'provisioned', 'before': '_rebuild' },  # rebuild server from latest snapshot
         { 'trigger': 'expire', 'source': ['up', 'on', 'off'], 'dest': 'expired', 'conditions': '_expire' }  # expire node
     ]
@@ -174,15 +172,7 @@ class Node(db.Model, StateMixin):
         """
         self.node_manager().power_on()
         return
-
-    def _take_snapshot(self):
-        """
-        Takes a snapshot of the server
-        """
-        self.node_manager().take_snapshot()
-        # TODO: schedule job to check if taking snapshot has been completed, and if so, to make the 'finish_taking_snapshot' transition.
-        return
-
+        
     def update_provider_attributes(self):
         """
         Udates the provider attributes for the node.

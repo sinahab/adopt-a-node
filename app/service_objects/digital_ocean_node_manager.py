@@ -108,15 +108,6 @@ class DigitalOceanNodeManager(NodeManager):
         db.session.commit()
         return
 
-    def take_snapshot(self):
-        """
-        Creates a snapshot from the given droplet.
-        """
-        droplet = self.manager.get_droplet(self.node.provider_id)
-        snapshot_name = str(int(time.time()))  # use current utc epoch time as name of the snapshot
-        snapshot = droplet.take_snapshot(snapshot_name, return_dict=True, power_off=False)
-        return(snapshot)
-
     def power_on(self):
         """
         Boots up the node
