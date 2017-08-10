@@ -60,8 +60,8 @@ class Node(db.Model, StateMixin):
     transitions = [
         { 'trigger': 'provision', 'source': 'new', 'dest': 'provisioned', 'before': '_provision'},  # provision a server on the desired cloud provider
         { 'trigger': 'install', 'source': 'provisioned', 'dest': 'installed', 'before': '_install'},  # install bitcoind on the server
-        { 'trigger': 'configure', 'source': ['installed', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': '_start_bitcoind'},  # configure bitcoin.conf according to the user's desired values.
-        { 'trigger': 'start_bitcoind', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_start_bitcoind'},  # start the BU daemon
+        { 'trigger': 'configure', 'source': ['installed', 'on', 'up'], 'dest': 'configured', 'before': '_configure', 'after': 'start_bitcoind'},  # configure bitcoin.conf according to the user's desired values.
+        { 'trigger': 'start_bitcoind', 'source': ['configured', 'on'], 'dest': 'up', 'before': '_restart_bitcoind'},  # start the BU daemon
         { 'trigger': 'stop_bitcoind', 'source': 'up', 'dest': 'on', 'before': '_stop_bitcoind'},  # stop the BU daemon
         { 'trigger': 'power_off', 'source': 'on', 'dest': 'off', 'before': '_power_off'},  # power off the associated server
         { 'trigger': 'power_on', 'source': 'off', 'dest': 'up', 'before': '_power_on'},  # power on the associated server. BU daemon starts automatically, hence 'up' dest.
@@ -145,7 +145,7 @@ class Node(db.Model, StateMixin):
         self.node_manager().update_bitcoin_conf()
         return
 
-    def _start_bitcoind(self):
+    def _restart_bitcoind(self):
         """
         Starts the BU client on the server.
         """
@@ -172,7 +172,7 @@ class Node(db.Model, StateMixin):
         """
         self.node_manager().power_on()
         return
-        
+
     def update_provider_attributes(self):
         """
         Udates the provider attributes for the node.
