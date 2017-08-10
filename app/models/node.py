@@ -82,6 +82,7 @@ class Node(db.Model, StateMixin):
 
             self.node_manager().create_server()
             db.session.refresh(self)
+            db.session.refresh(self.invoice)
             install_bitcoind.apply_async(args=(self.id,), countdown=120)
 
         except Exception as e:
